@@ -1,0 +1,182 @@
+[
+  {
+    "Id": 1,
+    "SapField": "AUFNR",
+    "Description": "Work Order Number",
+    "DataType": "CHAR(12)",
+    "MimosaEquivalent": "WorkOrder.WorkOrderID",
+    "Notes": "Primary identifier for the work order in SAP PM",
+    "Color": ""
+  },
+  {
+    "Id": 2,
+    "SapField": "AUART",
+    "Description": "Order Type",
+    "DataType": "CHAR(4)",
+    "MimosaEquivalent": "WorkOrder.WorkOrderType",
+    "Notes": "Defines the category of work order (PM01, PM02, etc.)",
+    "Color": ""
+  },
+  {
+    "Id": 3,
+    "SapField": "ERNAM",
+    "Description": "Created By",
+    "DataType": "CHAR(12)",
+    "MimosaEquivalent": "WorkOrder.CreatedBy",
+    "Notes": "User who created the work order",
+    "Color": ""
+  },
+  {
+    "Id": 4,
+    "SapField": "ERDAT",
+    "Description": "Created On",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.CreatedDateTime",
+    "Notes": "Date when the work order was created",
+    "Color": ""
+  },
+  {
+    "Id": 5,
+    "SapField": "AENAM",
+    "Description": "Changed By",
+    "DataType": "CHAR(12)",
+    "MimosaEquivalent": "WorkOrder.LastModifiedBy",
+    "Notes": "User who last modified the work order",
+    "Color": ""
+  },
+  {
+    "Id": 6,
+    "SapField": "AEDAT",
+    "Description": "Changed On",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.LastModifiedDateTime",
+    "Notes": "Date when the work order was last modified",
+    "Color": ""
+  },
+  {
+    "Id": 7,
+    "SapField": "STAT",
+    "Description": "System Status",
+    "DataType": "CHAR(5)",
+    "MimosaEquivalent": "WorkOrder.StatusID",
+    "Notes": "Current system status of the work order (CRTD, REL, TECO, etc.)",
+    "Color": ""
+  },
+  {
+    "Id": 8,
+    "SapField": "PRIOK",
+    "Description": "Priority",
+    "DataType": "CHAR(1)",
+    "MimosaEquivalent": "WorkOrder.PriorityID",
+    "Notes": "Priority of the work order (1-4, where 1 is highest)",
+    "Color": ""
+  },
+  {
+    "Id": 9,
+    "SapField": "GSTRP",
+    "Description": "Basic Start Date",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.ScheduledStartDateTime",
+    "Notes": "Planned start date for the work order",
+    "Color": ""
+  },
+  {
+    "Id": 10,
+    "SapField": "GLTRP",
+    "Description": "Basic Finish Date",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.ScheduledCompletionDateTime",
+    "Notes": "Planned completion date for the work order",
+    "Color": ""
+  },
+  {
+    "Id": 11,
+    "SapField": "IDAT1",
+    "Description": "Actual Start Date",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.ActualStartDateTime",
+    "Notes": "Actual date when work began",
+    "Color": ""
+  },
+  {
+    "Id": 12,
+    "SapField": "IDAT2",
+    "Description": "Actual Finish Date",
+    "DataType": "DATE",
+    "MimosaEquivalent": "WorkOrder.ActualCompletionDateTime",
+    "Notes": "Actual date when work was completed",
+    "Color": ""
+  },
+  {
+    "Id": 13,
+    "SapField": "EQUNR",
+    "Description": "Equipment",
+    "DataType": "CHAR(18)",
+    "MimosaEquivalent": "WorkOrder.AssetID",
+    "Notes": "Equipment number that the work order is for",
+    "Color": ""
+  },
+  {
+    "Id": 14,
+    "SapField": "TPLNR",
+    "Description": "Functional Location",
+    "DataType": "CHAR(30)",
+    "MimosaEquivalent": "WorkOrder.LocationID",
+    "Notes": "Functional location where the work is to be performed",
+    "Color": ""
+  },
+  {
+    "Id": 15,
+    "SapField": "KTEXT",
+    "Description": "Short Text",
+    "DataType": "CHAR(40)",
+    "MimosaEquivalent": "WorkOrder.Name",
+    "Notes": "Brief description of the work order",
+    "Color": ""
+  },
+  {
+    "Id": 16,
+    "SapField": "LTXA1",
+    "Description": "Long Text",
+    "DataType": "TEXT",
+    "MimosaEquivalent": "WorkOrder.Description",
+    "Notes": "Detailed description of the work to be performed",
+    "Color": ""
+  },
+  {
+    "Id": 17,
+    "SapField": "KOSTL",
+    "Description": "Cost Center",
+    "DataType": "CHAR(10)",
+    "MimosaEquivalent": "WorkOrder.CostCenterID",
+    "Notes": "Cost center responsible for the work order costs",
+    "Color": ""
+  },
+  {
+    "Id": 18,
+    "SapField": "ARBPL",
+    "Description": "Work Center",
+    "DataType": "CHAR(8)",
+    "MimosaEquivalent": "WorkOrder.WorkCenterID",
+    "Notes": "Work center responsible for executing the work",
+    "Color": ""
+  },
+  {
+    "Id": 19,
+    "SapField": "INGPR",
+    "Description": "Planner Group",
+    "DataType": "CHAR(3)",
+    "MimosaEquivalent": "WorkOrder.PlannerGroupID",
+    "Notes": "Group responsible for planning the work",
+    "Color": ""
+  },
+  {
+    "Id": 20,
+    "SapField": "QMNUM",
+    "Description": "Notification Number",
+    "DataType": "CHAR(12)",
+    "MimosaEquivalent": "WorkOrder.NotificationID",
+    "Notes": "Reference to the notification that triggered this work order",
+    "Color": ""
+  }
+]

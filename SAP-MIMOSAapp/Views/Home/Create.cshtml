@@ -1,0 +1,55 @@
+﻿@model SAP_MIMOSAapp.Models.WorkOrderMapping
+
+@{
+    ViewData["Title"] = "Create New Work Order";
+}
+
+<h1>Create New Work Order</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="SapField">SAP Field</label>
+        <input type="text" class="form-control" id="SapField" name="SapField" value="@Model?.SapField" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="text" class="form-control" id="Description" name="Description" value="@Model?.Description" required />
+    </div>
+    <div class="form-group">
+        <label for="DataType">Data Type</label>
+        <input type="text" class="form-control" id="DataType" name="DataType" value="@Model?.DataType" required />
+    </div>
+    <div class="form-group">
+        <label for="MimosaEquivalent">Mimosa Equivalent</label>
+        <input type="text" class="form-control" id="MimosaEquivalent" name="MimosaEquivalent" value="@Model?.MimosaEquivalent" required />
+    </div>
+    <div class="form-group">
+        <label for="Notes">Notes</label>
+        <textarea class="form-control" id="Notes" name="Notes" rows="3" required>@Model?.Notes</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary mt-3">Back to List</a>
+
+
+@section Scripts {
+    <script>
+        document.getElementById('createForm').addEventListener('submit', function (event) {
+            let isValid = true;
+            const requiredFields = ['SapField', 'Description', 'DataType', 'MimosaEquivalent', 'Notes'];
+
+            requiredFields.forEach(function (fieldId) {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    isValid = false;
+                    alert(fieldId + ' cannot be blank');
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    </script>
+}

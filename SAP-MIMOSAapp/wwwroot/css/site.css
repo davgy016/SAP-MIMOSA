@@ -1,0 +1,72 @@
+
+
+body {
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Align children (content-wrapper) vertically */
+    height: 100%; /* Take up the full height */
+}
+
+.nav-link:hover {
+    background-color: #007bff; /* Blue color for the hover effect */
+    color: white !important; /* Ensures the text color is white when hovering */
+}
+
+.content-wrapper {
+    flex: 1; /* Makes the content grow and take available space */
+}
+
+h1, h2 {
+    color: #2c3e50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: cornflowerblue !important;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9f7fe;
+}
+
+.description {
+    font-style: italic;
+    color: #555;
+}
+
+.section {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+footer {
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}

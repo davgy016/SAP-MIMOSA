@@ -1,0 +1,40 @@
+﻿@model SAP_MIMOSAapp.Models.WorkOrderMapping
+
+@{
+    ViewData["Title"] = "Edit Work Order Mapping";
+}
+
+<h2>Edit Work Order Mapping</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label>SAP PM Field</label>
+        <input asp-for="SapField" class="form-control" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+
+    <div>
+        <label>Data Type</label>
+        <input asp-for="DataType" class="form-control" />
+    </div>
+
+    <div>
+        <label>MIMOSA Equivalent</label>
+        <input asp-for="MimosaEquivalent" class="form-control" />
+    </div>
+
+    <div>
+        <label>Notes</label>
+        <input asp-for="Notes" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="@Url.Action("Index", "Home")">Cancel</a>
+</form>
