@@ -1,55 +1,54 @@
 ﻿@model SAP_MIMOSAapp.Models.WorkOrderMapping
 
 @{
-    ViewData["Title"] = "Create New Work Order";
+    ViewData["Title"] = "Create Work Order Mapping";
 }
 
-<h1>Create New Work Order</h1>
+<h2>Create New Work Order Mapping</h2>
 
-<form method="post">
-    <div class="form-group">
-        <label for="SapField">SAP Field</label>
-        <input type="text" class="form-control" id="SapField" name="SapField" value="@Model?.SapField" required />
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
     </div>
-    <div class="form-group">
-        <label for="Description">Description</label>
-        <input type="text" class="form-control" id="Description" name="Description" value="@Model?.Description" required />
+}
+
+<form asp-action="Create" asp-controller="Home" method="post">  
+    <input type="hidden" asp-for="Color" value="" />
+
+
+    <div class="form-group mb-3">
+        <label asp-for="SapField">SAP PM Field</label>
+        <input asp-for="SapField" class="form-control" required />
+        <span asp-validation-for="SapField" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="DataType">Data Type</label>
-        <input type="text" class="form-control" id="DataType" name="DataType" value="@Model?.DataType" required />
+
+    <div class="form-group mb-3">
+        <label asp-for="Description">Description</label>
+        <input asp-for="Description" class="form-control" required />
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="MimosaEquivalent">Mimosa Equivalent</label>
-        <input type="text" class="form-control" id="MimosaEquivalent" name="MimosaEquivalent" value="@Model?.MimosaEquivalent" required />
+
+    <div class="form-group mb-3">
+        <label asp-for="DataType">Data Type</label>
+        <input asp-for="DataType" class="form-control" required />
+        <span asp-validation-for="DataType" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="Notes">Notes</label>
-        <textarea class="form-control" id="Notes" name="Notes" rows="3" required>@Model?.Notes</textarea>
+
+    <div class="form-group mb-3">
+        <label asp-for="MimosaEquivalent">MIMOSA Equivalent</label>
+        <input asp-for="MimosaEquivalent" class="form-control" required />
+        <span asp-validation-for="MimosaEquivalent" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+
+    <div class="form-group mb-3">
+        <label asp-for="Notes">Notes</label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a class="btn btn-secondary" href="@Url.Action("Index", "Home")">Cancel</a>
+    </div>
 </form>
 
-<a href="@Url.Action("Index", "Home")" class="btn btn-secondary mt-3">Back to List</a>
-
-
-@section Scripts {
-    <script>
-        document.getElementById('createForm').addEventListener('submit', function (event) {
-            let isValid = true;
-            const requiredFields = ['SapField', 'Description', 'DataType', 'MimosaEquivalent', 'Notes'];
-
-            requiredFields.forEach(function (fieldId) {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    isValid = false;
-                    alert(fieldId + ' cannot be blank');
-                }
-            });
-
-            if (!isValid) {
-                event.preventDefault(); // Prevent form submission if validation fails
-            }
-        });
-    </script>
-}

@@ -1,4 +1,4 @@
-﻿@model List<SAP_MIMOSAapp.Models.WorkOrderMapping>
+﻿@model dynamic
 
 <h1>SAP PM to MIMOSA Work Order Entity Mapping</h1>
 
@@ -8,14 +8,29 @@
     <h2>Field Mapping Table</h2>
 
     <div class="d-flex justify-content-between align-items-center">
-       
-        <button id="resetButton" class="btn btn-warning mt-3">Reset All Colors</button>       
+        <button id="resetButton" class="btn btn-warning mt-3">Reset All Colors</button>
         <a href="@Url.Action("Create", "Home")" class="btn btn-primary mt-3">Create New Field</a>
     </div>
+
+    <!-- OpenAI Search Form -->
+    <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
+        <input type="text" name="query" placeholder="Enter your query..." value="@Model.searchRequest.Query" />
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display the AI response -->
+    <div id="aiResponse">
+        @if (ViewBag.AIResponse != null)
+        {
+            <pre>@ViewBag.AIResponse</pre>
+        }
+    </div>
+
+    <!-- Work Order Table -->
     <table class="table">
         <thead>
             <tr>
-                <th>SAP PM Field</th>
+                <th>SAP PM Field (AUFK Order master data)</th>
                 <th>SAP Description</th>
                 <th>SAP Data Type</th>
                 <th>MIMOSA Equivalent</th>
@@ -24,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.workOrders)
             {
                 <tr>
                     <td id="sapField_@item.Id" style="background-color: @item.Color">
@@ -34,7 +49,7 @@
                             <i class="fas fa-paint-brush change-color-icon green" data-id="@item.Id" style="cursor: pointer; font-size: 18px; color: green; margin-left: 10px;" title="Green"></i>
                             <i class="fas fa-paint-brush change-color-icon red" data-id="@item.Id" style="cursor: pointer; font-size: 18px; color: red; margin-left: 10px;" title="Red"></i>
                             <i class="fas fa-paint-brush change-color-icon yellow" data-id="@item.Id" style="cursor: pointer; font-size: 18px; color: yellow; margin-left: 10px;" title="Yellow"></i>
-                            <i class="fas fa-paint-brush change-color-icon yellow" data-id="@item.Id" style="cursor: pointer; font-size: 18px; color: white; margin-left: 10px;" title="Yellow"></i>
+                            <i class="fas fa-paint-brush change-color-icon white" data-id="@item.Id" style="cursor: pointer; font-size: 18px; color: white; margin-left: 10px;" title="Reset Color"></i>
                         </span>
                     </td>
                     <td>@item.Description</td>
@@ -51,49 +66,14 @@
             }
         </tbody>
     </table>
-    <div class="section">
-        <h2>Key Differences Between SAP PM and MIMOSA Work Order Models</h2>
-        <ol>
-            <li>
-                <strong>Naming Conventions:</strong>
-                <ul>
-                    <li>SAP PM uses short, often cryptic field names (e.g., AUFNR, AUART)</li>
-                    <li>MIMOSA uses descriptive, human-readable field names (e.g., WorkOrderID, WorkOrderType)</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Data Types:</strong>
-                <ul>
-                    <li>SAP PM has specific length constraints for character fields</li>
-                    <li>MIMOSA uses more generic data types without explicit length constraints</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Relationships:</strong>
-                <ul>
-                    <li>SAP PM uses technical keys for relationships (EQUNR, TPLNR)</li>
-                    <li>MIMOSA uses more semantic relationship fields (AssetID, LocationID)</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Extensions:</strong>
-                <ul>
-                    <li>SAP PM can be extended with custom Z-fields (Z*)</li>
-                    <li>MIMOSA allows for standard-compliant extensions through its object model</li>
-                </ul>
-            </li>
-        </ol>
-    </div>
 </div>
-
-
 
 @section Scripts {
     <script>
         // Change color when an icon is clicked
         $(".change-color-icon").on("click", function () {
             var itemId = $(this).data("id");
-            var newColor = $(this).css("color"); // Get the color from the icon clicked
+            var newColor = $(this).css("color");
 
             // Update the background color on the row immediately
             $("#sapField_" + itemId).css("background-color", newColor);
@@ -106,12 +86,12 @@
                     id: itemId,
                     color: newColor
                 },
-                // success: function () {
-                //     alert("Color updated successfully!");
-                // },
-                // error: function () {
-                //     alert("Error saving color change.");
-                // }
+                success: function () {
+                    console.log("Color updated successfully!");
+                },
+                error: function () {
+                    alert("Error saving color change.");
+                }
             });
         });
 
@@ -122,9 +102,9 @@
                 url: '@Url.Action("ResetColors", "Home")',
                 type: 'POST',
                 success: function () {
-                    // Reset all colors on the client side
+                    // Reset all colors
                     $("td[id^='sapField_']").each(function () {
-                        $(this).css("background-color", ""); // Reset to default (empty color or original color)
+                        $(this).css("background-color", "");
                     });
 
                     alert("All colors have been reset.");

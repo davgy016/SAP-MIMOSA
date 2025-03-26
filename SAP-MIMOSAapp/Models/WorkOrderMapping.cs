@@ -8,7 +8,7 @@
         public string DataType { get; set; }
         public string MimosaEquivalent { get; set; }
         public string Notes { get; set; }
-        public string Color { get; set; }
+        public string? Color { get; set; }
     }
 
 }
