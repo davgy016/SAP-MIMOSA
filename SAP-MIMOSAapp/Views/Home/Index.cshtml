@@ -12,18 +12,41 @@
         <a href="@Url.Action("Create", "Home")" class="btn btn-primary mt-3">Create New Field</a>
     </div>
 
-    <!-- OpenAI Search Form -->
-    <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
-        <input type="text" name="query" placeholder="Enter your query..." value="@Model.searchRequest.Query" />
-        <button type="submit">Search</button>
-    </form>
+    <!-- OpenAI Search Form - Updated with better styling and debug info -->
+    <div class="card mt-4 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">AI Assistant</h4>
+        </div>
+        <div class="card-body">
+            <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
+                <div class="input-group mb-3">
+                    <input type="text" id="queryInput" name="query" class="form-control"
+                           placeholder="Ask a question about SAP-MIMOSA mapping..."
+                           value="@(Model.searchRequest?.Query ?? "")" />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
 
-    <!-- Display the AI response -->
-    <div id="aiResponse">
-        @if (ViewBag.AIResponse != null)
-        {
-            <pre>@ViewBag.AIResponse</pre>
-        }
+            <!-- Display the AI response -->
+            <div id="aiResponse">
+                @if (!string.IsNullOrEmpty(ViewBag.AIResponse))
+                {
+                    <div class="alert alert-info">
+                        <h4>AI Response:</h4>
+                        <p>@Html.Raw(ViewBag.AIResponse?.Replace("\n", "<br/>"))</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Debug Information (can be removed in production) -->
+            <div class="mt-3 small text-muted">
+                <details>
+                    <summary>Debug Info</summary>
+                    <p>Query: @(Model.searchRequest?.Query ?? "No query")</p>
+                    <p>ViewBag.AIResponse set: @(!string.IsNullOrEmpty(ViewBag.AIResponse) ? "Yes" : "No")</p>
+                </details>
+            </div>
+        </div>
     </div>
 
     <!-- Work Order Table -->
@@ -113,6 +136,13 @@
                     alert("Error resetting colors.");
                 }
             });
+        });
+
+        // Add loading indicator when form is submitted
+        $("#aiSearchForm").on("submit", function() {
+            $("#aiResponse").html('<div class="alert alert-info">Loading response...</div>');
+            // Continue with form submission
+            return true;
         });
     </script>
 }

@@ -1,50 +1,66 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import openai
+from openai import OpenAI
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
 import os
 import threading
+import uvicorn  # Add this import
 from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.responses import JSONResponse
-import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 
-import dotenv
-dotenv.load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# FastAPI app for OpenAI
-fastapi_app = FastAPI()
+# Initialize OpenAI client
+client = OpenAI()
 
 # Flask app for work orders
 flask_app = Flask(__name__)
-CORS(flask_app)  # Enable CORS for Flask app
-
+CORS(flask_app)  # Enable CORS
+# FastAPI app for OpenAI
+fastapi_app = FastAPI()
 # Add Flask app as middleware to FastAPI
+# Add this after creating your FastAPI app
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development only, restrict in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
+
 
 JSON_FILE = "Data/SAPdata.json"
 
-class SearchQuery(BaseModel):
-    Query: str
 
-# FastAPI route for OpenAI interaction
+class SearchQuery(BaseModel):
+    query: str
+
+
 @fastapi_app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
-        # Call OpenAI API with ChatCompletion.create()
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Use the correct model name here
+        print(f"Received query: {request.query}")
+        
+        # Correct method for chat-based models
+        response = client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an AI assistant for SAP-MIMOSA work order mapping."},
-                {"role": "user", "content": request.Query}
+                {"role": "user", "content": request.query}
             ]
         )
-        return {"response": response.choices[0].message['content']}
+        
+        result = response.choices[0].message.content
+        print(f"Sending response: {result}")
+        return {"response": result}
 
     except Exception as e:
+        print(f"Error in ask_openai: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 # Flask routes for work orders
@@ -57,20 +73,24 @@ def load_data():
     with open(JSON_FILE, "r", encoding="utf-8") as file:
         return json.load(file)
 
+
 def save_data(data):
     os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
     with open(JSON_FILE, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
+
 @flask_app.route("/workorders", methods=["GET"])
 def get_workorders():
     return jsonify(load_data())
+
 
 @flask_app.route("/workorders/<int:Id>", methods=["GET"])
 def get_workorder(Id):
     workorders = load_data()
     workorder = next((w for w in workorders if w.get("Id") == Id), None)
     return jsonify(workorder) if workorder else ("Not Found", 404)
+
 
 @flask_app.route("/workorders", methods=["POST"])
 def add_workorder():
@@ -91,6 +111,7 @@ def add_workorder():
     save_data(workorders)
     return jsonify(new_workorder), 201
 
+
 @flask_app.route("/workorders/<int:Id>", methods=["PUT"])
 def update_workorder(Id):
     workorders = load_data()
@@ -108,6 +129,7 @@ def update_workorder(Id):
             return jsonify(w)
     return "Not Found", 404
 
+
 @flask_app.route("/workorders/<int:Id>", methods=["DELETE"])
 def delete_workorder(Id):
     workorders = load_data()
@@ -119,14 +141,11 @@ def delete_workorder(Id):
     save_data(updated_workorders)
     return "Deleted", 204
 
-# Function to run FastAPI using uvicorn
-def run_fastapi():
-    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
 
-# Run both FastAPI and Flask on separate threads
+# Run the FastAPI app and Flask app together
 if __name__ == "__main__":
-    # Run FastAPI on a separate thread
-    threading.Thread(target=run_fastapi).start()
-
-    # Run Flask on the main thread
+    # Run FastAPI with Uvicorn in a separate thread
+    threading.Thread(target=lambda: uvicorn.run(fastapi_app, host="127.0.0.1", port=8000, log_level="info")).start()
+    
+    # Run Flask app
     flask_app.run(port=5000)
