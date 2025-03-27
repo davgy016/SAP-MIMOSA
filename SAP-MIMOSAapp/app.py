@@ -28,7 +28,7 @@ fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
 JSON_FILE = "Data/SAPdata.json"
 
 class SearchQuery(BaseModel):
-    query: str
+    Query: str
 
 # FastAPI route for OpenAI interaction
 @fastapi_app.post("/ask_openai")
@@ -39,7 +39,7 @@ async def ask_openai(request: SearchQuery):
             model="gpt-4",  # Use the correct model name here
             messages=[
                 {"role": "system", "content": "You are an AI assistant for SAP-MIMOSA work order mapping."},
-                {"role": "user", "content": request.query}
+                {"role": "user", "content": request.Query}
             ]
         )
         return {"response": response.choices[0].message['content']}
