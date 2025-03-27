@@ -18,41 +18,46 @@ namespace SAP_MIMOSAapp.Controllers
         public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/");
+            //_httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/");
             _logger = logger;
         }
 
         // Work Order Management Methods
+        public class WorkOrderViewModel
+        {
+            public List<WorkOrderMapping> workOrders { get; set; } = new();
+            public SearchRequest searchRequest { get; set; } = new();
+            public string AIResponse { get; set; } = "";
+        }
+
+        // Then in your Index method:
         public async Task<IActionResult> Index(string query = "")
         {
+            var viewModel = new WorkOrderViewModel();
             try
             {
-                // Fetch work orders from the API
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var workOrders = JsonSerializer.Deserialize<List<WorkOrderMapping>>(response, options);
+                // Fetch work orders
+                var response = await _httpClient.GetStringAsync("http://127.0.0.1:5000/workorders");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                viewModel.workOrders = JsonSerializer.Deserialize<List<WorkOrderMapping>>(response, options) ?? new();
 
-                // Create a SearchRequest model for AI search query
-                var searchRequest = new SearchRequest { Query = query };
+                // Set up search request
+                viewModel.searchRequest = new SearchRequest { Query = query };
 
-                // If there's a query, call OpenAI API for interaction
+                // If there's a query, call AI
                 if (!string.IsNullOrEmpty(query))
                 {
-                    var aiResponse = await GetAIResponse(query);
-                    ViewBag.AIResponse = aiResponse;
+                    viewModel.AIResponse = await GetAIResponse(query);
+                    ViewBag.AIResponse = viewModel.AIResponse;
                 }
-
-                // Return the view with work orders and searchRequest
-                return View(new { workOrders, searchRequest });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                return View(new { workOrders = new List<WorkOrderMapping>(), searchRequest = new SearchRequest() });
+                _logger.LogError(ex, "Error in Index");
+                viewModel.AIResponse = $"Error: {ex.Message}";
             }
+
+            return View(viewModel);
         }
 
         // New AI Search Method
@@ -60,24 +65,57 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var request = new SearchRequest { Query = query };
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+                Console.WriteLine($"GetAIResponse called with query: {query}");
 
-                // Send the request to the FastAPI server for AI processing
+                // Create the request object exactly matching the Python model
+                var request = new { query = query }; // Note: lowercase property name to match Python
+
+                // Serialize with proper casing
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+                var jsonRequest = new StringContent(
+                    JsonSerializer.Serialize(request, jsonOptions),
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                // Log the request for debugging
+                var requestContent = await jsonRequest.ReadAsStringAsync();
+                Console.WriteLine($"Sending request: {requestContent}");
+
+                // Send the request
                 var response = await _httpClient.PostAsync("http://localhost:8000/ask_openai", jsonRequest);
+
+                // Log the response status
+                Console.WriteLine($"Response status: {response.StatusCode}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new System.Exception("Error communicating with AI service");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error content: {errorContent}");
+                    return $"Error: AI service returned status code {response.StatusCode}. Details: {errorContent}";
                 }
 
-                // Read AI response and return it
+                // Read and log the response
                 var responseString = await response.Content.ReadAsStringAsync();
-                var aiResponse = JsonSerializer.Deserialize<AIResponse>(responseString);
-                return aiResponse?.Response ?? "No response from AI";
+                Console.WriteLine($"AI response: {responseString}");
+
+                try
+                {
+                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(responseString, jsonOptions);
+                    return aiResponse?.Response ?? "No response from AI";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deserializing response: {ex.Message}");
+                    return $"Raw response: {responseString}";
+                }
             }
             catch (System.Exception ex)
             {
+                Console.WriteLine($"Exception in GetAIResponse: {ex}");
                 return $"Error: {ex.Message}";
             }
         }
