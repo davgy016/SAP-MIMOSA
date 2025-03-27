@@ -1,6 +1,9 @@
+# python3 -m uvicorn app:fastapi_app --host 0.0.0.0 --port 8000
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
+
 
 # Initialize OpenAI client
 client = OpenAI()
