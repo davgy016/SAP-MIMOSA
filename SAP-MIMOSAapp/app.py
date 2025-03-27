@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from openai import OpenAI
+import openai
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
@@ -8,44 +8,44 @@ import os
 import threading
 from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.responses import JSONResponse
+import uvicorn
 
-# Initialize OpenAI client
-client = OpenAI()
+
+import dotenv
+dotenv.load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# FastAPI app for OpenAI
+fastapi_app = FastAPI()
 
 # Flask app for work orders
 flask_app = Flask(__name__)
-CORS(flask_app)  # Enable CORS
-# FastAPI app for OpenAI
-fastapi_app = FastAPI()
+CORS(flask_app)  # Enable CORS for Flask app
+
 # Add Flask app as middleware to FastAPI
 fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
 
-
 JSON_FILE = "Data/SAPdata.json"
-
 
 class SearchQuery(BaseModel):
     query: str
 
-
+# FastAPI route for OpenAI interaction
 @fastapi_app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
-        # Correct method for chat-based models
-        response = client.chat.completions.create(
-            model="gpt-4o",
+        # Call OpenAI API with ChatCompletion.create()
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Use the correct model name here
             messages=[
                 {"role": "system", "content": "You are an AI assistant for SAP-MIMOSA work order mapping."},
                 {"role": "user", "content": request.query}
             ]
         )
-        return {"response": response.choices[0].message.content}
+        return {"response": response.choices[0].message['content']}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-
 
 # Flask routes for work orders
 def load_data():
@@ -57,24 +57,20 @@ def load_data():
     with open(JSON_FILE, "r", encoding="utf-8") as file:
         return json.load(file)
 
-
 def save_data(data):
     os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
     with open(JSON_FILE, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-
 @flask_app.route("/workorders", methods=["GET"])
 def get_workorders():
     return jsonify(load_data())
-
 
 @flask_app.route("/workorders/<int:Id>", methods=["GET"])
 def get_workorder(Id):
     workorders = load_data()
     workorder = next((w for w in workorders if w.get("Id") == Id), None)
     return jsonify(workorder) if workorder else ("Not Found", 404)
-
 
 @flask_app.route("/workorders", methods=["POST"])
 def add_workorder():
@@ -95,7 +91,6 @@ def add_workorder():
     save_data(workorders)
     return jsonify(new_workorder), 201
 
-
 @flask_app.route("/workorders/<int:Id>", methods=["PUT"])
 def update_workorder(Id):
     workorders = load_data()
@@ -113,7 +108,6 @@ def update_workorder(Id):
             return jsonify(w)
     return "Not Found", 404
 
-
 @flask_app.route("/workorders/<int:Id>", methods=["DELETE"])
 def delete_workorder(Id):
     workorders = load_data()
@@ -125,13 +119,14 @@ def delete_workorder(Id):
     save_data(updated_workorders)
     return "Deleted", 204
 
+# Function to run FastAPI using uvicorn
+def run_fastapi():
+    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
 
-# Add Flask app as middleware to FastAPI
-fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
-
-
-# Run the FastAPI app and Flask app together
+# Run both FastAPI and Flask on separate threads
 if __name__ == "__main__":
-    # Run both FastAPI and Flask on separate threads
-    threading.Thread(target=lambda: fastapi_app.run(port=8000)).start()
+    # Run FastAPI on a separate thread
+    threading.Thread(target=run_fastapi).start()
+
+    # Run Flask on the main thread
     flask_app.run(port=5000)
