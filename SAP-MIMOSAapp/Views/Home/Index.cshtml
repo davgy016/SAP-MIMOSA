@@ -11,8 +11,8 @@
         <button id="resetButton" class="btn btn-warning mt-3">Reset All Colors</button>
         <a href="@Url.Action("Create", "Home")" class="btn btn-primary mt-3">Create New Field</a>
     </div>
-
-    <!-- OpenAI Search Form - Updated with better styling and debug info -->
+    
+    <!--AI search form-->
     <div class="card mt-4 mb-4">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0">AI Assistant</h4>
@@ -20,14 +20,14 @@
         <div class="card-body">
             <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
                 <div class="input-group mb-3">
-                    <input type="text" id="queryInput" name="query" class="form-control"
-                           placeholder="Ask a question about SAP-MIMOSA mapping..."
+                    <input type="text" id="queryInput" name="query" class="form-control" 
+                           placeholder="Ask a question about SAP-MIMOSA mapping..." 
                            value="@(Model.searchRequest?.Query ?? "")" />
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
 
-            <!-- Display the AI response -->
+            <!-- display AI response -->
             <div id="aiResponse">
                 @if (!string.IsNullOrEmpty(ViewBag.AIResponse))
                 {
@@ -38,7 +38,7 @@
                 }
             </div>
 
-            <!-- Debug Information (can be removed in production) -->
+            <!-- Debug Information -->
             <div class="mt-3 small text-muted">
                 <details>
                     <summary>Debug Info</summary>

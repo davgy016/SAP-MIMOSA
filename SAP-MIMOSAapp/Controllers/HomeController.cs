@@ -18,7 +18,7 @@ namespace SAP_MIMOSAapp.Controllers
         public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
             _httpClient = httpClientFactory.CreateClient();
-            //_httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/");
+            _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/");
             _logger = logger;
         }
 
@@ -271,7 +271,43 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        // New AI Search Method
+        [HttpPost]
+        public async Task<IActionResult> ResetColors()
+        {
+            try
+            {
+                var workOrders = await _httpClient.GetFromJsonAsync<List<WorkOrderMapping>>("workorders");
+
+                if (workOrders == null)
+                {
+                    _logger.LogWarning("No work orders found.");
+                    return Json(new { success = false, message = "No work orders available." });
+                }
+
+                // Update each work order individually
+                foreach (var workOrder in workOrders)
+                {
+                    workOrder.Color = null;
+                    var json = JsonSerializer.Serialize(workOrder);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var updateResponse = await _httpClient.PutAsync($"workorders/{workOrder.Id}", content);
+                    if (!updateResponse.IsSuccessStatusCode)
+                    {
+                        _logger.LogError($"Failed to update work order {workOrder.Id}. Status Code: {updateResponse.StatusCode}");
+                    }
+                }
+
+                return Json(new { success = true, message = "Work order colors reset successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ResetColor action.");
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+
         [HttpPost("search")]
         public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)
         {
@@ -298,6 +334,7 @@ namespace SAP_MIMOSAapp.Controllers
         public string? Response { get; set; }
     }
 
+    //encapsulate search query from view when making AI search request. It defines structure of the request for SearchWithAI action. 
     public class SearchRequest
     {
         public string? Query { get; set; }
