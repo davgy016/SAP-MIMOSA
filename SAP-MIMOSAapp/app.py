@@ -20,15 +20,8 @@ flask_app = Flask(__name__)
 CORS(flask_app)  # Enable CORS
 # FastAPI app for OpenAI
 fastapi_app = FastAPI()
+
 # Add Flask app as middleware to FastAPI
-# Add this after creating your FastAPI app
-fastapi_app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # For development only, restrict in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
 
 
@@ -48,8 +41,8 @@ async def ask_openai(request: SearchQuery):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are an AI assistant for SAP-MIMOSA work order mapping."},
-                {"role": "user", "content": request.query}
+                {"role": "system", "content": "You are an Generative AI assistant for generating mapping between SAP and MIMOSA data models."},
+                {"role": "user", "content": request.query + "response provide in Json format"}
             ]
         )
         

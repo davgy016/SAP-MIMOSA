@@ -6,7 +6,7 @@
         "DataType": "CHAR(12)",
         "MimosaEquivalent": "WorkOrder.WorkOrderID",
         "Notes": "Primary identifier for the work order in SAP PM",
-        "Color": "rgb(255, 255, 255)",
+        "Color": null,
         "Sapfield": "AUFNR",
         "Datatype": "CHAR(12)",
         "Mimosaequivalent": "WorkOrder.WorkOrderID"
@@ -18,7 +18,7 @@
         "DataType": "CHAR(4)",
         "MimosaEquivalent": "WorkOrder.WorkOrderType",
         "Notes": "Defines the category of work order (PM01, PM02, etc.)",
-        "Color": "",
+        "Color": null,
         "Sapfield": "AUART",
         "Datatype": "CHAR(4)",
         "Mimosaequivalent": "WorkOrder.WorkOrderType"
@@ -30,7 +30,7 @@
         "DataType": "CHAR(12)",
         "MimosaEquivalent": "WorkOrder.CreatedBy",
         "Notes": "User who created the work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "ERNAM",
         "Datatype": "CHAR(12)",
         "Mimosaequivalent": "WorkOrder.CreatedBy"
@@ -42,7 +42,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.CreatedDateTime",
         "Notes": "Date when the work order was created",
-        "Color": "",
+        "Color": null,
         "Sapfield": "ERDAT",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.CreatedDateTime"
@@ -54,7 +54,7 @@
         "DataType": "CHAR(12)",
         "MimosaEquivalent": "WorkOrder.LastModifiedBy",
         "Notes": "User who last modified the work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "AENAM",
         "Datatype": "CHAR(12)",
         "Mimosaequivalent": "WorkOrder.LastModifiedBy"
@@ -66,7 +66,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.LastModifiedDateTime",
         "Notes": "Date when the work order was last modified",
-        "Color": "",
+        "Color": null,
         "Sapfield": "AEDAT",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.LastModifiedDateTime"
@@ -78,7 +78,7 @@
         "DataType": "CHAR(5)",
         "MimosaEquivalent": "WorkOrder.StatusID",
         "Notes": "Current system status of the work order (CRTD, REL, TECO, etc.)",
-        "Color": "",
+        "Color": null,
         "Sapfield": "STAT",
         "Datatype": "CHAR(5)",
         "Mimosaequivalent": "WorkOrder.StatusID"
@@ -90,7 +90,7 @@
         "DataType": "CHAR(1)",
         "MimosaEquivalent": "WorkOrder.PriorityID",
         "Notes": "This field exists in SAP AFIH Maintenance order header",
-        "Color": "",
+        "Color": null,
         "Sapfield": "PRIOK",
         "Datatype": "CHAR(1)",
         "Mimosaequivalent": "WorkOrder.PriorityID"
@@ -102,7 +102,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.ScheduledStartDateTime",
         "Notes": "Planned start date for the work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "GSTRP",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.ScheduledStartDateTime"
@@ -114,7 +114,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.ScheduledCompletionDateTime",
         "Notes": "Planned completion date for the work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "GLTRP",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.ScheduledCompletionDateTime"
@@ -126,7 +126,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.ActualStartDateTime",
         "Notes": "Actual date when work began",
-        "Color": "",
+        "Color": null,
         "Sapfield": "IDAT1",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.ActualStartDateTime"
@@ -138,7 +138,7 @@
         "DataType": "DATE",
         "MimosaEquivalent": "WorkOrder.ActualCompletionDateTime",
         "Notes": "Actual date when work was completed",
-        "Color": "",
+        "Color": null,
         "Sapfield": "IDAT2",
         "Datatype": "DATE",
         "Mimosaequivalent": "WorkOrder.ActualCompletionDateTime"
@@ -150,7 +150,7 @@
         "DataType": "CHAR(18)",
         "MimosaEquivalent": "WorkOrder.AssetID",
         "Notes": "This field exists in SAP AFIH Maintenance order header.  Equipment number that the work order is for",
-        "Color": "",
+        "Color": null,
         "Sapfield": "EQUNR",
         "Datatype": "CHAR(18)",
         "Mimosaequivalent": "WorkOrder.AssetID"
@@ -162,7 +162,7 @@
         "DataType": "CHAR(30)",
         "MimosaEquivalent": "WorkOrder.LocationID",
         "Notes": "Functional location where the work is to be performed",
-        "Color": "",
+        "Color": null,
         "Sapfield": "TPLNR",
         "Datatype": "CHAR(30)",
         "Mimosaequivalent": "WorkOrder.LocationID"
@@ -174,7 +174,7 @@
         "DataType": "CHAR(40)",
         "MimosaEquivalent": "WorkOrder.Name",
         "Notes": "Brief description of the work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "KTEXT",
         "Datatype": "CHAR(40)",
         "Mimosaequivalent": "WorkOrder.Name"
@@ -186,7 +186,7 @@
         "DataType": "TEXT",
         "MimosaEquivalent": "WorkOrder.Description",
         "Notes": "Detailed description of the work to be performed",
-        "Color": "",
+        "Color": null,
         "Sapfield": "LTXA1",
         "Datatype": "TEXT",
         "Mimosaequivalent": "WorkOrder.Description"
@@ -198,7 +198,7 @@
         "DataType": "CHAR(10)",
         "MimosaEquivalent": "WorkOrder.CostCenterID",
         "Notes": "Cost center responsible for the work order costs",
-        "Color": "",
+        "Color": null,
         "Sapfield": "KOSTL",
         "Datatype": "CHAR(10)",
         "Mimosaequivalent": "WorkOrder.CostCenterID"
@@ -210,7 +210,7 @@
         "DataType": "CHAR(8)",
         "MimosaEquivalent": "WorkOrder.WorkCenterID",
         "Notes": "Work center responsible for executing the work",
-        "Color": "",
+        "Color": null,
         "Sapfield": "ARBPL",
         "Datatype": "CHAR(8)",
         "Mimosaequivalent": "WorkOrder.WorkCenterID"
@@ -222,7 +222,7 @@
         "DataType": "CHAR(3)",
         "MimosaEquivalent": "WorkOrder.PlannerGroupID",
         "Notes": "This field exists in SAP AFIH Maintenance order header.  Group responsible for planning the work",
-        "Color": "",
+        "Color": null,
         "Sapfield": "INGPR",
         "Datatype": "CHAR(3)",
         "Mimosaequivalent": "WorkOrder.PlannerGroupID"
@@ -234,7 +234,7 @@
         "DataType": "CHAR(12)",
         "MimosaEquivalent": "WorkOrder.NotificationID",
         "Notes": "This field exists in SAP AFIH Maintenance order header.  Reference to the notification that triggered this work order",
-        "Color": "",
+        "Color": null,
         "Sapfield": "QMNUM",
         "Datatype": "CHAR(12)",
         "Mimosaequivalent": "WorkOrder.NotificationID"
