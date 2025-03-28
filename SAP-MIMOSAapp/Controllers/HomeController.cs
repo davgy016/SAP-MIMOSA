@@ -22,18 +22,11 @@ namespace SAP_MIMOSAapp.Controllers
             _logger = logger;
         }
 
-        // Work Order Management Methods
-        public class WorkOrderViewModel
-        {
-            public List<WorkOrderMapping> workOrders { get; set; } = new();
-            public SearchRequest searchRequest { get; set; } = new();
-            public string AIResponse { get; set; } = "";
-        }
-
+        
         // Then in your Index method:
-        public async Task<IActionResult> Index(string query = "")
+        public async Task<IActionResult> Index(WorkOrderViewModel viewModel, string query = "")
         {
-            var viewModel = new WorkOrderViewModel();
+            
             try
             {
                 // Fetch work orders
@@ -329,12 +322,17 @@ namespace SAP_MIMOSAapp.Controllers
         }
     }
 
+    /**
+     * AIResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
+     * Response or request formats can be expanded easier, e.g add new fields etc 
+     * Also can add validation rules
+     */
+    
     public class AIResponse
     {
         public string? Response { get; set; }
     }
 
-    //encapsulate search query from view when making AI search request. It defines structure of the request for SearchWithAI action. 
     public class SearchRequest
     {
         public string? Query { get; set; }

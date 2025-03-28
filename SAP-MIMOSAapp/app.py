@@ -49,7 +49,7 @@ async def ask_openai(request: SearchQuery):
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an Generative AI assistant for generating mapping between SAP and MIMOSA data models."},
-                {"role": "user", "content": request.query + "response provide in Json format"}
+                {"role": "user", "content": request.query}
             ]
         )
         

@@ -23,7 +23,7 @@
                     <input type="text" id="queryInput" name="query" class="form-control" 
                            placeholder="Ask a question about SAP-MIMOSA mapping..." 
                            value="@(Model.searchRequest?.Query ?? "")" />
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary">AI Assistant</button>
                 </div>
             </form>
 
@@ -39,13 +39,15 @@
             </div>
 
             <!-- Debug Information -->
-            <div class="mt-3 small text-muted">
+           <!-- 
+               <div class="mt-3 small text-muted">
                 <details>
                     <summary>Debug Info</summary>
                     <p>Query: @(Model.searchRequest?.Query ?? "No query")</p>
                     <p>ViewBag.AIResponse set: @(!string.IsNullOrEmpty(ViewBag.AIResponse) ? "Yes" : "No")</p>
                 </details>
-            </div>
+                </div>
+             -->
         </div>
     </div>
 
