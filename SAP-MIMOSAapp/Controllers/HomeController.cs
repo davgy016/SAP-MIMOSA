@@ -18,7 +18,7 @@ namespace SAP_MIMOSAapp.Controllers
         public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/");
+            _httpClient.BaseAddress = new Uri("http://127.0.0.1:8000/");
             _logger = logger;
         }
 
@@ -37,7 +37,7 @@ namespace SAP_MIMOSAapp.Controllers
             try
             {
                 // Fetch work orders
-                var response = await _httpClient.GetStringAsync("http://127.0.0.1:5000/workorders");
+                var response = await _httpClient.GetStringAsync("http://127.0.0.1:8000/workorders");
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 viewModel.workOrders = JsonSerializer.Deserialize<List<WorkOrderMapping>>(response, options) ?? new();
 

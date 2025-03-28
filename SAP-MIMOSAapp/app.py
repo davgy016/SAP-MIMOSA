@@ -1,43 +1,50 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
-from flask import Flask, jsonify, request
-from flask_cors import CORS
 import json
 import os
-import threading
-import uvicorn  # Add this import
-from fastapi.middleware.wsgi import WSGIMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-
+import uvicorn
+from typing import List, Optional
 
 # Initialize OpenAI client
 client = OpenAI()
 
-# Flask app for work orders
-flask_app = Flask(__name__)
-CORS(flask_app)  # Enable CORS
-# FastAPI app for OpenAI
-fastapi_app = FastAPI()
-
-# Add Flask app as middleware to FastAPI
-fastapi_app.mount("/flask", WSGIMiddleware(flask_app))
+# Initialize FastAPI app
+app = FastAPI()
 
 
+
+# JSON file path
 JSON_FILE = "Data/SAPdata.json"
 
-
+# Models
 class SearchQuery(BaseModel):
     query: str
 
 
-@fastapi_app.post("/ask_openai")
+# JSON file operations
+def load_data():
+    if not os.path.exists(JSON_FILE):
+        os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
+        with open(JSON_FILE, "w", encoding="utf-8") as file:
+            json.dump([], file, ensure_ascii=False, indent=4)
+        return []
+    with open(JSON_FILE, "r", encoding="utf-8") as file:
+        return json.load(file)
+
+def save_data(data):
+    os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
+    with open(JSON_FILE, "w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+# OpenAI endpoint
+@app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
         print(f"Received query: {request.query}")
         
-        # Correct method for chat-based models
+        # Call OpenAI API
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -56,89 +63,65 @@ async def ask_openai(request: SearchQuery):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-# Flask routes for work orders
-def load_data():
-    if not os.path.exists(JSON_FILE):
-        os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
-        with open(JSON_FILE, "w", encoding="utf-8") as file:
-            json.dump([], file, ensure_ascii=False, indent=4)
-        return []
-    with open(JSON_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+# Work order endpoints
+@app.get("/workorders")
+async def get_workorders():
+    return load_data()
 
-
-def save_data(data):
-    os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
-    with open(JSON_FILE, "w", encoding="utf-8") as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
-
-
-@flask_app.route("/workorders", methods=["GET"])
-def get_workorders():
-    return jsonify(load_data())
-
-
-@flask_app.route("/workorders/<int:Id>", methods=["GET"])
-def get_workorder(Id):
+@app.get("/workorders/{id}")
+async def get_workorder(id: int):
     workorders = load_data()
-    workorder = next((w for w in workorders if w.get("Id") == Id), None)
-    return jsonify(workorder) if workorder else ("Not Found", 404)
+    workorder = next((w for w in workorders if w.get("Id") == id), None)
+    if not workorder:
+        raise HTTPException(status_code=404, detail="Work order not found")
+    return workorder
 
-
-@flask_app.route("/workorders", methods=["POST"])
-def add_workorder():
+@app.post("/workorders")
+async def add_workorder(workorder: dict):
     workorders = load_data()
-    new_workorder = request.json
-
+    
     # Ensure all keys use correct casing
-    new_workorder = {key.capitalize(): value for key, value in new_workorder.items()}
-
+    new_workorder = {key.capitalize(): value for key, value in workorder.items()}
+    
     # Assign the correct ID
     max_id = max((w["Id"] for w in workorders if "Id" in w), default=0)
     new_workorder["Id"] = max_id + 1
-
+    
     # Remove any old lowercase "id" if present
     new_workorder.pop("id", None)
-
+    
     workorders.append(new_workorder)
     save_data(workorders)
-    return jsonify(new_workorder), 201
+    return new_workorder
 
-
-@flask_app.route("/workorders/<int:Id>", methods=["PUT"])
-def update_workorder(Id):
+@app.put("/workorders/{id}")
+async def update_workorder(id: int, workorder: dict):
     workorders = load_data()
-    updated_data = request.json
-
+    
     # Ensure keys are capitalized
-    updated_data = {key.capitalize(): value for key, value in updated_data.items()}
-
+    updated_data = {key.capitalize(): value for key, value in workorder.items()}
+    
     for w in workorders:
-        if w.get("Id") == Id:
+        if w.get("Id") == id:
             w.update(updated_data)
-            w["Id"] = Id  # Prevent ID modification
+            w["Id"] = id  # Prevent ID modification
             w.pop("id", None)  # Remove any old lowercase ID
             save_data(workorders)
-            return jsonify(w)
-    return "Not Found", 404
+            return w
+            
+    raise HTTPException(status_code=404, detail="Work order not found")
 
-
-@flask_app.route("/workorders/<int:Id>", methods=["DELETE"])
-def delete_workorder(Id):
+@app.delete("/workorders/{id}")
+async def delete_workorder(id: int):
     workorders = load_data()
-    updated_workorders = [w for w in workorders if w.get("Id") != Id]
-
-    if len(updated_workorders) == len(workorders):
-        return "Not Found", 404
-
-    save_data(updated_workorders)
-    return "Deleted", 204
-
-
-# Run the FastAPI app and Flask app together
-if __name__ == "__main__":
-    # Run FastAPI with Uvicorn in a separate thread
-    threading.Thread(target=lambda: uvicorn.run(fastapi_app, host="127.0.0.1", port=8000, log_level="info")).start()
+    updated_workorders = [w for w in workorders if w.get("Id") != id]
     
-    # Run Flask app
-    flask_app.run(port=5000)
+    if len(updated_workorders) == len(workorders):
+        raise HTTPException(status_code=404, detail="Work order not found")
+        
+    save_data(updated_workorders)
+    return {"detail": "Work order deleted"}
+
+# Run the FastAPI app
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
