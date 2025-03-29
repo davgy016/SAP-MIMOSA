@@ -17,6 +17,8 @@ namespace SAP_MIMOSAapp.Controllers
 
         public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
+            //set a base address for all requests
+            //Avoid creating new HttpClient instances for each request
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://127.0.0.1:8000/");
             _logger = logger;
@@ -40,14 +42,14 @@ namespace SAP_MIMOSAapp.Controllers
                 // If there's a query, call AI
                 if (!string.IsNullOrEmpty(query))
                 {
-                    viewModel.AIResponse = await GetAIResponse(query);
-                    ViewBag.AIResponse = viewModel.AIResponse;
+                    viewModel.aiResponse = await GetAIResponse(query);
+                    ViewBag.AIResponse = viewModel.aiResponse;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Index");
-                viewModel.AIResponse = $"Error: {ex.Message}";
+                viewModel.aiResponse = $"Error: {ex.Message}";
             }
 
             return View(viewModel);
@@ -323,11 +325,10 @@ namespace SAP_MIMOSAapp.Controllers
     }
 
     /**
-     * AIResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
-     * Response or request formats can be expanded easier, e.g add new fields etc 
+     * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
+     * Response or request formats can be expanded easier, e.g add new fields or new data type etc 
      * Also can add validation rules
-     */
-    
+     */    
     public class AIResponse
     {
         public string? Response { get; set; }

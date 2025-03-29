@@ -11,7 +11,7 @@
         <button id="resetButton" class="btn btn-warning mt-3">Reset All Colors</button>
         <a href="@Url.Action("Create", "Home")" class="btn btn-primary mt-3">Create New Field</a>
     </div>
-    
+
     <!--AI search form-->
     <div class="card mt-4 mb-4">
         <div class="card-header bg-primary text-white">
@@ -20,10 +20,10 @@
         <div class="card-body">
             <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
                 <div class="input-group mb-3">
-                    <input type="text" id="queryInput" name="query" class="form-control" 
-                           placeholder="Ask a question about SAP-MIMOSA mapping..." 
+                    <input type="text" id="queryInput" name="query" class="form-control"
+                           placeholder="Ask a question about SAP-MIMOSA mapping..."
                            value="@(Model.searchRequest?.Query ?? "")" />
-                    <button type="submit" class="btn btn-primary">AI Assistant</button>
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
 
@@ -39,15 +39,15 @@
             </div>
 
             <!-- Debug Information -->
-           <!-- 
-               <div class="mt-3 small text-muted">
-                <details>
-                    <summary>Debug Info</summary>
-                    <p>Query: @(Model.searchRequest?.Query ?? "No query")</p>
-                    <p>ViewBag.AIResponse set: @(!string.IsNullOrEmpty(ViewBag.AIResponse) ? "Yes" : "No")</p>
-                </details>
-                </div>
-             -->
+            <!--
+                <div class="mt-3 small text-muted">
+                 <details>
+                     <summary>Debug Info</summary>
+                     <p>Query: @(Model.searchRequest?.Query ?? "No query")</p>
+                     <p>ViewBag.AIResponse set: @(!string.IsNullOrEmpty(ViewBag.AIResponse) ? "Yes" : "No")</p>
+                 </details>
+                 </div>
+              -->
         </div>
     </div>
 
@@ -55,7 +55,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>SAP PM Field (AUFK Order master data)</th>
+                <th>SAP PM Field</th>
                 <th>SAP Description</th>
                 <th>SAP Data Type</th>
                 <th>MIMOSA Equivalent</th>
@@ -93,58 +93,95 @@
     </table>
 </div>
 
+<div class="section">
+    <h2>Key Differences Between SAP PM and MIMOSA Work Order Models</h2>
+    <ol>
+        <li>
+            <strong>Naming Conventions:</strong>
+            <ul>
+                <li>SAP PM uses short, often cryptic field names (e.g., AUFNR, AUART)</li>
+                <li>MIMOSA uses descriptive, human-readable field names (e.g., WorkOrderID, WorkOrderType)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Data Types:</strong>
+            <ul>
+                <li>SAP PM has specific length constraints for character fields</li>
+                <li>MIMOSA uses more generic data types without explicit length constraints</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Relationships:</strong>
+            <ul>
+                <li>SAP PM uses technical keys for relationships (EQUNR, TPLNR)</li>
+                <li>MIMOSA uses more semantic relationship fields (AssetID, LocationID)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Extensions:</strong>
+            <ul>
+                <li>SAP PM can be extended with custom Z-fields (Z*)</li>
+                <li>MIMOSA allows for standard-compliant extensions through its object model</li>
+            </ul>
+        </li>
+    </ol>
+</div>
+
 @section Scripts {
     <script>
-        // Change color when an icon is clicked
-        $(".change-color-icon").on("click", function () {
-            var itemId = $(this).data("id");
-            var newColor = $(this).css("color");
+        $(document).ready(function() {
 
-            // Update the background color on the row immediately
-            $("#sapField_" + itemId).css("background-color", newColor);
+            // Change color when an icon is clicked
+            $(".change-color-icon").on("click", function () {
+                var itemId = $(this).data("id");
+                var newColor = $(this).css("color");
 
-            // Send the color change to the server via AJAX
-            $.ajax({
-                url: '@Url.Action("ChangeColor", "Home")',
-                type: 'POST',
-                data: {
-                    id: itemId,
-                    color: newColor
-                },
-                success: function () {
-                    console.log("Color updated successfully!");
-                },
-                error: function () {
-                    alert("Error saving color change.");
-                }
+                // Update the background color on the row immediately
+                $("#sapField_" + itemId).css("background-color", newColor);
+
+                // Send the color change to the server via AJAX
+                $.ajax({
+                    url: '@Url.Action("ChangeColor", "Home")',
+                    type: 'POST',
+                    data: {
+                        id: itemId,
+                        color: newColor
+                    },
+                    success: function () {
+                        console.log("Color updated successfully!");
+                    },
+                    error: function () {
+                        alert("Error saving color change.");
+                    }
+                });
             });
-        });
 
-        // Reset all colors when the reset button is clicked
-        $("#resetButton").on("click", function () {
-            // Send a reset request to the server
-            $.ajax({
-                url: '@Url.Action("ResetColors", "Home")',
-                type: 'POST',
-                success: function () {
-                    // Reset all colors
-                    $("td[id^='sapField_']").each(function () {
-                        $(this).css("background-color", "");
-                    });
+            // Reset all colors when the reset button is clicked
+            $("#resetButton").on("click", function () {
+                // Send a reset request to the server
+                $.ajax({
+                    url: '@Url.Action("ResetColors", "Home")',
+                    type: 'POST',
+                    success: function () {
+                        // Reset all colors
+                        $("td[id^='sapField_']").each(function () {
+                            $(this).css("background-color", "");
+                        });
 
-                    alert("All colors have been reset.");
-                },
-                error: function () {
-                    alert("Error resetting colors.");
-                }
+                        alert("All colors have been reset.");
+                    },
+                    error: function () {
+                        alert("Error resetting colors.");
+                    }
+                });
             });
-        });
 
-        // Add loading indicator when form is submitted
-        $("#aiSearchForm").on("submit", function() {
-            $("#aiResponse").html('<div class="alert alert-info">Loading response...</div>');
-            // Continue with form submission
-            return true;
+            // Add loading indicator when form is submitted
+            $("#aiSearchForm").on("submit", function() {
+                $("#aiResponse").html('<div class="alert alert-info">Loading response...</div>');
+                // Continue with form submission
+                return true;
+            });
         });
     </script>
 }
