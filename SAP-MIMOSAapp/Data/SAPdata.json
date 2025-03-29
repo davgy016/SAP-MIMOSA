@@ -18,10 +18,7 @@
         "DataType": "CHAR(4)",
         "MimosaEquivalent": "WorkOrder.WorkOrderType",
         "Notes": "Defines the category of work order (PM01, PM02, etc.)",
-        "Color": null,
-        "Sapfield": "AUART",
-        "Datatype": "CHAR(4)",
-        "Mimosaequivalent": "WorkOrder.WorkOrderType"
+        "Color": null
     },
     {
         "Id": 3,
@@ -30,10 +27,7 @@
         "DataType": "CHAR(12)",
         "MimosaEquivalent": "WorkOrder.CreatedBy",
         "Notes": "User who created the work order",
-        "Color": null,
-        "Sapfield": "ERNAM",
-        "Datatype": "CHAR(12)",
-        "Mimosaequivalent": "WorkOrder.CreatedBy"
+        "Color": null
     },
     {
         "Id": 4,
@@ -149,7 +143,7 @@
         "Description": "Equipment",
         "DataType": "CHAR(18)",
         "MimosaEquivalent": "WorkOrder.AssetID",
-        "Notes": "This field exists in SAP AFIH Maintenance order header.  Equipment number that the work order is for",
+        "Notes": "This field exists in SAP AFIH Maintenance order header. Equipment number that the work order is for",
         "Color": null,
         "Sapfield": "EQUNR",
         "Datatype": "CHAR(18)",

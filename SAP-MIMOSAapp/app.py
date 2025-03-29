@@ -13,8 +13,6 @@ client = OpenAI()
 # Initialize FastAPI app
 app = FastAPI()
 
-
-
 # JSON file path
 JSON_FILE = "Data/SAPdata.json"
 
@@ -85,10 +83,7 @@ async def add_workorder(workorder: dict):
     
     # Assign the correct ID
     max_id = max((w["Id"] for w in workorders if "Id" in w), default=0)
-    new_workorder["Id"] = max_id + 1
-    
-    # Remove any old lowercase "id" if present
-    new_workorder.pop("id", None)
+    new_workorder["Id"] = max_id + 1    
     
     workorders.append(new_workorder)
     save_data(workorders)

@@ -6,6 +6,6 @@ namespace SAP_MIMOSAapp.Models
     {
         public List<WorkOrderMapping> workOrders { get; set; } = new();
         public SearchRequest searchRequest { get; set; } = new();
-        public string AIResponse { get; set; } = "";
+        public string aiResponse { get; set; } = "";
     }
 }

@@ -1,18 +1,18 @@
 
 
 body {
-    display: flex; /* Flexbox layout */
-    flex-direction: column; /* Align children (content-wrapper) vertically */
-    height: 100%; /* Take up the full height */
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
 }
 
 .nav-link:hover {
-    background-color: #007bff; /* Blue color for the hover effect */
-    color: white !important; /* Ensures the text color is white when hovering */
+    background-color: #007bff; 
+    color: white !important; 
 }
 
 .content-wrapper {
-    flex: 1; /* Makes the content grow and take available space */
+    flex: 1;
 }
 
 h1, h2 {
@@ -61,7 +61,7 @@ tr:hover {
     border-bottom: 2px solid #3498db;
 }
 footer {
-    margin-top: auto; /* Pushes footer to the bottom */
+    margin-top: auto;
 }
 
 @media screen and (max-width: 768px) {
