@@ -3,4 +3,5 @@
 
 class FieldLength:
     def score(mappings: list):
+        
         return float
