@@ -11,13 +11,15 @@ def sample_mapping():
         sap_fieldName="AUKUS",
         sap_fieldLength=10,
         sap_dataType="String",
-        sap_description="SAP Field Example",
+        sap_description="This sentence is kinda cool",
         mimosa_fieldName="AUKUS_MIM",
         mimosa_fieldLength=10,
         mimosa_dataType="String",
-        mimosa_description="MIMOSA Field Example"
+        mimosa_description="This sentence is kinda cool"
     )    
     return [mapping]
 
 def test_descriptionSimilarity(sample_mapping):
-    assert sample_mapping == DescriptionSimilarity.score(sample_mapping)
+    sim = DescriptionSimilarity()
+    score = sim.score(mappings=sample_mapping)
+    assert score == pytest.approx(0.8, abs=0.2), "Descriptions are not similar"
