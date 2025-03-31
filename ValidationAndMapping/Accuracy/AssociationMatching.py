@@ -2,4 +2,5 @@
 
 class AssociationMatching:
     def score(mappings: list):
+        #Vector database
         return float

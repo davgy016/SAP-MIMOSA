@@ -2,4 +2,5 @@
 
 class DataType:
     def score(mappings: list):
+        # Vector database https://www.datacamp.com/blog/types-of-databases-overview
         return float
