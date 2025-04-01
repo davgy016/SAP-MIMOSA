@@ -1,0 +1,254 @@
+[
+    {
+        "mapID": "001",
+        "LLMType": "Go",
+        "mappings": [
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "Equipment",
+                    "fieldName": "AUFNR",
+                    "description": "Work Order Number",
+                    "DataType": "CHAR(12)",
+                    "Notes": "Primary identifier for the work order in SAP PM",
+                    "FieldLength": "12"
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.WorkOrderID",
+                    "description": "Work Order Number",
+                    "DataType": "CHAR(12)",
+                    "Notes": "Primary identifier for the work order in SAP PM",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "DataType": "CHAR(4)",
+                    "Notes": "Defines the category of work order (PM01, PM02, etc.)",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.WorkOrderType",
+                    "description": "Order Type",
+                    "DataType": "CHAR(4)",
+                    "Notes": "Defines the category of work order (PM01, PM02, etc.)",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "ERNAM",
+                    "description": "Created By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who created the work order",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.CreatedBy",
+                    "description": "Created By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who created the work order",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "ERDAT",
+                    "description": "Created On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was created",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.CreatedDateTime",
+                    "description": "Created On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was created",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AENAM",
+                    "description": "Changed By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who last modified the work order",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.LastModifiedBy",
+                    "description": "Changed By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who last modified the work order",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AEDAT",
+                    "description": "Changed On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was last modified",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.LastModifiedDateTime",
+                    "description": "Changed On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was last modified",
+                    "FieldLength": ""
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "002",
+        "LLMType": "Claude",
+        "mappings": [
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "Functional Location",
+                    "fieldName": "AUFNR",
+                    "description": "Work Order Number",
+                    "DataType": "CHAR(12)",
+                    "Notes": "Primary identifier for the work order in SAP PM",
+                    "FieldLength": "12"
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.WorkOrderID",
+                    "description": "Work Order Number",
+                    "DataType": "CHAR(12)",
+                    "Notes": "Primary identifier for the work order in SAP PM",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "DataType": "CHAR(4)",
+                    "Notes": "Defines the category of work order (PM01, PM02, etc.)",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.WorkOrderType",
+                    "description": "Order Type",
+                    "DataType": "CHAR(4)",
+                    "Notes": "Defines the category of work order (PM01, PM02, etc.)",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "ERNAM",
+                    "description": "Created By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who created the work order",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.CreatedBy",
+                    "description": "Created By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who created the work order",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "ERDAT",
+                    "description": "Created On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was created",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.CreatedDateTime",
+                    "description": "Created On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was created",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AENAM",
+                    "description": "Changed By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who last modified the work order",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.LastModifiedBy",
+                    "description": "Changed By",
+                    "DataType": "CHAR(12)",
+                    "Notes": "User who last modified the work order",
+                    "FieldLength": ""
+                }
+            },
+            {
+                "sap": {
+                    "Platform": "SAP PM",
+                    "entityName": "",
+                    "fieldName": "AEDAT",
+                    "description": "Changed On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was last modified",
+                    "FieldLength": ""
+                },
+                "mimosa": {
+                    "Platform": "MIMOSA CCOM",
+                    "entityName": "",
+                    "fieldName": "WorkOrder.LastModifiedDateTime",
+                    "description": "Changed On",
+                    "DataType": "DATE",
+                    "Notes": "Date when the work order was last modified",
+                    "FieldLength": ""
+                }
+            }
+        ]
+    }
+]
