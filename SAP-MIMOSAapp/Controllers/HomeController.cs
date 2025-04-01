@@ -14,7 +14,6 @@ namespace SAP_MIMOSAapp.Controllers
         private readonly HttpClient _httpClient;
         private readonly ILogger<HomeController> _logger;
 
-
         public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
             //set a base address for all requests
@@ -24,35 +23,63 @@ namespace SAP_MIMOSAapp.Controllers
             _logger = logger;
         }
 
-        
-        // Then in your Index method:
-        public async Task<IActionResult> Index(WorkOrderViewModel viewModel, string query = "")
+        public async Task<IActionResult> Index(string query = "", string mapID = "", string llmType = "")
         {
-            
+            var documents = new List<MappingDocument>();
+
             try
             {
-                // Fetch work orders
+                // Fetch mapping documents
                 var response = await _httpClient.GetStringAsync("http://127.0.0.1:8000/workorders");
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                viewModel.workOrders = JsonSerializer.Deserialize<List<WorkOrderMapping>>(response, options) ?? new();
+                documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
-                // Set up search request
-                viewModel.searchRequest = new SearchRequest { Query = query };
+                // Filter by mapID if provided
+                if (!string.IsNullOrEmpty(mapID))
+                {
+                    var filteredDocuments = documents
+                        .Where(d => d.mapID.Contains(mapID, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
 
-                // If there's a query, call AI
+                    // Store the original documents count for UI feedback
+                    ViewBag.TotalDocuments = documents.Count;
+                    ViewBag.FilteredCount = filteredDocuments.Count;
+                    ViewBag.SearchedMapID = mapID;
+
+                    // Update the documents with filtered results
+                    documents = filteredDocuments;
+                }
+
+                // Filter by llmType if provided
+                if (!string.IsNullOrEmpty(llmType))
+                {
+                    var filteredDocuments = documents
+                        .Where(d => d.llmType.Contains(llmType, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+
+                    // Store the original documents count for UI feedback
+                    ViewBag.TotalDocuments = documents.Count;
+                    ViewBag.FilteredCount = filteredDocuments.Count;
+                    ViewBag.SearchedLLMType = llmType;
+
+                    // Update the documents with filtered results
+                    documents = filteredDocuments;
+                }
+
+                // If there's a query for AI, call AI
                 if (!string.IsNullOrEmpty(query))
                 {
-                    viewModel.aiResponse = await GetAIResponse(query);
-                    ViewBag.AIResponse = viewModel.aiResponse;
+                    var aiResponse = await GetAIResponse(query);
+                    ViewBag.AIResponse = aiResponse;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Index");
-                viewModel.aiResponse = $"Error: {ex.Message}";
+                ViewBag.ErrorMessage = $"Error: {ex.Message}";
             }
 
-            return View(viewModel);
+            return View(documents);
         }
 
         // New AI Search Method
@@ -117,26 +144,72 @@ namespace SAP_MIMOSAapp.Controllers
 
         public IActionResult Create()
         {
-            return View(new WorkOrderMapping());
+            return View(new MappingDocument());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(WorkOrderMapping newWorkOrder)
+        public async Task<IActionResult> Create(MappingDocument newDocument)
         {
             if (!ModelState.IsValid)
             {
-                return View(newWorkOrder);
+                return View(newDocument);
             }
 
             try
             {
-                var createResponse = await _httpClient.PostAsJsonAsync("workorders", newWorkOrder);
+                // Get the current mapping documents
+                var response = await _httpClient.GetStringAsync("workorders");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
+
+                // Generate a new mapID if not provided
+                if (string.IsNullOrEmpty(newDocument.mapID))
+                {
+                    // Find the highest existing mapID and increment
+                    int highestId = 0;
+                    foreach (var doc in documents)
+                    {
+                        if (int.TryParse(doc.mapID, out int id) && id > highestId)
+                        {
+                            highestId = id;
+                        }
+                    }
+
+                    // Format as 3-digit string with leading zeros
+                    newDocument.mapID = (highestId + 1).ToString("D3");
+                }
+
+                // Ensure Platform values are set correctly
+                if (newDocument.mappings != null)
+                {
+                    foreach (var mapping in newDocument.mappings)
+                    {
+                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.Platform))
+                        {
+                            mapping.sap.Platform = "SAP";
+                        }
+
+                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.Platform))
+                        {
+                            mapping.mimosa.Platform = "MIMOSA";
+                        }
+                    }
+                }
+
+                // Add the new document to the list
+                documents.Add(newDocument);
+
+                // Update the mapping documents
+                var json = JsonSerializer.Serialize(documents);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var createResponse = await _httpClient.PutAsync("workorders", content);
                 var responseText = await createResponse.Content.ReadAsStringAsync();
 
                 if (!createResponse.IsSuccessStatusCode)
                 {
                     ViewBag.ErrorMessage = $"Error creating record: {createResponse.StatusCode} - {responseText}";
-                    return View(newWorkOrder);
+                    return View(newDocument);
                 }
 
                 return RedirectToAction("Index");
@@ -144,27 +217,33 @@ namespace SAP_MIMOSAapp.Controllers
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error creating record: {ex.Message}";
-                return View(newWorkOrder);
+                return View(newDocument);
             }
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"workorders/{id}");
+                var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var workOrder = JsonSerializer.Deserialize<WorkOrderMapping>(response, options);
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
 
-                if (workOrder == null)
+                if (documents == null)
                 {
                     return NotFound();
                 }
 
-                return View(workOrder);
+                var document = documents.FirstOrDefault(d => d.mapID == id);
+                if (document == null)
+                {
+                    return NotFound();
+                }
+
+                return View(document);
             }
             catch (System.Exception ex)
             {
@@ -174,55 +253,101 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(WorkOrderMapping updatedWorkOrder)
+        public async Task<IActionResult> Edit(MappingDocument updatedDocument)
         {
             if (!ModelState.IsValid)
             {
-                return View(updatedWorkOrder);
+                return View(updatedDocument);
             }
 
             try
             {
-                var existingResponse = await _httpClient.GetStringAsync($"workorders/{updatedWorkOrder.Id}");
+                var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var existingWorkOrder = JsonSerializer.Deserialize<WorkOrderMapping>(existingResponse, options);
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
 
-                if (existingWorkOrder == null)
+                if (documents == null)
                 {
-                    ViewBag.ErrorMessage = "Record not found";
-                    return View(updatedWorkOrder);
+                    ViewBag.ErrorMessage = "Mapping documents not found";
+                    return View(updatedDocument);
                 }
 
-                if (string.IsNullOrEmpty(updatedWorkOrder.Color))
+                var documentIndex = documents.FindIndex(d => d.mapID == updatedDocument.mapID);
+                if (documentIndex == -1)
                 {
-                    updatedWorkOrder.Color = existingWorkOrder.Color;
+                    ViewBag.ErrorMessage = "Mapping document not found";
+                    return View(updatedDocument);
                 }
 
-                var json = JsonSerializer.Serialize(updatedWorkOrder);
+                // Preserve color if not provided
+                if (string.IsNullOrEmpty(updatedDocument.Color))
+                {
+                    updatedDocument.Color = documents[documentIndex].Color;
+                }
+
+                // Ensure Platform values are set correctly
+                if (updatedDocument.mappings != null)
+                {
+                    foreach (var mapping in updatedDocument.mappings)
+                    {
+                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.Platform))
+                        {
+                            mapping.sap.Platform = "SAP";
+                        }
+
+                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.Platform))
+                        {
+                            mapping.mimosa.Platform = "MIMOSA";
+                        }
+                    }
+                }
+
+                // Update the document
+                documents[documentIndex] = updatedDocument;
+
+                // Save the updated documents
+                var json = JsonSerializer.Serialize(documents);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PutAsync($"workorders/{updatedWorkOrder.Id}", content);
-                response.EnsureSuccessStatusCode();
+                var updateResponse = await _httpClient.PutAsync("workorders", content);
+                updateResponse.EnsureSuccessStatusCode();
 
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error updating record: {ex.Message}";
-                return View(updatedWorkOrder);
+                return View(updatedDocument);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"workorders/{id}");
-                response.EnsureSuccessStatusCode();
+                var response = await _httpClient.GetStringAsync("workorders");
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+
+                if (documents == null)
+                {
+                    return NotFound();
+                }
+
+                documents.RemoveAll(d => d.mapID == id);
+
+                var json = JsonSerializer.Serialize(documents);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var deleteResponse = await _httpClient.PutAsync("workorders", content);
+                deleteResponse.EnsureSuccessStatusCode();
 
                 return RedirectToAction("Index");
             }
@@ -234,28 +359,34 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeColor(int id, string color)
+        public async Task<IActionResult> ChangeColor(string id, string color)
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"workorders/{id}");
+                var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var workOrder = JsonSerializer.Deserialize<WorkOrderMapping>(response, options);
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
 
-                if (workOrder == null)
+                if (documents == null)
                 {
-                    return Json(new { success = false, message = "Record not found" });
+                    return Json(new { success = false, message = "Mapping documents not found" });
                 }
 
-                workOrder.Color = color;
+                var document = documents.FirstOrDefault(d => d.mapID == id);
+                if (document == null)
+                {
+                    return Json(new { success = false, message = "Mapping document not found" });
+                }
 
-                var json = JsonSerializer.Serialize(workOrder);
+                document.Color = color;
+
+                var json = JsonSerializer.Serialize(documents);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var updateResponse = await _httpClient.PutAsync($"workorders/{id}", content);
+                var updateResponse = await _httpClient.PutAsync("workorders", content);
                 updateResponse.EnsureSuccessStatusCode();
 
                 return Json(new { success = true });
@@ -271,29 +402,36 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var workOrders = await _httpClient.GetFromJsonAsync<List<WorkOrderMapping>>("workorders");
-
-                if (workOrders == null)
+                var response = await _httpClient.GetStringAsync("workorders");
+                var options = new JsonSerializerOptions
                 {
-                    _logger.LogWarning("No work orders found.");
-                    return Json(new { success = false, message = "No work orders available." });
+                    PropertyNameCaseInsensitive = true
+                };
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+
+                if (documents == null)
+                {
+                    _logger.LogWarning("No mapping documents found.");
+                    return Json(new { success = false, message = "No mapping documents available." });
                 }
 
-                // Update each work order individually
-                foreach (var workOrder in workOrders)
+                // Update each document's color
+                foreach (var document in documents)
                 {
-                    workOrder.Color = null;
-                    var json = JsonSerializer.Serialize(workOrder);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var updateResponse = await _httpClient.PutAsync($"workorders/{workOrder.Id}", content);
-                    if (!updateResponse.IsSuccessStatusCode)
-                    {
-                        _logger.LogError($"Failed to update work order {workOrder.Id}. Status Code: {updateResponse.StatusCode}");
-                    }
+                    document.Color = null;
                 }
 
-                return Json(new { success = true, message = "Work order colors reset successfully." });
+                var json = JsonSerializer.Serialize(documents);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var updateResponse = await _httpClient.PutAsync("workorders", content);
+                if (!updateResponse.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}");
+                    return Json(new { success = false, message = $"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}" });
+                }
+
+                return Json(new { success = true, message = "Mapping colors reset successfully." });
             }
             catch (Exception ex)
             {
@@ -301,7 +439,6 @@ namespace SAP_MIMOSAapp.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
-
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)
@@ -328,7 +465,7 @@ namespace SAP_MIMOSAapp.Controllers
      * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
      * Response or request formats can be expanded easier, e.g add new fields or new data type etc 
      * Also can add validation rules
-     */    
+     */
     public class AIResponse
     {
         public string? Response { get; set; }
@@ -339,3 +476,4 @@ namespace SAP_MIMOSAapp.Controllers
         public string? Query { get; set; }
     }
 }
+
