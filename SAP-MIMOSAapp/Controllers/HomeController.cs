@@ -30,7 +30,7 @@ namespace SAP_MIMOSAapp.Controllers
             try
             {
                 // Fetch mapping documents
-                var response = await _httpClient.GetStringAsync("http://127.0.0.1:8000/workorders");
+                var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
@@ -41,20 +41,28 @@ namespace SAP_MIMOSAapp.Controllers
                         .Where(d => d.mapID.Contains(mapID, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
+               //this can be used if search by table name
+               //     var filteredDocuments = documents
+               //.Where(d => d.mappings.Any(m =>
+               //    m.sap.entityName.Contains(mapID, StringComparison.OrdinalIgnoreCase) ||
+               //    m.mimosa.entityName.Contains(mapID, StringComparison.OrdinalIgnoreCase)))
+               //.ToList();
+
                     // Store the original documents count for UI feedback
                     ViewBag.TotalDocuments = documents.Count;
                     ViewBag.FilteredCount = filteredDocuments.Count;
                     ViewBag.SearchedMapID = mapID;
+                    //ViewBag.AIQuery = query;
 
                     // Update the documents with filtered results
                     documents = filteredDocuments;
                 }
 
-                // Filter by llmType if provided
+                // Filter by LLMType if provided
                 if (!string.IsNullOrEmpty(llmType))
                 {
                     var filteredDocuments = documents
-                        .Where(d => d.llmType.Contains(llmType, StringComparison.OrdinalIgnoreCase))
+                        .Where(d => d.LLMType.Contains(llmType, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
                     // Store the original documents count for UI feedback
@@ -108,7 +116,7 @@ namespace SAP_MIMOSAapp.Controllers
                 Console.WriteLine($"Sending request: {requestContent}");
 
                 // Send the request
-                var response = await _httpClient.PostAsync("http://localhost:8000/ask_openai", jsonRequest);
+                var response = await _httpClient.PostAsync("ask_openai", jsonRequest);
 
                 // Log the response status
                 Console.WriteLine($"Response status: {response.StatusCode}");

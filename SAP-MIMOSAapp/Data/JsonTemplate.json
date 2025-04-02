@@ -15,7 +15,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.WorkOrderID",
                     "description": "Work Order Number",
                     "DataType": "CHAR(12)",
@@ -26,7 +26,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Equipment",
                     "fieldName": "AUART",
                     "description": "Order Type",
                     "DataType": "CHAR(4)",
@@ -35,7 +35,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.WorkOrderType",
                     "description": "Order Type",
                     "DataType": "CHAR(4)",
@@ -46,7 +46,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Equipment",
                     "fieldName": "ERNAM",
                     "description": "Created By",
                     "DataType": "CHAR(12)",
@@ -55,7 +55,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.CreatedBy",
                     "description": "Created By",
                     "DataType": "CHAR(12)",
@@ -66,7 +66,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Equipment",
                     "fieldName": "ERDAT",
                     "description": "Created On",
                     "DataType": "DATE",
@@ -75,7 +75,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.CreatedDateTime",
                     "description": "Created On",
                     "DataType": "DATE",
@@ -86,7 +86,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Equipment",
                     "fieldName": "AENAM",
                     "description": "Changed By",
                     "DataType": "CHAR(12)",
@@ -95,7 +95,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.LastModifiedBy",
                     "description": "Changed By",
                     "DataType": "CHAR(12)",
@@ -106,7 +106,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Equipment",
                     "fieldName": "AEDAT",
                     "description": "Changed On",
                     "DataType": "DATE",
@@ -115,7 +115,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Asset",
                     "fieldName": "WorkOrder.LastModifiedDateTime",
                     "description": "Changed On",
                     "DataType": "DATE",
@@ -141,7 +141,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.WorkOrderID",
                     "description": "Work Order Number",
                     "DataType": "CHAR(12)",
@@ -152,7 +152,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Functional Location",
                     "fieldName": "AUART",
                     "description": "Order Type",
                     "DataType": "CHAR(4)",
@@ -161,7 +161,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.WorkOrderType",
                     "description": "Order Type",
                     "DataType": "CHAR(4)",
@@ -172,7 +172,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Functional Location",
                     "fieldName": "ERNAM",
                     "description": "Created By",
                     "DataType": "CHAR(12)",
@@ -181,7 +181,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.CreatedBy",
                     "description": "Created By",
                     "DataType": "CHAR(12)",
@@ -192,7 +192,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Functional Location",
                     "fieldName": "ERDAT",
                     "description": "Created On",
                     "DataType": "DATE",
@@ -201,7 +201,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.CreatedDateTime",
                     "description": "Created On",
                     "DataType": "DATE",
@@ -212,7 +212,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Functional Location",
                     "fieldName": "AENAM",
                     "description": "Changed By",
                     "DataType": "CHAR(12)",
@@ -221,7 +221,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.LastModifiedBy",
                     "description": "Changed By",
                     "DataType": "CHAR(12)",
@@ -232,7 +232,7 @@
             {
                 "sap": {
                     "Platform": "SAP PM",
-                    "entityName": "",
+                    "entityName": "Functional Location",
                     "fieldName": "AEDAT",
                     "description": "Changed On",
                     "DataType": "DATE",
@@ -241,7 +241,7 @@
                 },
                 "mimosa": {
                     "Platform": "MIMOSA CCOM",
-                    "entityName": "",
+                    "entityName": "Segment",
                     "fieldName": "WorkOrder.LastModifiedDateTime",
                     "description": "Changed On",
                     "DataType": "DATE",
