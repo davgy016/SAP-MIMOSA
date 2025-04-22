@@ -1,6 +1,6 @@
 import pytest
 
-from ValidationAndMapping.Accuracy import DescriptionSimilarity
+from ValidationAndMapping.Accuracy import DescriptionSimilarity,Accuracy
 from WebApp.Models import FieldMapping, MappingEntry, Mapping  
 from ValidationAndMapping.ScoreManager import ScoreManager
 
@@ -40,9 +40,15 @@ def sample_mapping():
 
 def test_descriptionSimilarity(sample_mapping):
     sim = DescriptionSimilarity()
-    score = sim.score(mappings=sample_mapping)
-    print("Similarity score:", score)
+    score = sim.score(mapping=sample_mapping[0])
+    print("Description Similarity score:", score)
     assert score == pytest.approx(0.9, abs=0.2), "Descriptions are not similar enough"
+
+def test_accuracy(sample_mapping):
+    acc = Accuracy()
+    score = acc.calculateAccuracy(mapping=sample_mapping[0])
+    print("Accuracy Score:",score)
+    assert score == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
 
 def test_scoreManager_scoreOutput(sample_mapping):
     sm = ScoreManager()

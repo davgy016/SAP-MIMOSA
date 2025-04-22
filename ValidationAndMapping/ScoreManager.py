@@ -7,8 +7,8 @@
 from ValidationAndMapping import Score
 
 #Score Managers
-from ValidationAndMapping import Quality
-from ValidationAndMapping import Accuracy
+# from ValidationAndMapping.Quality import Quality
+from ValidationAndMapping.Accuracy import Accuracy
 from WebApp.Models import Mapping
 from typing import List
 
@@ -27,10 +27,14 @@ class ScoreManager:
         """
         print("Received mappings for scoring:", mappings[0].mappings)
         
-        # Logic for scoring the mappings would go here
-        # For now, we'll just return a placeholder score.
-        # You can replace this with your actual scoring logic.
+        # Create accuracy and quality objects to score each mapping
+        accuracy_scorer = Accuracy()
+
+        # Numbers to store the aggregate of each type of score
+        accuracy_score = 0
+
+        # Iterate over all of the mappings
+        for map in mappings:
+            accuracy_score = accuracy_scorer.calculateAccuracy(map)
         
-        score = 0.9
-        
-        return score
+        return accuracy_score
