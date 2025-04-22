@@ -15,7 +15,7 @@ from typing import List
 class ScoreManager:
 
     @staticmethod
-    def scoreOutput(mappings: List[Mapping]) -> str:
+    def scoreOutput(mappings: List[Mapping]) -> float:
         """
         This method processes the list of Mapping objects and returns a score.
         
@@ -25,12 +25,12 @@ class ScoreManager:
         Returns:
             str: The computed score as a string.
         """
-        print("Received mappings for scoring:", mappings)
+        print("Received mappings for scoring:", mappings[0].mappings)
         
         # Logic for scoring the mappings would go here
         # For now, we'll just return a placeholder score.
         # You can replace this with your actual scoring logic.
         
-        score = "some calculated score"
+        score = 0.9
         
         return score
