@@ -4,12 +4,33 @@
 # this object is then returned to the ModelOutput to be stored.
 
 # Score class used to store results
-import Score
+from ValidationAndMapping import Score
 
 #Score Managers
-import Quality
-import Accuracy
+from ValidationAndMapping import Quality
+from ValidationAndMapping import Accuracy
+from WebApp.Models import Mapping
+from typing import List
 
-class ScoringManager:
-    def scoreOutput(content: str):
-        return Score
+class ScoreManager:
+
+    @staticmethod
+    def scoreOutput(mappings: List[Mapping]) -> str:
+        """
+        This method processes the list of Mapping objects and returns a score.
+        
+        Args:
+            mappings (List[Mapping]): A list of Mapping objects to score.
+        
+        Returns:
+            str: The computed score as a string.
+        """
+        print("Received mappings for scoring:", mappings)
+        
+        # Logic for scoring the mappings would go here
+        # For now, we'll just return a placeholder score.
+        # You can replace this with your actual scoring logic.
+        
+        score = "some calculated score"
+        
+        return score

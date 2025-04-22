@@ -2,7 +2,7 @@
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from numpy.linalg import norm
-import Mapping
+from WebApp.Models import Mapping
 
 class DescriptionSimilarity:
     def __init__(self):
