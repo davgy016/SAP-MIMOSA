@@ -33,6 +33,7 @@ app = FastAPI()
 @app.post("/check_accuracy")
 async def check_accuracy(output: MappingQuery):
     data = output.root 
+    print(data)
     score = ScoreManager.scoreOutput(data)
     print(score)
     return score
