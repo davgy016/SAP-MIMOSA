@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./ValidationAndMapping/Accuracy"
+        "./ValidationAndMapping/Accuracy",
+        "./ValidationAndMapping"
     ]
 }
