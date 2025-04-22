@@ -1,3 +1,5 @@
+# DEPRECEATED NOW USING WebApp.Models
+
 class Mapping:
     def __init__(self, sap_fieldName, sap_fieldLength, sap_dataType, sap_description, 
                  mimosa_fieldName, mimosa_fieldLength, mimosa_dataType, mimosa_description):
