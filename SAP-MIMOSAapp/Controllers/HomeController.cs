@@ -53,6 +53,12 @@ namespace SAP_MIMOSAapp.Controllers
 
                 model.FilteredCount = documents.Count;
                 model.SearchResults = documents;
+
+                // AI Assistant
+                if (!string.IsNullOrEmpty(model.Query))
+                {
+                    ViewBag.AIResponse = await GetAIResponse(model.Query);
+                }
             }
             catch (Exception ex)
             {
@@ -63,7 +69,7 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-        // New AI Search Method
+        //AI Search Method
         private async Task<string> GetAIResponse(string query)
         {
             try
