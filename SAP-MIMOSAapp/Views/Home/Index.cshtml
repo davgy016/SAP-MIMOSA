@@ -1,4 +1,4 @@
-﻿@model List<SAP_MIMOSAapp.Models.MappingDocument>
+@model SAP_MIMOSAapp.Models.SearchViewModel
 
 
 <h1>Generate Mapping Between SAP PM & MIMOSA </h1>
@@ -16,16 +16,16 @@
                         <div class="col-md-6">
                             <form id="mappingSearchForm" method="get" action="@Url.Action("Index", "Home")">
                                 <div class="mb-3">
-                                    <label for="searchQuery" class="form-label">Search</label>
-                                    <input type="text" id="searchQuery" name="mapID" class="form-control" placeholder="Enter search term..." value="@ViewBag.SearchedMapID" />
+                                    <label for="searchInput" class="form-label">Search</label>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="@(string.IsNullOrEmpty(Model.SearchByLLM) ? "Enter entity name..." : "Enter LLM type...")" value="@(string.IsNullOrEmpty(Model.SearchByLLM) ? Model.SearchByEntityName : Model.SearchByLLM)" />
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="searchType" id="searchMapID" value="mapID" checked>
-                                        <label class="form-check-label" for="searchMapID">Search by Map ID</label>
+                                        <input class="form-check-input" type="radio" name="SearchType" id="searchEntityName" value="EntityName" @(string.IsNullOrEmpty(Model.SearchByLLM) ? "checked" : "")>
+                                        <label class="form-check-label" for="searchEntityName">Search by Entity Name</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="searchType" id="searchLLMType" value="LLMType">
+                                        <input class="form-check-input" type="radio" name="SearchType" id="searchLLMType" value="LLMType" @(!string.IsNullOrEmpty(Model.SearchByLLM) ? "checked" : "")>
                                         <label class="form-check-label" for="searchLLMType">Search by LLM Type</label>
                                     </div>
                                 </div>
@@ -33,11 +33,11 @@
                                     <button type="submit" class="btn btn-primary">Search</button>
                                     <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Clear</a>
                                 </div>
-                                @if (ViewBag.SearchedMapID != null || ViewBag.SearchedLLMType != null)
+                                @if (!string.IsNullOrEmpty(Model.SearchByEntityName) || !string.IsNullOrEmpty(Model.SearchByLLM))
                                 {
                                     <div class="mt-2">
                                         <small class="text-muted">
-                                            Found @ViewBag.FilteredCount mapping(s) out of @ViewBag.TotalDocuments total mappings.
+                                            Found @Model.FilteredCount mapping(s) out of @Model.TotalDocuments total mappings.
                                         </small>
                                     </div>
                                 }
@@ -59,7 +59,7 @@
                                         <select name="LLMType" class="form-select">
                                             <option value="">Select LLM</option>
                                             <option value="GPT-4">GPT-4</option>
-                                            <option value="GPT-3.5">GPT-3.5</option>                                            
+                                            <option value="GPT-3.5">GPT-3.5</option>
                                         </select>
                                     </div>
 
@@ -118,7 +118,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Count == 0)
+                @if (Model.SearchResults.Count == 0)
                 {
                     <tr>
                         <td colspan="15" class="text-center">No mappings found.</td>
@@ -126,7 +126,7 @@
                 }
                 else
                 {
-                    @foreach (var document in Model)
+                    @foreach (var document in Model.SearchResults)
                     {
                         bool isFirstMapping = true;
                         int mappingCount = document.mappings.Count;
@@ -147,15 +147,7 @@
                                                     <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
                                                 </form>
                                             </div>
-                                            @* @if (isFirstMapping) *@
-                                            @* { *@
-                                            @*     <div class="d-flex align-items-center mt-3 mb-4" style="background-color:blanchedalmond;"> *@
-                                            @*         <i class="fas fa-paint-brush change-color-icon green" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: green; " title="Green"></i> *@
-                                            @*         <i class="fas fa-paint-brush change-color-icon red" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: red; " title="Red"></i> *@
-                                            @*         <i class="fas fa-paint-brush change-color-icon yellow" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: yellow;" title="Yellow"></i> *@
-                                            @*         <i class="fas fa-paint-brush change-color-icon white" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: white;" title="Reset Color"></i> *@
-                                            @*     </div> *@
-                                            @* } *@
+                                            
                                         </div>
                                     </td>
                                     <td rowspan="@mappingCount" class="align-middle border-right">@document.LLMType</td>
@@ -175,7 +167,7 @@
                                 <td>@mapping.mimosa.fieldName</td>
                                 <td>@mapping.mimosa.entityName</td>
                                 <td>@mapping.mimosa.fieldName</td>
-                                <td>@mapping.mimosa.entityName</td>                                
+                                <td>@mapping.mimosa.entityName</td>
 
                             </tr>
                             <tr id="details-@document.mapID" class="details-row" style="display: none;">
@@ -183,10 +175,10 @@
                                     <div class="p-2 border bg-light">
                                         <strong>More Information:</strong>
                                         <p>Promt: </p>
-                                        <p>Accuracy Rate: </p> 
-                                        <p>Quality Rate: </p> 
-                                        <p>Matching: </p> 
-                                        
+                                        <p>Accuracy Rate: </p>
+                                        <p>Quality Rate: </p>
+                                        <p>Matching: </p>
+
                                     </div>
                                 </td>
                             </tr>
@@ -236,81 +228,48 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Change color when an icon is clicked
-            // $(".change-color-icon").on("click", function () {
-            //     var mapID = $(this).data("id");
-            //     var newColor = $(this).css("color");
+        //Search form logic
+        function updateSearchInputName() {
+            const searchType = document.querySelector('input[name="SearchType"]:checked').value;
+            const searchInput = document.getElementById('searchInput');
+            searchInput.removeAttribute('name');
+            if (searchType === 'EntityName') {
+                searchInput.name = 'SearchByEntityName';
+                searchInput.placeholder = 'Enter entity name...';
+            } else {
+                searchInput.name = 'SearchByLLM';
+                searchInput.placeholder = 'Enter LLM type...';
+            }
+        }
 
-            //     Update the background color on all rows for this mapID
-            //     $("tr[id='row_" + mapID + "']").css("background-color", newColor);
-            //     $("#mapID_" + mapID).css("background-color", newColor);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update placeholder when radio changes
+            document.getElementById('searchEntityName').addEventListener('change', updateSearchInputName);
+            document.getElementById('searchLLMType').addEventListener('change', updateSearchInputName);           
+            updateSearchInputName();
+            //input name on submit
+            document.getElementById('mappingSearchForm').addEventListener('submit', updateSearchInputName);
+            // Set radio button based on which field is filled
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.value && !document.getElementById('searchLLMType').checked) {
+                document.getElementById('searchEntityName').checked = true;
+            } else if (searchInput.value && document.getElementById('searchLLMType').checked) {
+                document.getElementById('searchLLMType').checked = true;
+            }
+        });
 
-            //     Send the color change to the server via AJAX
-            //     $.ajax({
-            //         url: '@Url.Action("ChangeColor", "Home")',
-            //         type: 'POST',
-            //         data: {
-            //             id: mapID,
-            //             color: newColor
-            //         },
-            //         success: function () {
-            //             console.log("Color updated successfully!");
-            //         },
-            //         error: function () {
-            //             alert("Error saving color change.");
-            //         }
-            //     });
-            // });
-
-            // Reset all colors when the reset button is clicked
-            // $("#resetButton").on("click", function () {
-            //     Send a reset request to the server
-            //     $.ajax({
-            //         url: '@Url.Action("ResetColors", "Home")',
-            //         type: 'POST',
-            //         success: function () {
-            //             Reset all colors
-            //             $("tr[id^='row_']").css("background-color", "");
-            //             $("td[id^='mapID_']").css("background-color", "");
-
-            //             alert("All colors have been reset.");
-            //         },
-            //         error: function () {
-            //             alert("Error resetting colors.");
-            //         }
-            //     });
-            // });
-
-            // Add loading indicator when form is submitted
-            $("#aiSearchForm").on("submit", function() {
-                $("#aiResponse").html('<div class="alert alert-info">Loading response...</div>');
-                // Continue with form submission
+        //AI search logic
+        $(function() {
+            $('#aiSearchForm').on('submit', function() {
+                $('#aiResponse').html('<div class="alert alert-info">Loading response...</div>');
                 return true;
             });
-
-            // Handle search type change
-            $('input[name="searchType"]').on('change', function() {
-                const searchType = $(this).val();
-                const searchInput = $('#searchQuery');
-
-                if (searchType === 'mapID') {
-                    searchInput.attr('name', 'mapID');
-                    searchInput.attr('placeholder', 'Enter Map ID...');
-                } else {
-                    searchInput.attr('name', 'llmType');
-                    searchInput.attr('placeholder', 'Enter LLM Type...');
-                }
-            });
         });
-            function toggleRow(mapID) {
-            var row = document.getElementById("details-" + mapID);
-            if (row.style.display === "none") {
-                row.style.display = "table-row";
-            } else {
-                row.style.display = "none";
-            }
+
+        //Row toggle logic
+        function toggleRow(mapID) {
+            const row = document.getElementById('details-' + mapID);
+            row.style.display = (row.style.display === 'none') ? 'table-row' : 'none';
         }
     </script>
 }
-
