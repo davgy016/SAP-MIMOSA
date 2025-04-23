@@ -23,7 +23,7 @@ namespace SAP_MIMOSAapp.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(string query = "", string mapID = "", string llmType = "")
+        public async Task<IActionResult> Index(SearchViewModel model)
         {
             var documents = new List<MappingDocument>();
 
@@ -34,52 +34,25 @@ namespace SAP_MIMOSAapp.Controllers
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
-                // Filter by mapID if provided
-                if (!string.IsNullOrEmpty(mapID))
+                model.TotalDocuments = documents.Count;
+
+                if (!string.IsNullOrEmpty(model.SearchByEntityName))
                 {
-                    var filteredDocuments = documents
-                        .Where(d => d.mapID.Contains(mapID, StringComparison.OrdinalIgnoreCase))
+                    documents = documents
+                        .Where(d => d.mappings.Any(m =>
+                            m.sap.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase) ||
+                            m.mimosa.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase)))
                         .ToList();
-
-               //this can be used if search by table name
-               //     var filteredDocuments = documents
-               //.Where(d => d.mappings.Any(m =>
-               //    m.sap.entityName.Contains(mapID, StringComparison.OrdinalIgnoreCase) ||
-               //    m.mimosa.entityName.Contains(mapID, StringComparison.OrdinalIgnoreCase)))
-               //.ToList();
-
-                    // Store the original documents count for UI feedback
-                    ViewBag.TotalDocuments = documents.Count;
-                    ViewBag.FilteredCount = filteredDocuments.Count;
-                    ViewBag.SearchedMapID = mapID;
-                    //ViewBag.AIQuery = query;
-
-                    // Update the documents with filtered results
-                    documents = filteredDocuments;
                 }
-
-                // Filter by LLMType if provided
-                if (!string.IsNullOrEmpty(llmType))
+                else if (!string.IsNullOrEmpty(model.SearchByLLM))
                 {
-                    var filteredDocuments = documents
-                        .Where(d => d.LLMType.Contains(llmType, StringComparison.OrdinalIgnoreCase))
+                    documents = documents
+                        .Where(d => d.LLMType.Contains(model.SearchByLLM, System.StringComparison.OrdinalIgnoreCase))
                         .ToList();
-
-                    // Store the original documents count for UI feedback
-                    ViewBag.TotalDocuments = documents.Count;
-                    ViewBag.FilteredCount = filteredDocuments.Count;
-                    ViewBag.SearchedLLMType = llmType;
-
-                    // Update the documents with filtered results
-                    documents = filteredDocuments;
                 }
 
-                // If there's a query for AI, call AI
-                if (!string.IsNullOrEmpty(query))
-                {
-                    var aiResponse = await GetAIResponse(query);
-                    ViewBag.AIResponse = aiResponse;
-                }
+                model.FilteredCount = documents.Count;
+                model.SearchResults = documents;
             }
             catch (Exception ex)
             {
@@ -87,7 +60,7 @@ namespace SAP_MIMOSAapp.Controllers
                 ViewBag.ErrorMessage = $"Error: {ex.Message}";
             }
 
-            return View(documents);
+            return View(model);
         }
 
         // New AI Search Method
@@ -98,7 +71,7 @@ namespace SAP_MIMOSAapp.Controllers
                 Console.WriteLine($"GetAIResponse called with query: {query}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query }; // Note: lowercase property name to match Python
+                var request = new { query = query }; // lowercase property name to match Python
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
