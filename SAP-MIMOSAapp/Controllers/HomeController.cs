@@ -150,9 +150,33 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View(new MappingDocument());
+            try
+            {
+                // Get the current mapping documents to calculate next ID
+                var response = await _httpClient.GetStringAsync("workorders");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
+
+                // Calculate next ID
+                int highestId = 0;
+                foreach (var doc in documents)
+                {
+                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
+                    {
+                        highestId = id;
+                    }
+                }
+                ViewBag.NextMapId = (highestId + 1).ToString("D3");
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = $"Error calculating next ID: {ex.Message}";
+                return View();
+            }
         }
 
         [HttpPost]
@@ -168,24 +192,18 @@ namespace SAP_MIMOSAapp.Controllers
                 // Get the current mapping documents
                 var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();                   
 
-                // Generate a new mapID if not provided
-                if (string.IsNullOrEmpty(newDocument.mapID))
+                // Always auto-generate mapID as 3-digit string with leading zeros
+                int highestId = 0;
+                foreach (var doc in documents)
                 {
-                    // Find the highest existing mapID and increment
-                    int highestId = 0;
-                    foreach (var doc in documents)
+                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
                     {
-                        if (int.TryParse(doc.mapID, out int id) && id > highestId)
-                        {
-                            highestId = id;
-                        }
+                        highestId = id;
                     }
-
-                    // Format as 3-digit string with leading zeros
-                    newDocument.mapID = (highestId + 1).ToString("D3");
                 }
+                newDocument.mapID = (highestId + 1).ToString("D3");
 
                 // Ensure platform values are set correctly
                 if (newDocument.mappings != null)
