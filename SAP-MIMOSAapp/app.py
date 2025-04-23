@@ -17,8 +17,12 @@ app = FastAPI()
 JSON_FILE = "Data/JsonTemplate.json"
 
 # Models
+from pydantic import BaseModel, Field
 class SearchQuery(BaseModel):
-    query: str
+    Query: str = Field(..., alias="query")
+    class Config:
+        allow_population_by_field_name = True
+
 
 class MappingField(BaseModel):
     platform: str
@@ -59,14 +63,14 @@ def save_data(data):
 @app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
-        print(f"Received query: {request.query}")
+        print(f"Received query: {request.Query}")  # already camelCase usage
         
         # Call OpenAI API
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an Generative AI assistant for generating mapping between SAP and MIMOSA data models."},
-                {"role": "user", "content": request.query +" response provide in json format"}
+                {"role": "user", "content": request.Query +" response provide in json format"}  # already camelCase usage
             ]
         )
         

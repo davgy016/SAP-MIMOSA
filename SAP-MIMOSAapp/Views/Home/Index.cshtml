@@ -46,16 +46,15 @@
 
                         <!-- AI Assistant Search -->
                         <div class="col-md-6">
-                            <form id="aiSearchForm" method="get" action="@Url.Action("Index", "Home")">
+                            <form id="aiSearchForm" method="post" asp-action="Index" asp-controller="Home">
                                 <div class="mb-3">
                                     <label for="queryInput" class="form-label">AI Assistant</label>
-                                    <input type="text" id="queryInput" name="query" class="form-control"
-                                           placeholder="Ask a question about SAP-MIMOSA mapping..." />
+                                    <input type="text" id="queryInput" name="Query" class="form-control"
+                                           placeholder="Ask a question about SAP-MIMOSA mapping..." value="@(Model.Query ?? "")" />
                                 </div>
                                 <div class="d-flex mb-3 gap-2">
                                     <button type="submit" class="btn btn-primary">Ask AI</button>
                                     <div>
-                                        <!--Controller and app requires adding code to make it work-->
                                         <select name="LLMType" class="form-select">
                                             <option value="">Select LLM</option>
                                             <option value="GPT-4">GPT-4</option>
@@ -65,14 +64,12 @@
 
                                 </div>
                             </form>
-
-                            <!-- display AI response -->
                             <div id="aiResponse">
                                 @if (ViewBag.AIResponse != null)
                                 {
                                     <div class="alert alert-info">
                                         <h4>AI Response:</h4>
-                                        <p>@Html.Raw(ViewBag.AIResponse?.Replace("\n", "<br/>"))</p>
+                                        <p>@Html.Raw(ViewBag.AIResponse?.Replace("\n", "<br/>") ?? "")</p>
                                     </div>
                                 }
                             </div>
@@ -258,18 +255,17 @@
             }
         });
 
-        //AI search logic
-        $(function() {
-            $('#aiSearchForm').on('submit', function() {
-                $('#aiResponse').html('<div class="alert alert-info">Loading response...</div>');
-                return true;
-            });
-        });
-
         //Row toggle logic
         function toggleRow(mapID) {
             const row = document.getElementById('details-' + mapID);
             row.style.display = (row.style.display === 'none') ? 'table-row' : 'none';
         }
+    //AI search logic
+    $(function() {
+        $('#aiSearchForm').on('submit', function() {
+            $('#aiResponse').html('<div class="alert alert-info">Loading response...</div>');
+            return true;
+        });
+    });
     </script>
 }
