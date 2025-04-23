@@ -21,13 +21,13 @@ class SearchQuery(BaseModel):
     query: str
 
 class MappingField(BaseModel):
-    Platform: str
+    platform: str
     entityName: str
     fieldName: str
     description: str
-    DataType: str
-    Notes: str
-    FieldLength: str
+    dataType: str
+    notes: str
+    fieldLength: str
 
 class MappingPair(BaseModel):
     sap: MappingField
