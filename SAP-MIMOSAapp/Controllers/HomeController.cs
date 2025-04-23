@@ -187,19 +187,19 @@ namespace SAP_MIMOSAapp.Controllers
                     newDocument.mapID = (highestId + 1).ToString("D3");
                 }
 
-                // Ensure Platform values are set correctly
+                // Ensure platform values are set correctly
                 if (newDocument.mappings != null)
                 {
                     foreach (var mapping in newDocument.mappings)
                     {
-                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.Platform))
+                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.platform))
                         {
-                            mapping.sap.Platform = "SAP";
+                            mapping.sap.platform = "SAP";
                         }
 
-                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.Platform))
+                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.platform))
                         {
-                            mapping.mimosa.Platform = "MIMOSA";
+                            mapping.mimosa.platform = "MIMOSA";
                         }
                     }
                 }
@@ -296,19 +296,19 @@ namespace SAP_MIMOSAapp.Controllers
                     updatedDocument.Color = documents[documentIndex].Color;
                 }
 
-                // Ensure Platform values are set correctly
+                // Ensure platform values are set correctly
                 if (updatedDocument.mappings != null)
                 {
                     foreach (var mapping in updatedDocument.mappings)
                     {
-                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.Platform))
+                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.platform))
                         {
-                            mapping.sap.Platform = "SAP";
+                            mapping.sap.platform = "SAP";
                         }
 
-                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.Platform))
+                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.platform))
                         {
-                            mapping.mimosa.Platform = "MIMOSA";
+                            mapping.mimosa.platform = "MIMOSA";
                         }
                     }
                 }
