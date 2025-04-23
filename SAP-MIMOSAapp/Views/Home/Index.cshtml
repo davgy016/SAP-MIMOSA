@@ -84,7 +84,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <button id="resetButton" class="btn btn-warning">Reset All Colors</button>
+        @* <button id="resetButton" class="btn btn-warning">Reset All Colors</button> *@
         <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Create New Mapping</a>
     </div>
 
@@ -133,7 +133,7 @@
 
                         @foreach (var mapping in document.mappings)
                         {
-                            <tr id="row_@document.mapID" style="background-color: @(isFirstMapping ? document.Color : null)">
+                            <tr id="row_@document.mapID">
                                 @if (isFirstMapping)
                                 {
                                     <td rowspan="@mappingCount" class="align-middle border-right" id="mapID_@document.mapID">
@@ -147,15 +147,15 @@
                                                     <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
                                                 </form>
                                             </div>
-                                            @if (isFirstMapping)
-                                            {
-                                                <div class="d-flex align-items-center mt-3 mb-4" style="background-color:blanchedalmond;">
-                                                    <i class="fas fa-paint-brush change-color-icon green" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: green; " title="Green"></i>
-                                                    <i class="fas fa-paint-brush change-color-icon red" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: red; " title="Red"></i>
-                                                    <i class="fas fa-paint-brush change-color-icon yellow" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: yellow;" title="Yellow"></i>
-                                                    <i class="fas fa-paint-brush change-color-icon white" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: white;" title="Reset Color"></i>
-                                                </div>
-                                            }
+                                            @* @if (isFirstMapping) *@
+                                            @* { *@
+                                            @*     <div class="d-flex align-items-center mt-3 mb-4" style="background-color:blanchedalmond;"> *@
+                                            @*         <i class="fas fa-paint-brush change-color-icon green" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: green; " title="Green"></i> *@
+                                            @*         <i class="fas fa-paint-brush change-color-icon red" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: red; " title="Red"></i> *@
+                                            @*         <i class="fas fa-paint-brush change-color-icon yellow" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: yellow;" title="Yellow"></i> *@
+                                            @*         <i class="fas fa-paint-brush change-color-icon white" data-id="@document.mapID" style="cursor: pointer; font-size: 23px; color: white;" title="Reset Color"></i> *@
+                                            @*     </div> *@
+                                            @* } *@
                                         </div>
                                     </td>
                                     <td rowspan="@mappingCount" class="align-middle border-right">@document.LLMType</td>
@@ -174,8 +174,8 @@
                                 <td>@mapping.mimosa.entityName</td>
                                 <td>@mapping.mimosa.fieldName</td>
                                 <td>@mapping.mimosa.entityName</td>
-                                <td>@mapping.mimosa.dataType</td>
-                                <td>@mapping.mimosa.fieldLength</td>                                
+                                <td>@mapping.mimosa.fieldName</td>
+                                <td>@mapping.mimosa.entityName</td>                                
 
                             </tr>
                             <tr id="details-@document.mapID" class="details-row" style="display: none;">
@@ -238,49 +238,49 @@
     <script>
         $(document).ready(function() {
             // Change color when an icon is clicked
-            $(".change-color-icon").on("click", function () {
-                var mapID = $(this).data("id");
-                var newColor = $(this).css("color");
+            // $(".change-color-icon").on("click", function () {
+            //     var mapID = $(this).data("id");
+            //     var newColor = $(this).css("color");
 
-                // Update the background color on all rows for this mapID
-                $("tr[id='row_" + mapID + "']").css("background-color", newColor);
-                $("#mapID_" + mapID).css("background-color", newColor);
+            //     Update the background color on all rows for this mapID
+            //     $("tr[id='row_" + mapID + "']").css("background-color", newColor);
+            //     $("#mapID_" + mapID).css("background-color", newColor);
 
-                // Send the color change to the server via AJAX
-                $.ajax({
-                    url: '@Url.Action("ChangeColor", "Home")',
-                    type: 'POST',
-                    data: {
-                        id: mapID,
-                        color: newColor
-                    },
-                    success: function () {
-                        console.log("Color updated successfully!");
-                    },
-                    error: function () {
-                        alert("Error saving color change.");
-                    }
-                });
-            });
+            //     Send the color change to the server via AJAX
+            //     $.ajax({
+            //         url: '@Url.Action("ChangeColor", "Home")',
+            //         type: 'POST',
+            //         data: {
+            //             id: mapID,
+            //             color: newColor
+            //         },
+            //         success: function () {
+            //             console.log("Color updated successfully!");
+            //         },
+            //         error: function () {
+            //             alert("Error saving color change.");
+            //         }
+            //     });
+            // });
 
             // Reset all colors when the reset button is clicked
-            $("#resetButton").on("click", function () {
-                // Send a reset request to the server
-                $.ajax({
-                    url: '@Url.Action("ResetColors", "Home")',
-                    type: 'POST',
-                    success: function () {
-                        // Reset all colors
-                        $("tr[id^='row_']").css("background-color", "");
-                        $("td[id^='mapID_']").css("background-color", "");
+            // $("#resetButton").on("click", function () {
+            //     Send a reset request to the server
+            //     $.ajax({
+            //         url: '@Url.Action("ResetColors", "Home")',
+            //         type: 'POST',
+            //         success: function () {
+            //             Reset all colors
+            //             $("tr[id^='row_']").css("background-color", "");
+            //             $("td[id^='mapID_']").css("background-color", "");
 
-                        alert("All colors have been reset.");
-                    },
-                    error: function () {
-                        alert("Error resetting colors.");
-                    }
-                });
-            });
+            //             alert("All colors have been reset.");
+            //         },
+            //         error: function () {
+            //             alert("Error resetting colors.");
+            //         }
+            //     });
+            // });
 
             // Add loading indicator when form is submitted
             $("#aiSearchForm").on("submit", function() {

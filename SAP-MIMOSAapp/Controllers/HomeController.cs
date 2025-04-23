@@ -290,11 +290,11 @@ namespace SAP_MIMOSAapp.Controllers
                     return View(updatedDocument);
                 }
 
-                // Preserve color if not provided
-                if (string.IsNullOrEmpty(updatedDocument.Color))
-                {
-                    updatedDocument.Color = documents[documentIndex].Color;
-                }
+                //// Preserve color if not provided
+                //if (string.IsNullOrEmpty(updatedDocument.color))
+                //{
+                //    updatedDocument.color = documents[documentIndex].color;
+                //}
 
                 // Ensure platform values are set correctly
                 if (updatedDocument.mappings != null)
@@ -366,87 +366,87 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ChangeColor(string id, string color)
-        {
-            try
-            {
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+        //[HttpPost]
+        //public async Task<IActionResult> ChangeColor(string id, string color)
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetStringAsync("workorders");
+        //        var options = new JsonSerializerOptions
+        //        {
+        //            PropertyNameCaseInsensitive = true
+        //        };
+        //        var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
 
-                if (documents == null)
-                {
-                    return Json(new { success = false, message = "Mapping documents not found" });
-                }
+        //        if (documents == null)
+        //        {
+        //            return Json(new { success = false, message = "Mapping documents not found" });
+        //        }
 
-                var document = documents.FirstOrDefault(d => d.mapID == id);
-                if (document == null)
-                {
-                    return Json(new { success = false, message = "Mapping document not found" });
-                }
+        //        var document = documents.FirstOrDefault(d => d.mapID == id);
+        //        if (document == null)
+        //        {
+        //            return Json(new { success = false, message = "Mapping document not found" });
+        //        }
 
-                document.Color = color;
+        //        document.color = color;
 
-                var json = JsonSerializer.Serialize(documents);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //        var json = JsonSerializer.Serialize(documents);
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var updateResponse = await _httpClient.PutAsync("workorders", content);
-                updateResponse.EnsureSuccessStatusCode();
+        //        var updateResponse = await _httpClient.PutAsync("workorders", content);
+        //        updateResponse.EnsureSuccessStatusCode();
 
-                return Json(new { success = true });
-            }
-            catch (System.Exception ex)
-            {
-                return Json(new { success = false, message = $"Error updating color: {ex.Message}" });
-            }
-        }
+        //        return Json(new { success = true });
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        return Json(new { success = false, message = $"Error updating color: {ex.Message}" });
+        //    }
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> ResetColors()
-        {
-            try
-            {
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+        //[HttpPost]
+        //public async Task<IActionResult> ResetColors()
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetStringAsync("workorders");
+        //        var options = new JsonSerializerOptions
+        //        {
+        //            PropertyNameCaseInsensitive = true
+        //        };
+        //        var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
 
-                if (documents == null)
-                {
-                    _logger.LogWarning("No mapping documents found.");
-                    return Json(new { success = false, message = "No mapping documents available." });
-                }
+        //        if (documents == null)
+        //        {
+        //            _logger.LogWarning("No mapping documents found.");
+        //            return Json(new { success = false, message = "No mapping documents available." });
+        //        }
 
-                // Update each document's color
-                foreach (var document in documents)
-                {
-                    document.Color = null;
-                }
+        //        // Update each document's color
+        //        foreach (var document in documents)
+        //        {
+        //            document.color = null;
+        //        }
 
-                var json = JsonSerializer.Serialize(documents);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //        var json = JsonSerializer.Serialize(documents);
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var updateResponse = await _httpClient.PutAsync("workorders", content);
-                if (!updateResponse.IsSuccessStatusCode)
-                {
-                    _logger.LogError($"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}");
-                    return Json(new { success = false, message = $"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}" });
-                }
+        //        var updateResponse = await _httpClient.PutAsync("workorders", content);
+        //        if (!updateResponse.IsSuccessStatusCode)
+        //        {
+        //            _logger.LogError($"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}");
+        //            return Json(new { success = false, message = $"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}" });
+        //        }
 
-                return Json(new { success = true, message = "Mapping colors reset successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in ResetColor action.");
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
+        //        return Json(new { success = true, message = "Mapping colors reset successfully." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error in ResetColor action.");
+        //        return Json(new { success = false, message = $"Error: {ex.Message}" });
+        //    }
+        //}
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)
