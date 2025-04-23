@@ -123,8 +123,7 @@
                     "fieldLength": ""
                 }
             }
-        ],
-        "Color": "rgb(255, 255, 255)"
+        ]
     },
     {
         "mapID": "002",
@@ -262,7 +261,7 @@
                     "entityName": "dsdsds4343",
                     "fieldName": "sd4344343",
                     "description": "sd",
-                    "dataType": "ds",
+                    "dataType": "ds8787",
                     "notes": "sds",
                     "fieldLength": "ds"
                 },
@@ -276,7 +275,6 @@
                     "fieldLength": "ds"
                 }
             }
-        ],
-        "Color": "rgb(255, 255, 255)"
+        ]
     }
 ]
