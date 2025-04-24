@@ -1,4 +1,4 @@
-﻿namespace SAP_MIMOSAapp.Models
+namespace SAP_MIMOSAapp.Models
 {
     public class MappingDocument
     {

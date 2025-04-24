@@ -376,7 +376,7 @@
                     "entityName": "Asset",
                     "fieldName": "ManufacturerName",
                     "description": "Name of the asset manufacturer",
-                    "dataType": "STRING",
+                    "dataType": "String",
                     "notes": "Name of the company that builds the asset",
                     "fieldLength": "MAX"
                 }

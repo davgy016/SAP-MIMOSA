@@ -1,4 +1,4 @@
-@model SAP_MIMOSAapp.Models.SearchViewModel
+﻿@model SAP_MIMOSAapp.Models.SearchViewModel
 
 
 <h1>Generate Mapping Between SAP PM & MIMOSA </h1>
@@ -162,15 +162,15 @@
                                 <td>@mapping.sap.fieldName</td>
                                 <td>@mapping.sap.description</td>
                                 <td>@mapping.sap.dataType</td>
-                                <td style="border-right: 3px solid gray;">@mapping.sap.dataType</td>
+                                <td style="border-right: 3px solid gray;">@mapping.sap.fieldLength</td>
 
                                 <!-- MIMOSA fields -->
                                 @* <td>@mapping.mimosa.Platform</td> *@
                                 <td>@mapping.mimosa.entityName</td>
                                 <td>@mapping.mimosa.fieldName</td>
-                                <td>@mapping.mimosa.entityName</td>
-                                <td>@mapping.mimosa.fieldName</td>
-                                <td>@mapping.mimosa.entityName</td>
+                                <td>@mapping.mimosa.description</td>
+                                <td>@mapping.mimosa.dataType</td>
+                                <td>@mapping.mimosa.fieldLength</td>
 
                             </tr>
                             <tr id="details-@document.mapID" class="details-row" style="display: none;">
