@@ -65,11 +65,11 @@
                                 </div>
                             </form>
                             <div id="aiResponse">
-                                @if (ViewBag.AIResponse != null)
+                                @if (!string.IsNullOrEmpty(Model.AIResponse))
                                 {
                                     <div class="alert alert-info">
                                         <h4>AI Response:</h4>
-                                        <p>@Html.Raw(ViewBag.AIResponse?.Replace("\n", "<br/>") ?? "")</p>
+                                        <p>@Html.Raw(Model.AIResponse?.Replace("\n", "<br/>") ?? "")</p>
                                     </div>
                                 }
                             </div>
@@ -86,9 +86,15 @@
     </div>
 
     <!-- Mapping Table with Complex Header -->
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
+    @if ((Model.SearchResults != null && Model.SearchResults.Count > 0) 
+        || !string.IsNullOrEmpty(Model.SearchByEntityName) 
+        || !string.IsNullOrEmpty(Model.SearchByLLM))
+{
+    // Only show table if searching by EntityName or LLM, not by AI/Query
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
                 <tr>
                     <th rowspan="2" class="align-middle">Map ID</th>
                     <th rowspan="2" class="align-middle">LLM Type</th>
@@ -185,8 +191,9 @@
                     }
                 }
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
+    }
 </div>
 
 <div class="section mt-4">
