@@ -2,6 +2,7 @@ from urllib.request import urlopen
 import re
 import csv
 from bs4 import BeautifulSoup
+import json
 
 
 class SAPWebScraper():
@@ -54,7 +55,7 @@ class SAPWebScraper():
         for row in rows:
             # Extract all cell text, using either <td> or <th>
             cells = row.find_all(['td', 'th'])
-            text_cells = [cell.get_text(strip=True) for cell in cells]
+            text_cells = [cell.get_text(strip=True) for cell in cells if cell.get_text(strip=True)]
             if text_cells:  # Skip empty rows
                 data.append(text_cells)
 
@@ -64,14 +65,59 @@ class SAPWebScraper():
             writer.writerows(data)
 
         print(f"CSV file saved to: {output_csv}")
+
+
+    def extract_visible_text_to_json(self, filename: str, output_json: str = None):
+        """
+        Extracts visible HTML table text from the input file and saves it to a JSON file.
+        
+        Args:
+            filename (str): The input HTML file.
+            output_json (str): Optional. If provided, output will be saved here.
+                            Otherwise, it will use the same name with `.json` extension.
+        """
+        if output_json is None:
+            output_json = filename.rsplit('.', 1)[0] + '.json'
+
+        # Read the HTML content
+        with open(filename, 'r', encoding='utf-8') as f:
+            html = f.read()
+
+        soup = BeautifulSoup(html, 'html.parser')
+
+        rows = soup.find_all('tr')
+        data = []
+
+        for row in rows:
+            cells = row.find_all(['td', 'th'])
+            text_cells = [cell.get_text(strip=True) for cell in cells if cell.get_text(strip=True)]
+            if text_cells and 10 <= len(text_cells) <= 13:
+                data.append(text_cells)
+
+        # Convert to JSON
+        if not data:
+            print("No valid table data found.")
+            return
+
+        # Use first row as header, rest as data
+        headers = data[0]
+        json_data = [dict(zip(headers, row)) for row in data[1:]]
+
+        with open(output_json, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, indent=2, ensure_ascii=False)
+
+        print(f"JSON file saved to: {output_json}")
+
     
 scraper = SAPWebScraper()
 
-# scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
-# scraper.getSlices("<tr>.+?</tr>")
-# scraper.write_to_file("output.txt")
+scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
+scraper.getSlices("<tr>.+?</tr>")
+scraper.write_to_file("mainTable.txt")
+scraper.extract_visible_text_to_csv("mainTable.txt","mainTable.csv")
+
 
 scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295&table=EAMS_CVBEXTDS")
 scraper.getSlices(r"<tr.*?>.*?</tr>")
 scraper.write_to_file("output.txt")
-scraper.extract_visible_text_to_csv("output.txt","output.csv")
+scraper.extract_visible_text_to_json("output.txt","output.json")
