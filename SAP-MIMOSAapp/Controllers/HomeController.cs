@@ -59,10 +59,19 @@ namespace SAP_MIMOSAapp.Controllers
                 //AI Assistant only handle Query if no EntityName/LLM search
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    model.SearchResults = new List<MappingDocument>();
-                    model.FilteredCount = 0;
-                    model.TotalDocuments = 0;
-                    model.AIResponse = await GetAIResponse(model.Query);
+                    var aiResponse = await GetAIResponse(model.Query); // returns the AI's JSON string
+                    var mappingDoc = ParseAIMapping(aiResponse);
+
+                    if (mappingDoc != null)
+                    {
+                        TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
+                        return RedirectToAction("CreateWithAI");
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "AI did not return a valid mapping.";
+                        return View(model);
+                    }
                 }
                 else
                 {
@@ -79,6 +88,21 @@ namespace SAP_MIMOSAapp.Controllers
             }
 
             return View(model);
+        }
+
+        // Helper to parse AI response JSON string into MappingDocument
+        private MappingDocument? ParseAIMapping(string aiJson)
+        {
+            try
+            {
+                // The AI response is expected to be: { "mappings": [ ... ] }
+                var doc = JsonSerializer.Deserialize<MappingDocument>(aiJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return doc;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         //AI Search Method
@@ -183,7 +207,7 @@ namespace SAP_MIMOSAapp.Controllers
                 // Get the current mapping documents
                 var response = await _httpClient.GetStringAsync("workorders");
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();                   
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
                 // Always auto-generate mapID as 3-digit string with leading zeros
                 int highestId = 0;
@@ -476,21 +500,49 @@ namespace SAP_MIMOSAapp.Controllers
             var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
             return Json(new { response = aiResponse?.Response ?? "No response from AI" });
         }
-    }
+        [HttpGet]
+        public async Task<IActionResult> CreateWithAI()
+        {
+            if (TempData["AIMapping"] != null)
+            {
+                var mapping = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
 
-    /**
-     * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
-     * Response or request formats can be expanded easier, e.g add new fields or new data type etc 
-     * Also can add validation rules
-     */
-    public class AIResponse
-    {
-        public string? Response { get; set; }
-    }
+                // Get the current mapping documents to calculate next ID
+                var response = await _httpClient.GetStringAsync("workorders");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
-    public class SearchRequest
-    {
-        public string? Query { get; set; }
+                int highestId = 0;
+                foreach (var doc in documents)
+                {
+                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
+                    {
+                        highestId = id;
+                    }
+                }
+                var nextMapId = (highestId + 1).ToString("D3");
+                mapping.mapID = nextMapId;
+                ViewBag.NextMapId = nextMapId;
+
+                return View("Create", mapping);
+            }
+            return RedirectToAction("Create");
+        }
+
+        /**
+         * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
+         * Response or request formats can be expanded easier, e.g add new fields or new data type etc 
+         * Also can add validation rules
+         */
+        public class AIResponse
+        {
+            public string? Response { get; set; }
+        }
+
+        public class SearchRequest
+        {
+            public string? Query { get; set; }
+        }
     }
 }
 

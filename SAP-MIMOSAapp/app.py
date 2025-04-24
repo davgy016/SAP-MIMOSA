@@ -14,7 +14,7 @@ client = OpenAI()
 app = FastAPI()
 
 # JSON file path
-JSON_FILE = "Data/JsonTemplate.json"
+JSON_FILE = "Data/SAPMIMOSA.json"
 
 # Models
 from pydantic import BaseModel, Field
@@ -69,8 +69,36 @@ async def ask_openai(request: SearchQuery):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are an Generative AI assistant for generating mapping between SAP and MIMOSA data models."},
-                {"role": "user", "content": request.Query +" response provide in json format"}  # already camelCase usage
+                {"role": "system", "content": """You are an AI assistant for generating mapping between SAP and MIMOSA data models.
+                Generate a structured JSON response that follows this exact format:
+                {
+                  "mappings": [
+                    {
+                      "sap": {
+                        "platform": "SAP",
+                        "entityName": "string",
+                        "fieldName": "string",
+                        "description": "string",
+                        "dataType": "string",
+                        "notes": "string",
+                        "fieldLength": "string"
+                      },
+                      "mimosa": {
+                        "platform": "MIMOSA",
+                        "entityName": "string",
+                        "fieldName": "string",
+                        "description": "string",
+                        "dataType": "string",
+                        "notes": "string",
+                        "fieldLength": "string"
+                      }
+                    }
+                  ]
+                }
+                
+                Ensure all fields are filled with appropriate values. The platform for SAP should always be "SAP" and for MIMOSA should always be "MIMOSA".
+                Generate all mapping pairs that are accurate and relevant to the query."""},    
+                {"role": "user", "content": request.Query }
             ]
         )
         
