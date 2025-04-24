@@ -55,8 +55,8 @@ class SAPWebScraper():
         for row in rows:
             # Extract all cell text, using either <td> or <th>
             cells = row.find_all(['td', 'th'])
-            text_cells = [cell.get_text(strip=True) for cell in cells if cell.get_text(strip=True)]
-            if text_cells:  # Skip empty rows
+            text_cells = [cell.get_text(strip=True).replace(",","") for cell in cells if cell.get_text(strip=True)]
+            if text_cells and len(text_cells) >= 7 and len(text_cells) <= 9:  # Skip empty rows
                 data.append(text_cells)
 
         # Save to CSV
@@ -103,21 +103,33 @@ class SAPWebScraper():
         headers = data[0]
         json_data = [dict(zip(headers, row)) for row in data[1:]]
 
+        return json_data
         with open(output_json, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, indent=2, ensure_ascii=False)
 
-        print(f"JSON file saved to: {output_json}")
 
     
 scraper = SAPWebScraper()
+tableNames = []
 
-scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
-scraper.getSlices("<tr>.+?</tr>")
-scraper.write_to_file("mainTable.txt")
-scraper.extract_visible_text_to_csv("mainTable.txt","mainTable.csv")
+# scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
+# scraper.getSlices("<tr.*?>.*?</tr>")
+# scraper.write_to_file("mainTable.txt")
+# scraper.extract_visible_text_to_csv("mainTable.txt","mainTable.csv")
+
+with open("mainTable.csv", "r+") as f:
+    for line in f.readlines():
+        line = line.split(",")
+        tableName = line[3]
+        tableNames.append(tableName)
+
+print(tableNames)
 
 
-scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295&table=EAMS_CVBEXTDS")
+scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295&table=EAMS_KPIPARAM")
 scraper.getSlices(r"<tr.*?>.*?</tr>")
 scraper.write_to_file("output.txt")
-scraper.extract_visible_text_to_json("output.txt","output.json")
+json_data = scraper.extract_visible_text_to_json("output.txt","output.json")
+with open("output.json", 'w', encoding='utf-8') as f:
+    json.dump(json_data, f, indent=2, ensure_ascii=False)
+
