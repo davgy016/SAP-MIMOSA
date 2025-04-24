@@ -1,6 +1,6 @@
 import pytest
 
-from ValidationAndMapping.Accuracy import DescriptionSimilarity,Accuracy
+from ValidationAndMapping.Accuracy import DescriptionSimilarity, FieldLength, Accuracy
 from WebApp.Models import FieldMapping, MappingEntry, Mapping  
 from ValidationAndMapping.ScoreManager import ScoreManager
 
@@ -24,7 +24,7 @@ def sample_mapping():
         description="Work Order Number",
         dataType="CHAR(12)",
         notes="Primary identifier for the work order in SAP PM",
-        fieldLength=""
+        fieldLength="15"
     )
 
     mapping_entry = MappingEntry(sap=sap_field, mimosa=mimosa_field)
@@ -43,6 +43,12 @@ def test_descriptionSimilarity(sample_mapping):
     score = sim.score(mapping=sample_mapping[0])
     print("Description Similarity score:", score)
     assert score == pytest.approx(0.9, abs=0.2), "Descriptions are not similar enough"
+
+def test_fieldLength(sample_mapping):
+    fl = FieldLength()
+    score = fl.score(mapping=sample_mapping[0])
+    print("Field Length score:", score)
+    assert score == pytest.approx(0.9, abs=0.2), "Field Lengths are not similar enough"
 
 def test_accuracy(sample_mapping):
     acc = Accuracy()
