@@ -4,6 +4,7 @@ namespace SAP_MIMOSAapp.Models
 {
     public class SearchViewModel
     {
+        public string? AIResponse { get; set; }
         public string? SearchByEntityName { get; set; }
         public string? SearchByLLM { get; set; }
         public int TotalDocuments { get; set; }

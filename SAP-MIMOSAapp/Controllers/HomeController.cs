@@ -29,35 +29,47 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
-                // Fetch mapping documents
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
-
-                model.TotalDocuments = documents.Count;
-
-                if (!string.IsNullOrEmpty(model.SearchByEntityName))
+                // Search by Entity Name or LLM (mapping table)
+                if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
-                    documents = documents
-                        .Where(d => d.mappings.Any(m =>
-                            m.sap.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase) ||
-                            m.mimosa.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase)))
-                        .ToList();
+                    var response = await _httpClient.GetStringAsync("workorders");
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
+
+                    model.TotalDocuments = documents.Count;
+
+                    if (!string.IsNullOrEmpty(model.SearchByEntityName))
+                    {
+                        documents = documents
+                            .Where(d => d.mappings.Any(m =>
+                                m.sap.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase) ||
+                                m.mimosa.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase)))
+                            .ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(model.SearchByLLM))
+                    {
+                        documents = documents
+                            .Where(d => d.LLMType.Contains(model.SearchByLLM, System.StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                    }
+
+                    model.FilteredCount = documents.Count;
+                    model.SearchResults = documents;
                 }
-                else if (!string.IsNullOrEmpty(model.SearchByLLM))
+                //AI Assistant only handle Query if no EntityName/LLM search
+                else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    documents = documents
-                        .Where(d => d.LLMType.Contains(model.SearchByLLM, System.StringComparison.OrdinalIgnoreCase))
-                        .ToList();
+                    model.SearchResults = new List<MappingDocument>();
+                    model.FilteredCount = 0;
+                    model.TotalDocuments = 0;
+                    model.AIResponse = await GetAIResponse(model.Query);
                 }
-
-                model.FilteredCount = documents.Count;
-                model.SearchResults = documents;
-
-                // AI Assistant
-                if (!string.IsNullOrEmpty(model.Query))
+                else
                 {
-                    ViewBag.AIResponse = await GetAIResponse(model.Query);
+                    // No search: show nothing
+                    model.SearchResults = new List<MappingDocument>();
+                    model.FilteredCount = 0;
+                    model.TotalDocuments = 0;
                 }
             }
             catch (Exception ex)
