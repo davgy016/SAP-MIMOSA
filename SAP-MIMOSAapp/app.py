@@ -41,6 +41,7 @@ class MappingDocument(BaseModel):
     mapID: str
     LLMType: str
     mappings: List[MappingPair]
+    prompt: Optional[str] = None
     #color: Optional[str] = None
 
 # JSON file operations

@@ -65,7 +65,7 @@ namespace SAP_MIMOSAapp.Controllers
                     if (mappingDoc != null)
                     {
                         TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
-                        return RedirectToAction("CreateWithAI");
+                        return RedirectToAction("CreateWithAI", new { query = model.Query });
                     }
                     else
                     {
@@ -200,6 +200,12 @@ namespace SAP_MIMOSAapp.Controllers
             if (!ModelState.IsValid)
             {
                 return View(newDocument);
+            }
+
+            // Ensure prompt is set if present in TempData (from AI workflow)
+            if (string.IsNullOrEmpty(newDocument.prompt) && TempData["Prompt"] != null)
+            {
+                newDocument.prompt = TempData["Prompt"].ToString();
             }
 
             try
@@ -501,11 +507,12 @@ namespace SAP_MIMOSAapp.Controllers
             return Json(new { response = aiResponse?.Response ?? "No response from AI" });
         }
         [HttpGet]
-        public async Task<IActionResult> CreateWithAI()
+        public async Task<IActionResult> CreateWithAI(string query)
         {
             if (TempData["AIMapping"] != null)
             {
                 var mapping = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
+                mapping.prompt = query;
 
                 // Get the current mapping documents to calculate next ID
                 var response = await _httpClient.GetStringAsync("workorders");
