@@ -497,7 +497,7 @@ namespace SAP_MIMOSAapp.Controllers
 
             var jsonRequest = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("http://localhost:8000/ask_openai", jsonRequest);
+            var response = await _httpClient.PostAsync("ask_openai", jsonRequest);
             if (!response.IsSuccessStatusCode)
             {
                 return StatusCode((int)response.StatusCode, new { response = "Error with AI search" });
