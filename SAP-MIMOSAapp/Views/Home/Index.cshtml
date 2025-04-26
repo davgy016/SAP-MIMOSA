@@ -91,47 +91,48 @@
     || !string.IsNullOrEmpty(Model.SearchByLLM))
     {
         // Only show table if searching by EntityName or LLM, not by AI/Query
+        @if (Model.SearchResults.Count == 0)
+        {
 
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="align-middle">Map ID</th>
-                        <th rowspan="2" class="align-middle">LLM Type</th>
-                        <th colspan="5" class="text-center border-bottom" style="background-color:lightseagreen !important; border-right: 3px solid gray;">SAP</th>
-                        <th colspan="6" class="text-center border-bottom " style="background-color: seagreen !important;">MIMOSA</th>
-                        @* <th rowspan="2" class="align-middle">Actions</th> *@
-                    </tr>
-                    <tr style="white-space:nowrap;">
-                        <!-- SAP columns -->
-                        @* <th>Platform</th> *@
-                        <th>Table Name</th>
-                        <th>Field Name</th>
-                        <th>Description</th>
-                        <th>Data Type</th>
-                        <th style="border-right: 3px solid gray;">Length</th>
+            <p class="text-center">No mappings found.</p>
 
-                        <!-- MIMOSA columns -->
-                        @* <th>Platform</th> *@
-                        <th>Table Name</th>
-                        <th>Field Name</th>
-                        <th>Description</th>
-                        <th>Data Type</th>
-                        <th>Length</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.SearchResults.Count == 0)
-                    {
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td colspan="15" class="text-center">No mappings found.</td>
+                            <th rowspan="2" class="align-middle">Map ID</th>
+                            <th rowspan="2" class="align-middle">LLM Type</th>
+                            <th colspan="5" class="text-center border-bottom" style="background-color:lightseagreen !important; border-right: 3px solid gray;">SAP</th>
+                            <th colspan="6" class="text-center border-bottom " style="background-color: seagreen !important;">MIMOSA</th>
+                            @* <th rowspan="2" class="align-middle">Actions</th> *@
                         </tr>
-                    }
-                    else
+                        <tr style="white-space:nowrap;">
+                            <!-- SAP columns -->
+                            @* <th>Platform</th> *@
+                            <th>Table Name</th>
+                            <th>Field Name</th>
+                            <th>Description</th>
+                            <th>Data Type</th>
+                            <th style="border-right: 3px solid gray;">Length</th>
+
+                            <!-- MIMOSA columns -->
+                            @* <th>Platform</th> *@
+                            <th>Table Name</th>
+                            <th>Field Name</th>
+                            <th>Description</th>
+                            <th>Data Type</th>
+                            <th>Length</th>
+                        </tr>
+                    </thead>
+
+
+                    @foreach (var document in Model.SearchResults)
                     {
-                        @foreach (var document in Model.SearchResults)
-                        {
-                            int mappingCount = document.mappings.Count;
+                        int mappingCount = document.mappings.Count;
+
                         <tbody class="mapping-group" id="group-@document.mapID">
                             @for (int i = 0; i < mappingCount; i++)
                             {
@@ -205,34 +206,18 @@
                                 </td>
                             </tr>
                         </tbody>
-                        }
-                        }
                     }
-                </tbody>
-            </table>
-        </div>
+
+
+                </table>
+            </div>
+        }
     }
 </div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<style>
-.details-animate {
-    transition: all 0.4s cubic-bezier(.4,2,.6,1);
-    opacity: 0;
-    transform: translateY(-16px) scaleY(0.95);
-    pointer-events: none;
-    height: 0;
-}
-.details-animate.showing {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-    pointer-events: auto;
-    height: auto;
-}
-</style>
 
 <div class="section mt-4">
-    <h2>Key Differences Between SAP PM and MIMOSA Work Order Models</h2>
+    <h2>Key Differences Between SAP PM and MIMOSA Data  Models</h2>
     <ol>
         <li>
             <strong>Naming Conventions:</strong>
