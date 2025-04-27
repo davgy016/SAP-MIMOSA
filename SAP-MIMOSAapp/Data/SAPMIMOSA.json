@@ -928,5 +928,506 @@
             }
         ],
         "prompt": "provide work order mapping"
+    },
+    {
+        "mapID": "011",
+        "LLMType": "GPT-4",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "saaa",
+                    "fieldName": "j",
+                    "description": "j",
+                    "dataType": "j",
+                    "notes": "j",
+                    "fieldLength": "j"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "jj",
+                    "fieldName": "j",
+                    "description": "j",
+                    "dataType": "j",
+                    "notes": "jj",
+                    "fieldLength": "j"
+                }
+            }
+        ],
+        "prompt": ""
+    },
+    {
+        "mapID": "012",
+        "LLMType": "GPT-3.5",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "OrderID",
+                    "description": "Unique identifier for the work order.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for work order entity.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderID",
+                    "description": "Unique ID assigned to a work order.",
+                    "dataType": "String",
+                    "notes": "Serves as the unique identifier.",
+                    "fieldLength": "16"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "Description",
+                    "description": "Description of the work order.",
+                    "dataType": "TEXT",
+                    "notes": "Detailed text about the work to be performed.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "Description",
+                    "description": "Textual description of the work order.",
+                    "dataType": "String",
+                    "notes": "Details of the work to be done.",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "StartDate",
+                    "description": "Date when work order is scheduled to start.",
+                    "dataType": "DATE",
+                    "notes": "Format is YYYYMMDD.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledStartDate",
+                    "description": "Planned start date of the work.",
+                    "dataType": "Date",
+                    "notes": "Format follows ISO 8601.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "EndDate",
+                    "description": "Date when work order is scheduled to end.",
+                    "dataType": "DATE",
+                    "notes": "Indicates planned completion.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledEndDate",
+                    "description": "Planned end date of the work.",
+                    "dataType": "Date",
+                    "notes": "Expected completion date.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "Priority",
+                    "description": "Priority level of the work order.",
+                    "dataType": "NUMBER",
+                    "notes": "Defines order of execution.",
+                    "fieldLength": "2"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "PriorityCode",
+                    "description": "Numeric code representing priority level.",
+                    "dataType": "Integer",
+                    "notes": "Higher value indicates higher priority.",
+                    "fieldLength": "3"
+                }
+            }
+        ],
+        "prompt": "provide worko order mapping"
+    },
+    {
+        "mapID": "013",
+        "LLMType": "GPT-4",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "OrderID",
+                    "description": "Unique identifier for the maintenance order.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for order identification.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WOID",
+                    "description": "Unique identifier for the work order.",
+                    "dataType": "STRING",
+                    "notes": "Primary key for work order.",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "OrderType",
+                    "description": "Type of maintenance order which defines its purpose and processing.",
+                    "dataType": "CHAR",
+                    "notes": "Categorizes the nature of the order.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WOType",
+                    "description": "Type of the work order indicating its category.",
+                    "dataType": "STRING",
+                    "notes": "Defines category of the work order.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "Priority",
+                    "description": "Indicates the priority level of the maintenance order.",
+                    "dataType": "CHAR",
+                    "notes": "Helps in prioritizing tasks.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WOPriority",
+                    "description": "Priority of the work order.",
+                    "dataType": "STRING",
+                    "notes": "Indicates urgency.",
+                    "fieldLength": "2"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "StartDate",
+                    "description": "Scheduled start date for the maintenance order.",
+                    "dataType": "DATE",
+                    "notes": "Proposed start date.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WOStartDate",
+                    "description": "The start date of the work order.",
+                    "dataType": "DATETIME",
+                    "notes": "Intended start date.",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "EndDate",
+                    "description": "Scheduled end date for the maintenance order.",
+                    "dataType": "DATE",
+                    "notes": "Proposed completion date.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WOEndDate",
+                    "description": "The end date of the work order.",
+                    "dataType": "DATETIME",
+                    "notes": "Expected completion date.",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "MaintenanceOrder",
+                    "fieldName": "Description",
+                    "description": "Brief description of the maintenance work to be performed.",
+                    "dataType": "CHAR",
+                    "notes": "Summary of work.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WODescription",
+                    "description": "Description of the work order.",
+                    "dataType": "STRING",
+                    "notes": "Describes the nature of tasks.",
+                    "fieldLength": "255"
+                }
+            }
+        ],
+        "prompt": "provide work order mapping"
+    },
+    {
+        "mapID": "014",
+        "LLMType": "GPT-4",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Typically numeric but stored as CHAR",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equip",
+                    "fieldName": "EquipID",
+                    "description": "Unique identifier for a piece of equipment",
+                    "dataType": "STRING",
+                    "notes": "Primary key for equipment entities",
+                    "fieldLength": "18"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentName",
+                    "description": "Name or description of equipment",
+                    "dataType": "CHAR",
+                    "notes": "Descriptive name",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equip",
+                    "fieldName": "EquipDesc",
+                    "description": "Description or name of the equipment",
+                    "dataType": "STRING",
+                    "notes": "Descriptive name for human readability",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Name of the manufacturer",
+                    "dataType": "CHAR",
+                    "notes": "Stored as a string reference",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equip",
+                    "fieldName": "MfgName",
+                    "description": "Manufacturer's name of the equipment",
+                    "dataType": "STRING",
+                    "notes": "Typically points to a manufacturer entity",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "ModelNumber",
+                    "description": "Model number of the equipment",
+                    "dataType": "CHAR",
+                    "notes": "Model identifier",
+                    "fieldLength": "20"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equip",
+                    "fieldName": "ModelID",
+                    "description": "Identifier for the model of equipment",
+                    "dataType": "STRING",
+                    "notes": "Model number as identified by the manufacturer",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "SerialNumber",
+                    "description": "Serial number of the equipment",
+                    "dataType": "CHAR",
+                    "notes": "Unique per equipment item",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equip",
+                    "fieldName": "SerialNum",
+                    "description": "Unique serial number of the equipment",
+                    "dataType": "STRING",
+                    "notes": "Used to uniquely identify individual units",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate mappings for  equipment "
+    },
+    {
+        "mapID": "015",
+        "LLMType": "GPT-3.5",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ggggj",
+                    "fieldName": "j",
+                    "description": "jj",
+                    "dataType": "e",
+                    "notes": "j",
+                    "fieldLength": "j"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "j",
+                    "fieldName": "j",
+                    "description": "j",
+                    "dataType": "j",
+                    "notes": "j",
+                    "fieldLength": "j"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "016",
+        "LLMType": "GPT-4",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique identifier for Equipment",
+                    "dataType": "CHAR",
+                    "notes": "Key field for Equipment details",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for the asset",
+                    "dataType": "STRING",
+                    "notes": "Typically matches the equipment identifier in SAP",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "FunctionalLocation",
+                    "fieldName": "AssetLocation",
+                    "description": "Location of the Equipment",
+                    "dataType": "CHAR",
+                    "notes": "Indicates the functional location within the plant",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "Location",
+                    "description": "Physical or logical location of the asset",
+                    "dataType": "STRING",
+                    "notes": "Can be a hierarchical location identifier",
+                    "fieldLength": "40"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Description",
+                    "description": "Description of the Equipment",
+                    "dataType": "CHAR",
+                    "notes": "Provides human-readable information about the equipment",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetDescription",
+                    "description": "Textual description of the asset",
+                    "dataType": "STRING",
+                    "notes": "Typically a replication of the equipment description in SAP",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Manufacturer of the Equipment",
+                    "dataType": "CHAR",
+                    "notes": "Indicates the company that produced the equipment",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ManufacturerName",
+                    "description": "Name of the asset manufacturer",
+                    "dataType": "STRING",
+                    "notes": "Matches SAP equipment's manufacturer name",
+                    "fieldLength": "60"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "ModelNumber",
+                    "description": "Model number of the Equipment",
+                    "dataType": "CHAR",
+                    "notes": "Indicates the specific model of the equipment",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ModelNumber",
+                    "description": "Asset model number",
+                    "dataType": "STRING",
+                    "notes": "Typically used for direct comparison with SAP's model number",
+                    "fieldLength": "30"
+                }
+            }
+        ],
+        "prompt": "generate asset mappings"
     }
 ]

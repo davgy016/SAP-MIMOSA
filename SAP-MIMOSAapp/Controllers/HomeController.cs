@@ -167,31 +167,8 @@ namespace SAP_MIMOSAapp.Controllers
 
         public async Task<IActionResult> Create()
         {
-            try
-            {
-                // Get the current mapping documents to calculate next ID
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
-
-                // Calculate next ID
-                int highestId = 0;
-                foreach (var doc in documents)
-                {
-                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
-                    {
-                        highestId = id;
-                    }
-                }
-                ViewBag.NextMapId = (highestId + 1).ToString("D3");
-
-                return View();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = $"Error calculating next ID: {ex.Message}";
-                return View();
-            }
+            // No need to pre-calculate mapID; backend will generate it.
+            return View();
         }
 
         [HttpPost]
@@ -210,22 +187,6 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
-                // Get the current mapping documents
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
-
-                // Always auto-generate mapID as 3-digit string with leading zeros
-                int highestId = 0;
-                foreach (var doc in documents)
-                {
-                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
-                    {
-                        highestId = id;
-                    }
-                }
-                newDocument.mapID = (highestId + 1).ToString("D3");
-
                 // Ensure platform values are set correctly
                 if (newDocument.mappings != null)
                 {
@@ -243,14 +204,11 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
 
-                // Add the new document to the list
-                documents.Add(newDocument);
-
-                // Update the mapping documents
-                var json = JsonSerializer.Serialize(documents);
+                // POST to backend to create new mapping (backend will generate mapID)
+                var json = JsonSerializer.Serialize(newDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var createResponse = await _httpClient.PutAsync("workorders", content);
+                var createResponse = await _httpClient.PostAsync("workorders", content);
                 var responseText = await createResponse.Content.ReadAsStringAsync();
 
                 if (!createResponse.IsSuccessStatusCode)
@@ -259,6 +217,11 @@ namespace SAP_MIMOSAapp.Controllers
                     return View(newDocument);
                 }
 
+                // Get the created mapping with mapID from backend response
+                var createdDoc = JsonSerializer.Deserialize<MappingDocument>(responseText, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // Redirect to Index (home page) with success message
+                TempData["SuccessMessage"] =  "Mapping with #ID " + createdDoc.mapID + " created successfully!";
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
@@ -514,23 +477,7 @@ namespace SAP_MIMOSAapp.Controllers
                 var mapping = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
                 mapping.prompt = query;
 
-                // Get the current mapping documents to calculate next ID
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
-
-                int highestId = 0;
-                foreach (var doc in documents)
-                {
-                    if (int.TryParse(doc.mapID, out int id) && id > highestId)
-                    {
-                        highestId = id;
-                    }
-                }
-                var nextMapId = (highestId + 1).ToString("D3");
-                mapping.mapID = nextMapId;
-                ViewBag.NextMapId = nextMapId;
-
+                // Do NOT assign mapID here! Let the backend generate it.
                 return View("Create", mapping);
             }
             return RedirectToAction("Create");
