@@ -15,6 +15,10 @@
     }
 
     <form asp-action="Create" method="post">
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+        }
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Mapping Details</h5>
@@ -23,7 +27,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="mapID" class="form-label">Map ID</label>
-                        <input asp-for="mapID" class="form-control form-text text-muted" readonly value="@(string.IsNullOrEmpty(Model?.mapID) ? ViewBag.NextMapId : Model.mapID)" />                       
+                        <input asp-for="mapID" class="form-control form-text text-muted" readonly placeholder="Map ID will be auto-generated" value="@(string.IsNullOrEmpty(Model?.mapID) ? ViewBag.NextMapId : Model.mapID)" />
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="LLMType" class="form-label">LLM Type</label>

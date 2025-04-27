@@ -6,6 +6,7 @@ import json
 import os
 import uvicorn
 from typing import List, Optional
+from uuid import uuid4
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -38,7 +39,7 @@ class MappingPair(BaseModel):
     mimosa: MappingField
 
 class MappingDocument(BaseModel):
-    mapID: str
+    mapID: Optional[str] = None
     LLMType: str
     mappings: List[MappingPair]
     prompt: Optional[str] = None
@@ -117,6 +118,21 @@ async def ask_openai(request: SearchQuery):
 @app.get("/workorders")
 async def get_workorders():
     return load_data()
+
+@app.post("/workorders")
+async def create_workorder(document: MappingDocument):
+    data = load_data()
+    # Generate a numeric mapID like '011' if not supplied
+    if not document.mapID:
+        existing_ids = [
+            int(doc["mapID"]) for doc in data
+            if "mapID" in doc and str(doc["mapID"]).isdigit()
+        ]
+        next_id = max(existing_ids, default=0) + 1
+        document.mapID = f"{next_id:03d}"
+    data.append(document.dict(exclude_none=True))
+    save_data(data)
+    return document
 
 @app.put("/workorders")
 async def update_workorders(documents: List[MappingDocument]):

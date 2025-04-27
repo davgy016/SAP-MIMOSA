@@ -3,6 +3,14 @@
 
 <h1>Generate Mapping Between SAP PM & MIMOSA </h1>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="success-message" class="alert alert-success text-center" role="alert" style="z-index:1000; position:relative;">
+        @TempData["SuccessMessage"]
+    </div>
+    
+}
+
 <div class="section">
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -338,6 +346,11 @@
                 setTimeout(function() { row.style.display = 'none'; }, 400);
             }
         }
+
+         setTimeout(function() {
+            var msg = document.getElementById('success-message');
+            if (msg) msg.style.display = 'none';
+        }, 5000);
 
     </script>
 }
