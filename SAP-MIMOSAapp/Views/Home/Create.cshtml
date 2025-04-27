@@ -48,6 +48,13 @@
                 <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
             </div>
             <div class="card-body" id="mappingsContainer">
+                @if (!string.IsNullOrWhiteSpace(Model?.prompt))
+                {
+                    <div class="alert alert-warning">
+                        <strong>Prompt:</strong> @Model.prompt 
+                    </div>
+                }
+
                 @{
                     var mappingIndex = 0;
                     if (Model?.mappings != null && Model.mappings.Count > 0)
@@ -59,9 +66,7 @@
                         }
                     }
                 }
-                <div class="alert alert-info" id="noMappingsMessage" @(Model?.mappings != null && Model.mappings.Count > 0 ? "style='display:none;'" : "")>
-                    No mappings added yet. Click "Add Mapping" to create a mapping pair.
-                </div>
+
             </div>
         </div>
 
@@ -83,7 +88,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
             const mappingsContainer = document.getElementById('mappingsContainer');
-            const noMappingsMessage = document.getElementById('noMappingsMessage');
             const template = document.getElementById('mappingPairTemplate').textContent;
 
             // Add mapping button click handler
@@ -93,8 +97,6 @@
 
             // Function to add a new mapping pair
             function addMappingPair() {
-                // Hide the "no mappings" message
-                noMappingsMessage.style.display = 'none';
 
                 // Create a new mapping pair from template (replace all [-1] with mappingIndex)
                 let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
@@ -105,10 +107,7 @@
                 mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
                     mappingElement.remove();
 
-                    // Show the "no mappings" message if there are no mappings
-                    if (mappingsContainer.querySelectorAll('.mapping-pair').length === 0) {
-                        noMappingsMessage.style.display = 'block';
-                    }
+
                 });
 
                 // Add the new mapping to the container
