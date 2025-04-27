@@ -18,6 +18,7 @@
                                 <div class="mb-3">
                                     <label for="searchInput" class="form-label">Search</label>
                                     <input type="text" id="searchInput" class="form-control" placeholder="@(string.IsNullOrEmpty(Model.SearchByLLM) ? "Enter entity name..." : "Enter LLM type...")" value="@(string.IsNullOrEmpty(Model.SearchByLLM) ? Model.SearchByEntityName : Model.SearchByLLM)" />
+                                    <div id="searchInputError" class="invalid-feedback" style="display:none;"></div>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check form-check-inline">
@@ -51,6 +52,7 @@
                                     <label for="queryInput" class="form-label">AI Assistant</label>
                                     <input type="text" id="queryInput" name="Query" class="form-control"
                                            placeholder="Ask a question about SAP-MIMOSA mapping..." value="@(Model.Query ?? "")" />
+                                    <div id="aiInputError" class="invalid-feedback" style="display:none;"></div>
                                 </div>
                                 <div class="d-flex mb-3 gap-2">
                                     <button type="submit" class="btn btn-primary">Ask AI</button>
@@ -252,61 +254,90 @@
 
 @section Scripts {
     <script>
-            //Search form logic
-            function updateSearchInputName() {
-                const searchType = document.querySelector('input[name="SearchType"]:checked').value;
-                const searchInput = document.getElementById('searchInput');
-                searchInput.removeAttribute('name');
-                if (searchType === 'EntityName') {
-                    searchInput.name = 'SearchByEntityName';
-                    searchInput.placeholder = 'Enter entity name...';
-                } else {
-                    searchInput.name = 'SearchByLLM';
-                    searchInput.placeholder = 'Enter LLM type...';
-                }
+        //Search form logic
+        function updateSearchInputName() {
+            const searchType = document.querySelector('input[name="SearchType"]:checked').value;
+            const searchInput = document.getElementById('searchInput');
+            searchInput.removeAttribute('name');
+            if (searchType === 'EntityName') {
+                searchInput.name = 'SearchByEntityName';
+                searchInput.placeholder = 'Enter entity name...';
+            } else {
+                searchInput.name = 'SearchByLLM';
+                searchInput.placeholder = 'Enter LLM type...';
             }
+        }
 
-            document.addEventListener('DOMContentLoaded', () => {
-                // Update placeholder when radio changes
-                document.getElementById('searchEntityName').addEventListener('change', updateSearchInputName);
-                document.getElementById('searchLLMType').addEventListener('change', updateSearchInputName);
+        function showInputError(inputElem, errorElem, message) {
+            errorElem.textContent = message;
+            errorElem.style.display = 'block';
+            inputElem.classList.add('is-invalid');
+        }
+        function clearInputError(inputElem, errorElem) {
+            errorElem.textContent = '';
+            errorElem.style.display = 'none';
+            inputElem.classList.remove('is-invalid');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update placeholder when radio changes
+            document.getElementById('searchEntityName').addEventListener('change', updateSearchInputName);
+            document.getElementById('searchLLMType').addEventListener('change', updateSearchInputName);
+            updateSearchInputName();
+            //input name on submit
+            document.getElementById('mappingSearchForm').addEventListener('submit', function(e) {
                 updateSearchInputName();
-                //input name on submit
-                document.getElementById('mappingSearchForm').addEventListener('submit', updateSearchInputName);
-                // Set radio button based on which field is filled
                 const searchInput = document.getElementById('searchInput');
-                if (searchInput.value && !document.getElementById('searchLLMType').checked) {
-                    document.getElementById('searchEntityName').checked = true;
-                } else if (searchInput.value && document.getElementById('searchLLMType').checked) {
-                    document.getElementById('searchLLMType').checked = true;
+                const errorElem = document.getElementById('searchInputError');
+                clearInputError(searchInput, errorElem);
+                if (!searchInput.value.trim()) {
+                    showInputError(searchInput, errorElem, 'Please enter a search value.');
+                    e.preventDefault();
+                    return false;
                 }
             });
+            // Set radio button based on which field is filled
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.value && !document.getElementById('searchLLMType').checked) {
+                document.getElementById('searchEntityName').checked = true;
+            } else if (searchInput.value && document.getElementById('searchLLMType').checked) {
+                document.getElementById('searchLLMType').checked = true;
+            }
+            // AI Assistant form validation and loading message
+            document.getElementById('aiSearchForm').addEventListener('submit', function(e) {
+                const aiInput = document.getElementById('queryInput');
+                const errorElem = document.getElementById('aiInputError');
+                clearInputError(aiInput, errorElem);
+                if (!aiInput.value.trim()) {
+                    showInputError(aiInput, errorElem, 'Please enter a question for the AI assistant.');
+                    e.preventDefault();
+                    return false;
+                }
+                document.getElementById('aiResponse').innerHTML = '<div class="alert alert-info">Loading response...</div>';
+                return true;
+            });
 
-            //Row toggle logic
-            function toggleRow(mapID) {
-                // Hide all other open details rows
-                document.querySelectorAll('.details-row').forEach(function(row) {
-                    if (row.id !== 'details-' + mapID) {
-                        row.classList.remove('showing');
-                        setTimeout(function() { row.style.display = 'none'; }, 400);
-                    }
-                });
-                // Toggle the selected row with animation
-                const row = document.getElementById('details-' + mapID);
-                if (row && row.style.display === 'none') {
-                    row.style.display = 'table-row';
-                    setTimeout(function() { row.classList.add('showing'); }, 10);
-                } else if(row) {
+        });
+
+        //Row toggle logic
+        function toggleRow(mapID) {
+            // Hide all other open details rows
+            document.querySelectorAll('.details-row').forEach(function(row) {
+                if (row.id !== 'details-' + mapID) {
                     row.classList.remove('showing');
                     setTimeout(function() { row.style.display = 'none'; }, 400);
                 }
-            }
-        //AI search logic
-        $(function() {
-            $('#aiSearchForm').on('submit', function() {
-                $('#aiResponse').html('<div class="alert alert-info">Loading response...</div>');
-                return true;
             });
-        });
+            // Toggle the selected row with animation
+            const row = document.getElementById('details-' + mapID);
+            if (row && row.style.display === 'none') {
+                row.style.display = 'table-row';
+                setTimeout(function() { row.classList.add('showing'); }, 10);
+            } else if(row) {
+                row.classList.remove('showing');
+                setTimeout(function() { row.style.display = 'none'; }, 400);
+            }
+        }
+
     </script>
 }
