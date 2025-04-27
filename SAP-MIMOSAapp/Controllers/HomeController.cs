@@ -65,7 +65,7 @@ namespace SAP_MIMOSAapp.Controllers
                     if (mappingDoc != null)
                     {
                         TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
-                        return RedirectToAction("CreateWithAI", new { query = model.Query });
+                        return RedirectToAction("Create", new { query = model.Query });
                     }
                     else
                     {
@@ -165,10 +165,18 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        public async Task<IActionResult> Create()
+        [HttpGet]
+        public IActionResult Create(string? query = null)
         {
-            // No need to pre-calculate mapID; backend will generate it.
-            return View();
+            MappingDocument? model = null;
+            if (TempData["AIMapping"] != null)
+            {
+                model = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
+                if (query != null)
+                    model.prompt = query;
+            }
+            // If no AI mapping, model will be null and view will show empty form
+            return View(model);
         }
 
         [HttpPost]
@@ -469,19 +477,7 @@ namespace SAP_MIMOSAapp.Controllers
             var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
             return Json(new { response = aiResponse?.Response ?? "No response from AI" });
         }
-        [HttpGet]
-        public async Task<IActionResult> CreateWithAI(string query)
-        {
-            if (TempData["AIMapping"] != null)
-            {
-                var mapping = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
-                mapping.prompt = query;
 
-                // Do NOT assign mapID here! Let the backend generate it.
-                return View("Create", mapping);
-            }
-            return RedirectToAction("Create");
-        }
 
         /**
          * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
