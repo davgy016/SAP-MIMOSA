@@ -229,7 +229,7 @@ namespace SAP_MIMOSAapp.Controllers
                 var createdDoc = JsonSerializer.Deserialize<MappingDocument>(responseText, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 // Redirect to Index (home page) with success message
-                TempData["SuccessMessage"] =  "Mapping with #ID " + createdDoc.mapID + " created successfully!";
+                TempData["SuccessMessage"] = "Mapping with #ID " + createdDoc.mapID + " created successfully!";
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
@@ -347,32 +347,18 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
+                var deleteResponse = await _httpClient.DeleteAsync($"workorders/{id}");
+                if (!deleteResponse.IsSuccessStatusCode)
                 {
-                    PropertyNameCaseInsensitive = true
-                };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
-
-                if (documents == null)
-                {
-                    return NotFound();
+                    var error = await deleteResponse.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = $"Error deleting record: {error}" });
                 }
-
-                documents.RemoveAll(d => d.mapID == id);
-
-                var json = JsonSerializer.Serialize(documents);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var deleteResponse = await _httpClient.PutAsync("workorders", content);
-                deleteResponse.EnsureSuccessStatusCode();
-
-                return RedirectToAction("Index");
+               
+                return Json(new { success = true, message = "Mapping deleted successfully!" });
             }
             catch (System.Exception ex)
             {
-                TempData["ErrorMessage"] = $"Error deleting record: {ex.Message}";
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = $"Error deleting record: {ex.Message}" });
             }
         }
 
