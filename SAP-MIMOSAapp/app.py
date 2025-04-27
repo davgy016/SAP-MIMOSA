@@ -139,6 +139,16 @@ async def update_workorders(documents: List[MappingDocument]):
     save_data([doc.dict(exclude_none=True) for doc in documents])
     return documents
 
+@app.delete("/workorders/{map_id}")
+async def delete_workorder(map_id: str):
+    data = load_data()
+    original_len = len(data)
+    data = [doc for doc in data if str(doc.get("mapID")) != str(map_id)]
+    if len(data) == original_len:
+        raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
+    save_data(data)
+    return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
+
 # Run the FastAPI app
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
