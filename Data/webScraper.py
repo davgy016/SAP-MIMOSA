@@ -106,30 +106,64 @@ class SAPWebScraper():
         return json_data
         with open(output_json, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, indent=2, ensure_ascii=False)
+    def merge_json(self, tableList, jsonList):
+        """
+        Merges multiple JSON tables into one structured list with table names.
+
+        Args:
+            tableList (List[str]): List of table names.
+            jsonList (List[List[Dict[str, str]]]): List of JSON data corresponding to each table.
+
+        Returns:
+            List[Dict[str, Any]]: Merged JSON in the format:
+                [
+                    {
+                        "TableName": <table_name>,
+                        "Fields": [ ...rows... ]
+                    },
+                    ...
+                ]
+        """
+        merged = []
+
+        for table_name, fields in zip(tableList, jsonList):
+            merged.append({
+                "TableName": table_name,
+                "Fields": fields
+            })
+
+        return merged
 
 
     
+    
 scraper = SAPWebScraper()
 tableNames = []
+jsonData = []
+counter = 0
 
-# scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
-# scraper.getSlices("<tr.*?>.*?</tr>")
-# scraper.write_to_file("mainTable.txt")
-# scraper.extract_visible_text_to_csv("mainTable.txt","mainTable.csv")
+scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295")
+scraper.getSlices("<tr.*?>.*?</tr>")
+scraper.write_to_file("mainTable.txt")
+scraper.extract_visible_text_to_csv("mainTable.txt","mainTable.csv")
 
 with open("mainTable.csv", "r+") as f:
     for line in f.readlines():
+        counter += 1
         line = line.split(",")
         tableName = line[3]
         tableNames.append(tableName)
 
-print(tableNames)
+        scraper.scrape(url=f"https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295&table={tableName}")
+        scraper.getSlices(r"<tr.*?>.*?</tr>")
+        scraper.write_to_file("output.txt")
+        json_data = scraper.extract_visible_text_to_json("output.txt","output.json")
+        jsonData.append(json_data)
 
+        print(f"Completed {counter} of {len(f.readlines())} tables {counter/len(f.readlines())}% done")
 
-scraper.scrape(url="https://sap.erpref.com/?schema=ERP6EHP7&module_id=1295&table=EAMS_KPIPARAM")
-scraper.getSlices(r"<tr.*?>.*?</tr>")
-scraper.write_to_file("output.txt")
-json_data = scraper.extract_visible_text_to_json("output.txt","output.json")
+fullJson = scraper.merge_json(tableNames,jsonData)
+
 with open("output.json", 'w', encoding='utf-8') as f:
-    json.dump(json_data, f, indent=2, ensure_ascii=False)
+    json.dump(fullJson, f, indent=2, ensure_ascii=False)
 
