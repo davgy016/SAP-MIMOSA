@@ -1,1 +1,173 @@
-[]
+[
+    {
+        "Id": 20,
+        "SapField": [
+            {
+                "Label": "QMNUM",
+                "DataType": "CHAR(12)",
+                "Description": "Notification Number",
+                "FieldLength": 10
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.NotificationID",
+                "DataType": "CHAR(12)",
+                "Description": "Notification Number",
+                "FieldLength": 10
+            }
+        ]
+    },
+    {
+        "Id": 21,
+        "SapField": [
+            {
+                "Label": "AUFNR",
+                "DataType": "CHAR(12)",
+                "Description": "Order Number",
+                "FieldLength": 12
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.WorkOrderID",
+                "DataType": "CHAR(12)",
+                "Description": "Work Order Number",
+                "FieldLength": 12
+            }
+        ]
+    },
+    {
+        "Id": 22,
+        "SapField": [
+            {
+                "Label": "WERKS",
+                "DataType": "CHAR(4)",
+                "Description": "Plant",
+                "FieldLength": 4
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.PlantID",
+                "DataType": "CHAR(4)",
+                "Description": "Plant",
+                "FieldLength": 4
+            }
+        ]
+    },
+    {
+        "Id": 23,
+        "SapField": [
+            {
+                "Label": "AUSNR",
+                "DataType": "CHAR(12)",
+                "Description": "Maintenance Notification",
+                "FieldLength": 12
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.MaintenanceNotificationID",
+                "DataType": "CHAR(12)",
+                "Description": "Maintenance Notification",
+                "FieldLength": 12
+            }
+        ]
+    },
+    {
+        "Id": 24,
+        "SapField": [
+            {
+                "Label": "TARIF",
+                "DataType": "CHAR(10)",
+                "Description": "Priority",
+                "FieldLength": 10
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.Priority",
+                "DataType": "CHAR(10)",
+                "Description": "Priority",
+                "FieldLength": 10
+            }
+        ]
+    },
+    {
+        "Id": 25,
+        "SapField": [
+            {
+                "Label": "BESKZ",
+                "DataType": "CHAR(1)",
+                "Description": "Order Type",
+                "FieldLength": 1
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.OrderType",
+                "DataType": "CHAR(1)",
+                "Description": "Order Type",
+                "FieldLength": 1
+            }
+        ]
+    },
+    {
+        "Id": 26,
+        "SapField": [
+            {
+                "Label": "STEUS",
+                "DataType": "CHAR(4)",
+                "Description": "System Status",
+                "FieldLength": 4
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.SystemStatus",
+                "DataType": "CHAR(4)",
+                "Description": "System Status",
+                "FieldLength": 4
+            }
+        ]
+    },
+    {
+        "Id": 27,
+        "SapField": [
+            {
+                "Label": "ERDAT",
+                "DataType": "DATS",
+                "Description": "Creation Date",
+                "FieldLength": 8
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.CreationDate",
+                "DataType": "DATS",
+                "Description": "Creation Date",
+                "FieldLength": 8
+            }
+        ]
+    },
+    {
+        "Id": 28,
+        "SapField": [
+            {
+                "Label": "AEDAT",
+                "DataType": "DATS",
+                "Description": "Last Change Date",
+                "FieldLength": 8
+            }
+        ],
+        "MimosaField": [
+            {
+                "Label": "WorkOrder.LastChangeDate",
+                "DataType": "DATS",
+                "Description": "Last Change Date",
+                "FieldLength": 8
+            }
+        ]
+    }
+]

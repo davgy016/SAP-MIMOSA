@@ -1,0 +1,70 @@
+@model Tuple<int, SAP_MIMOSAapp.Models.MappingPair>
+<div class="mapping-pair mb-4 border rounded p-3 position-relative">
+    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
+        <i class="bi bi-x-lg"></i> Remove
+    </button>
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-primary">SAP Field</h5>
+            <div class="mb-2">
+                <label class="form-label">Platform</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].sap.platform" value="@(Model.Item1 == -1 ? "SAP" : (string.IsNullOrEmpty(Model.Item2?.sap?.platform) ? "SAP" : Model.Item2?.sap?.platform))" readonly />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Entity Name</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].sap.entityName" value="@Model.Item2?.sap?.entityName" required />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Field Name</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].sap.fieldName" value="@Model.Item2?.sap?.fieldName" required />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="mappings[@Model.Item1].sap.description" rows="2">@Model.Item2?.sap?.description</textarea>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Data Type</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].sap.dataType" value="@Model.Item2?.sap?.dataType" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Field Length</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].sap.fieldLength" value="@Model.Item2?.sap?.fieldLength" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="mappings[@Model.Item1].sap.notes" rows="2">@Model.Item2?.sap?.notes</textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5 class="text-success">MIMOSA Field</h5>
+            <div class="mb-2">
+                <label class="form-label">Platform</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.platform" value="@(Model.Item1 == -1 ? "MIMOSA" : (string.IsNullOrEmpty(Model.Item2?.mimosa?.platform) ? "MIMOSA" : Model.Item2?.mimosa?.platform))" readonly />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Entity Name</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.entityName" value="@Model.Item2?.mimosa?.entityName" required />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Field Name</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.fieldName" value="@Model.Item2?.mimosa?.fieldName" required />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="mappings[@Model.Item1].mimosa.description" rows="2">@Model.Item2?.mimosa?.description</textarea>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Data Type</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.dataType" value="@Model.Item2?.mimosa?.dataType" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Field Length</label>
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.fieldLength" value="@Model.Item2?.mimosa?.fieldLength" />
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="mappings[@Model.Item1].mimosa.notes" rows="2">@Model.Item2?.mimosa?.notes</textarea>
+            </div>
+        </div>
+    </div>
+</div>
