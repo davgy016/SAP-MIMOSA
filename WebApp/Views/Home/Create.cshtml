@@ -1,0 +1,125 @@
+@model SAP_MIMOSAapp.Models.MappingDocument
+
+@{
+    ViewData["Title"] = "Create Mapping";
+}
+
+<div class="container mt-4">
+    <h2>Create New Mapping</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    <form asp-action="Create" method="post">
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+        }
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Mapping Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="mapID" class="form-label">Map ID</label>
+                        <input asp-for="mapID" class="form-control form-text text-muted" readonly placeholder="Map ID will be auto-generated" value="@(string.IsNullOrEmpty(Model?.mapID) ? ViewBag.NextMapId : Model.mapID)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LLMType" class="form-label">LLM Type</label>
+                        <select asp-for="LLMType" class="form-select">
+                            <option value="">Select LLM Type</option>
+                            <option value="GPT-4">GPT-4</option>
+                            <option value="GPT-3.5">GPT-3.5</option>
+                            <option value="Claude">Claude</option>
+                            <option value="Gemini">Gemini</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span asp-validation-for="LLMType" class="text-danger"></span>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Mappings</h5>
+                <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
+            </div>
+            <div class="card-body" id="mappingsContainer">
+                @if (!string.IsNullOrWhiteSpace(Model?.prompt))
+                {
+                    <div class="alert alert-warning">
+                        <strong>Prompt:</strong> @Model.prompt 
+                    </div>
+                }
+
+                @{
+                    var mappingIndex = 0;
+                    if (Model?.mappings != null && Model.mappings.Count > 0)
+                    {
+                        foreach (var mapping in Model.mappings)
+                        {
+                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
+                            mappingIndex++;
+                        }
+                    }
+                }
+
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="prompt" />
+        <div class="d-flex justify-content-between mb-4">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</div>
+
+<!-- Template for mapping pair -->
+<script type="text/template" id="mappingPairTemplate">
+    @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
+</script>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
+            const mappingsContainer = document.getElementById('mappingsContainer');
+            const template = document.getElementById('mappingPairTemplate').textContent;
+
+            // Add mapping button click handler
+            document.getElementById('addMapping').addEventListener('click', function() {
+                addMappingPair();
+            });
+
+            // Function to add a new mapping pair
+            function addMappingPair() {
+
+                // Create a new mapping pair from template (replace all [-1] with mappingIndex)
+                let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
+
+                // Create a container for the new mapping
+                const mappingElement = document.createElement('div');
+                mappingElement.innerHTML = newMapping;
+                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
+                    mappingElement.remove();
+
+
+                });
+
+                // Add the new mapping to the container
+                mappingsContainer.appendChild(mappingElement);
+
+                // Increment the index for the next mapping
+                mappingIndex++;
+            }
+        });
+    </script>
+}

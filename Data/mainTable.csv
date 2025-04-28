@@ -1,0 +1,1259 @@
+1,ERP EHP7,6.0,EAMSC_JOB_OPTION,2,1,Customizing for Job Options,Plant Maintenance
+2,ERP EHP7,6.0,EAMSC_UI_SHLP,5,1,Configuration for search help assignment,Plant Maintenance
+3,ERP EHP7,6.0,EAMS_CVBATTMANAT,4,1,Attribute Manager: ABBID Text,Plant Maintenance
+4,ERP EHP7,6.0,EAMS_CVBATTMANFT,6,1,Attribute Manager: Field Text,Plant Maintenance
+5,ERP EHP7,6.0,EAMS_CVBATTMANST,5,1,Attribute Manager: Structure Text,Plant Maintenance
+6,ERP EHP7,6.0,EAMS_CVBATTRMANA,2,1,Attribute Manager: ABBID,Plant Maintenance
+7,ERP EHP7,6.0,EAMS_CVBATTRMAND,7,1,Attribute Manager: User display fields,Plant Maintenance
+8,ERP EHP7,6.0,EAMS_CVBATTRMANF,4,1,Attribute Manager: Field,Plant Maintenance
+9,ERP EHP7,6.0,EAMS_CVBATTRMANS,3,1,Attribute Manager: Structure,Plant Maintenance
+10,ERP EHP7,6.0,EAMS_CVBEXTDS,11,1,Data sources to retrieve external attributes and geolocation,Plant Maintenance
+11,ERP EHP7,6.0,EAMS_CVBOBJICON,4,1,MIME Icon for Object type,Plant Maintenance
+12,ERP EHP7,6.0,EAMS_CVBOPT,2,1,On / Off Map Display Functionality,Plant Maintenance
+13,ERP EHP7,6.0,EAMS_CVBPARVWPRI,4,1,Partner Function priority for searching address,Plant Maintenance
+14,ERP EHP7,6.0,EAMS_CVBSETTINGS,7,1,EAMS VB: Settings,Plant Maintenance
+15,ERP EHP7,6.0,EAMS_CVBSYSSTAT,6,1,System Status and Icon Combination of Objects,Plant Maintenance
+16,ERP EHP7,6.0,EAMS_CVBSYSTS,4,1,System Status and Priority Combination of Objects,Plant Maintenance
+17,ERP EHP7,6.0,EAMS_CVBSYSTST,5,1,System Status and Priority Combination of Objects (Text),Plant Maintenance
+18,ERP EHP7,6.0,EAMS_CVBUSSTS,8,1,User Status and Icon Combination of Objects,Plant Maintenance
+19,ERP EHP7,6.0,EAMS_ICON_SYSTA,4,1,System Status Icon and Network Object Combination,Plant Maintenance
+20,ERP EHP7,6.0,EAMS_KPIFOROBJ,3,1,KPIs for GIS and Analytics,Plant Maintenance
+21,ERP EHP7,6.0,EAMS_KPIFOROBJ_T,4,1,Text Table for KPIs,Plant Maintenance
+22,ERP EHP7,6.0,EAMS_KPIMETADATA,7,1,KPI Metadata Table for GIS and Analytics,Plant Maintenance
+23,ERP EHP7,6.0,EAMS_KPIOBJALL,4,1,Table to Enter One Field,Plant Maintenance
+24,ERP EHP7,6.0,EAMS_KPIPARAM,14,1,KPI Display Parameter Customizing Table,Plant Maintenance
+25,ERP EHP7,6.0,EAMS_KPIPERSONAL,8,1,KPI Personalisation Table,Plant Maintenance
+26,ERP EHP7,6.0,EAMS_LAYERS_PERS,4,1,User Layer personalization,Plant Maintenance
+27,ERP EHP7,6.0,EAMS_LTXT_USAGE,2,1,Determine Long Text for Job,Plant Maintenance
+28,ERP EHP7,6.0,EAMS_OBJTYPE,4,1,EAM object types,Plant Maintenance
+29,ERP EHP7,6.0,EAMS_SHLP_CONFIG,5,1,Configuration for Search Help Assignment,Plant Maintenance
+30,ERP EHP7,6.0,EAMS_SL_CLR_CODE,4,1,Table For Color Coding,Plant Maintenance
+31,ERP EHP7,6.0,EAMS_SL_COUNTRY,3,1,Country Code table,Plant Maintenance
+32,ERP EHP7,6.0,EAMS_SL_NM_LINKS,6,1,Network Modelor Links customization table,Plant Maintenance
+33,ERP EHP7,6.0,EAMS_SL_PIECHART,4,1,Pie chart customizing table,Plant Maintenance
+34,ERP EHP7,6.0,EAMS_SL_SCRN_SIZ,7,1,Screen sizing customization,Plant Maintenance
+35,ERP EHP7,6.0,EAMS_SL_TIMER,3,1,Refresh Timer for the Silverlight Appication,Plant Maintenance
+36,ERP EHP7,6.0,EAMS_UI_SETTINGS,3,1,Configure Display of Jobs in the Launchpad,Plant Maintenance
+37,ERP EHP7,6.0,EAMS_UI_SHLP,4,1,Configuration for search help assignment,Plant Maintenance
+38,ERP EHP7,6.0,EAMS_VISOBJCOMPT,8,1,Visual Object Component Symbol/Icon Customizing,Plant Maintenance
+39,ERP EHP7,6.0,EAMS_VISOBJECT,6,1,Visual Object Style and Properties,Plant Maintenance
+40,ERP EHP7,6.0,EAMWS_ORG_AREA,2,1,Organizational Area for Safety,Plant Maintenance
+41,ERP EHP7,6.0,EAMWS_PLANTS,5,1,Safety Plan Relevant Plants in WS,Plant Maintenance
+42,ERP EHP7,6.0,EAMWS_REQUI,3,1,Safety requirements of WCM assigned to EAM object,Plant Maintenance
+43,ERP EHP7,6.0,EAMWS_RESPONSES,10,1,Risk Respones for Safety Checklist,Plant Maintenance
+44,ERP EHP7,6.0,EAMWS_RISKS,14,1,Risks for Safety Checklist,Plant Maintenance
+45,ERP EHP7,6.0,EAMWS_RISK_RELEV,4,1,Risk-Relevant Objects,Plant Maintenance
+46,ERP EHP7,6.0,EAMWS_RM_SYSTEM,4,1,Connection to Risk Management System,Plant Maintenance
+47,ERP EHP7,6.0,EAMWS_SAFETYMEAS,11,1,Safety Measures for Safety Checklist,Plant Maintenance
+48,ERP EHP7,6.0,EAMWS_SFTY_SYMB,2,1,Folder in MIME Repository for Storing Safety Symbols,Plant Maintenance
+49,ERP EHP7,6.0,MC17I30HDRSETUP,6,1,Store BW reconstruction for MC17I30HDR (Order),Plant Maintenance
+50,ERP EHP7,6.0,MC17I30OPRSETUP,6,1,Store BW Reconstruction for MC17I30OPR (Process),Plant Maintenance
+51,ERP EHP7,6.0,MC18I30HDRSETUP,6,1,Store BW Reconstruction for MC18I30HDR (Order),Plant Maintenance
+52,ERP EHP7,6.0,MC18I30OPRSETUP,6,1,Store BW Reconstruction for MC18I30OPR (Process),Plant Maintenance
+53,ERP EHP7,6.0,MCB_BUD,10,1,MCB Retraction data for Budget check,Plant Maintenance
+54,ERP EHP7,6.0,MSM_COMM_LOG_1,15,2,Communication lof for MSM for paging,Plant Maintenance
+55,ERP EHP7,6.0,MSM_COMM_LOG_2,19,2,Commmunication log for MSM for paging status,Plant Maintenance
+56,ERP EHP7,6.0,PLMN_FL_EXT,47,1,GHO Object characteristics,Plant Maintenance
+57,ERP EHP7,6.0,PMEAMS_JC_SEL,6,1,Selection of Printing Papers for Web Dynpro Document,Plant Maintenance
+58,ERP EHP7,6.0,PMPL,15,1,PM: Print log,Plant Maintenance
+59,ERP EHP7,6.0,S180,13,1,APO: Long-Term Planning,Plant Maintenance
+60,ERP EHP7,6.0,S180E,10,2,S180 - Structure Information,Plant Maintenance
+61,ERP EHP7,6.0,T003O_BC,4,1,MCB Budget check parameter for PM Work order,Plant Maintenance
+62,ERP EHP7,6.0,T354A,4,1,Define business operation for authorization check,Plant Maintenance
+63,ERP EHP7,6.0,T354B,1,1,Business transactions for authorization check,Plant Maintenance
+64,ERP EHP7,6.0,T354T,6,1,Transaction branching by dynpro field,Plant Maintenance
+65,ERP EHP7,6.0,T370B,2,1,Technical object authorization group,Plant Maintenance
+66,ERP EHP7,6.0,T370B_T,4,1,Language-dependent texts for authorization group,Plant Maintenance
+67,ERP EHP7,6.0,T370C,2,1,ABC indicator for technical objects,Plant Maintenance
+68,ERP EHP7,6.0,T370C_T,4,1,Language-dependent texts for ABC indicator,Plant Maintenance
+69,ERP EHP7,6.0,T370K,2,1,Type of technical object,Plant Maintenance
+70,ERP EHP7,6.0,T370K_T,4,1,Language-Dependent Texts for Object Type,Plant Maintenance
+71,ERP EHP7,6.0,T370L,3,1,Default value type for start transactions (two-character),Plant Maintenance
+72,ERP EHP7,6.0,T370M,3,1,Category default value for start transactions,Plant Maintenance
+73,ERP EHP7,6.0,T390_OT,6,1,Description of shop papers per document type selection,Plant Maintenance
+74,ERP EHP7,6.0,T390_U,21,1,Print control by user,Plant Maintenance
+75,ERP EHP7,6.0,T392_V,19,1,PM: Detailed selection for print diversion,Plant Maintenance
+76,ERP EHP7,6.0,T399U,5,1,Control: General PM/SM settings,Plant Maintenance
+77,ERP EHP7,6.0,T399W_T,4,1,Maintenance plan category descriptions,Plant Maintenance
+78,ERP EHP7,6.0,TCMES,3,1,Settings for External Scheduling of Order,Plant Maintenance
+79,ERP EHP7,6.0,TEQUI_HIER,8,1,Definition of Hierarchies for Equipment,Plant Maintenance
+80,ERP EHP7,6.0,TEQUI_HIERT,6,1,Text Table for TEQUI_HIER,Plant Maintenance
+81,ERP EHP7,6.0,TFUNCT_LOC_HIER,8,1,Definition of Hierarchies for Functional Locations,Plant Maintenance
+82,ERP EHP7,6.0,TFUNCT_LOC_HIERT,6,1,Text Table for TFUNCT_LOC_HIER,Plant Maintenance
+83,ERP EHP7,6.0,TIPLMN_OBJ_EQUI,2,1,Customizing Table - GHO Object EQUI,Plant Maintenance
+84,ERP EHP7,6.0,TIPLMN_OBJ_FL,2,1,Customizing Table - GHO Object FL,Plant Maintenance
+85,ERP EHP7,6.0,TMSMGRAPH8,4,1,Control of MSM Graphic,Plant Maintenance
+86,ERP EHP7,6.0,TMSMGRAPH8C,4,1,Customer Control for MSM Graphic,Plant Maintenance
+87,ERP EHP7,6.0,TPLMN_GIS_LAYER,4,1,Customizing for GIS Map layer,Plant Maintenance
+88,ERP EHP7,6.0,TPM_C05,10,1,Extraction Parameters:Task List/Maintenance Plan (as of 5.0),Plant Maintenance
+89,ERP EHP7,6.0,TSCHEDULEPARAM1,2,1,Scheduling Parameter 1,Plant Maintenance
+90,ERP EHP7,6.0,TSCHEDULEPARAM1T,4,1,External Scheduling Texts for Parameter 1,Plant Maintenance
+91,ERP EHP7,6.0,TSCHEDULEPARAM2,2,1,Scheduling Parameter 2,Plant Maintenance
+92,ERP EHP7,6.0,TSCHEDULEPARAM2T,4,1,External Scheduling Texts for Parameter 2,Plant Maintenance
+93,ERP EHP7,6.0,TSCHEDULEPARAM3,2,1,Scheduling Parameter 3,Plant Maintenance
+94,ERP EHP7,6.0,TSCHEDULEPARAM3T,4,1,External Scheduling Texts for Parameter 3,Plant Maintenance
+95,ERP EHP7,6.0,TZ1APPL,3,1,Activation of Time Zone Support per Applikation Range,Plant Maintenance
+96,ERP EHP7,6.0,Z9I_STK_CUST,3,1,Stillstandskontrolle: Steuerungsparameter,Plant Maintenance
+97,ERP EHP7,6.0,Z9I_STK_IF_NPV,29,1,PM/PS-Schnittstelle: Netzplanvorgänge,Plant Maintenance
+98,ERP EHP7,6.0,Z9I_STK_IF_NPV_W,36,1,PM/PS-Schnittstelle: Netzplanvorgänge Werkstattsicht,Plant Maintenance
+99,ERP EHP7,6.0,Z9I_STK_IF_PSP,17,1,PM/PS-Interface: PSP-Elemente,Plant Maintenance
+100,ERP EHP7,6.0,Z9I_STK_IF_PSP_W,20,1,PM/PS-Interface: PSP-Elemente Werkstattsicht,Plant Maintenance
+101,ERP EHP7,6.0,Z9I_STK_KOMPLEX,6,1,Komplexstillstände,Plant Maintenance
+102,ERP EHP7,6.0,Z9I_STK_MAIL_ADR,9,1,Mail-Adressen für Stillstandsrückmeldungen,Plant Maintenance
+103,ERP EHP7,6.0,Z9I_STK_VORGANG,54,1,Terminkontrolle Stillstandsplanung: Relevante Vorgänge,Plant Maintenance
+104,ERP EHP7,6.0,Z9I_STK_WVARI,6,1,Werkstattlisten-Varianten,Plant Maintenance
+105,ERP EHP7,6.0,Z9MIANF,39,1,Stillstanndsplanung - Daten für Anfragen,Plant Maintenance
+106,ERP EHP7,6.0,Z9MISTP,18,1,Stillstandsplanung,Plant Maintenance
+107,ERP EHP7,6.0,Z9MI_KLASSEN,4,1,Klassenzuordnung für Werkstattlisten der Stillstandsplanun,Plant Maintenance
+108,ERP EHP7,6.0,/ISDFPS/MDIV_SUM,7,1,DFPS: Totals Records for Interval Documents,Maintenance Processing
+109,ERP EHP7,6.0,/ISDFPS/MNTF_HD,10,2,DFPS: Mass Maintenance,Maintenance Processing
+110,ERP EHP7,6.0,/ISDFPS/MNTF_POS,7,1,DFPS: Mass Maintenance,Maintenance Processing
+111,ERP EHP7,6.0,/ISDFPS/PMRELCG,6,1,PM: Relocation - Check Groups (Relocation Monitor),Maintenance Processing
+112,ERP EHP7,6.0,/ISDFPS/PMRELCT,4,1,PM: Relocation - Text for Check Group (Relocation Monitor),Maintenance Processing
+113,ERP EHP7,6.0,/ISDFPS/PM_UPSC,5,1,Commands for UPS Processing,Maintenance Processing
+114,ERP EHP7,6.0,/ISDFPS/PM_UPSCT,5,1,Commands for UPS Processing - Description,Maintenance Processing
+115,ERP EHP7,6.0,/ISDFPS/STRU_PM,7,1,PM: Maintenance System for Force Element,Maintenance Processing
+116,ERP EHP7,6.0,/MRSS/ADOBE_OFF,5,1,Test table,Maintenance Processing
+117,ERP EHP7,6.0,/MRSS/C_AUTO_ASG,2,1,Determine assignment type for Automatic assignment creation,Maintenance Processing
+118,ERP EHP7,6.0,/MRSS/C_BAS_TA,5,1,Time allocation Types,Maintenance Processing
+119,ERP EHP7,6.0,/MRSS/C_BAS_TAT,5,1,Texts for Time allocation types,Maintenance Processing
+120,ERP EHP7,6.0,/MRSS/C_DEF_DURA,2,1,Customizing to specify the default demand duration type,Maintenance Processing
+121,ERP EHP7,6.0,/MRSS/C_DPR_ACCL,3,1,Color for showing resource availability(Assignment Calendar),Maintenance Processing
+122,ERP EHP7,6.0,/MRSS/C_DPR_ASG,3,1,Degree of Coverage of Demands,Maintenance Processing
+123,ERP EHP7,6.0,/MRSS/C_DPR_FORM,4,1,Forms for Communication via E-Mail and Groupware,Maintenance Processing
+124,ERP EHP7,6.0,/MRSS/C_DPR_PROC,2,1,Activate different processes in cProjects,Maintenance Processing
+125,ERP EHP7,6.0,/MRSS/C_DPR_REJ,4,1,Reason for rejection of candidates: Customizing,Maintenance Processing
+126,ERP EHP7,6.0,/MRSS/C_DPR_REJT,4,1,Text table for /MRSS/C_DPR_REJ,Maintenance Processing
+127,ERP EHP7,6.0,/MRSS/C_DPR_ROLE,9,1,Customizing: MRS relevant setting for the project role type,Maintenance Processing
+128,ERP EHP7,6.0,/MRSS/C_DPR_STAT,3,1,To store the status for CPRO,Maintenance Processing
+129,ERP EHP7,6.0,/MRSS/C_DPR_UI,9,1,Configuration of UI elements in C Projects,Maintenance Processing
+130,ERP EHP7,6.0,/MRSS/C_DPR_UI_T,5,1,Configuration of UI elements in C Projects: Texts,Maintenance Processing
+131,ERP EHP7,6.0,/MRSS/C_PREMK,18,1,Dummy table for creating Org. Assgnmnt Search Help (No Data),Maintenance Processing
+132,ERP EHP7,6.0,/MRSS/C_RES_TA,3,1,Assignment of Resource Types and Time Allocation Types,Maintenance Processing
+133,ERP EHP7,6.0,/MRSS/C_RES_TYP,3,1,MRS Basis Resource Types,Maintenance Processing
+134,ERP EHP7,6.0,/MRSS/C_RES_TYPT,4,1,MRS Basis Resource type texts,Maintenance Processing
+135,ERP EHP7,6.0,/MRSS/C_RM_CVUI,3,1,customizing for other resources and outlook export,Maintenance Processing
+136,ERP EHP7,6.0,/MRSS/C_SGW_CUST,2,1,Master Data Settings for Web Based Planning Board,Maintenance Processing
+137,ERP EHP7,6.0,/MRSS/C_SGW_HIER,3,1,customization Table to display Hierarhies,Maintenance Processing
+138,ERP EHP7,6.0,/MRSS/C_SGW_PATH,4,1,Maintain Evaluation Paths for Various Object Types,Maintenance Processing
+139,ERP EHP7,6.0,/MRSS/C_ZIPA_DT,5,1,Postal Code Areas: Postal Code Assignment,Maintenance Processing
+140,ERP EHP7,6.0,/MRSS/C_ZIPA_HD,2,1,Postal Code Area: Header Data,Maintenance Processing
+141,ERP EHP7,6.0,/MRSS/C_ZIPA_HDT,4,1,Postal Code Area: Header Data Texts,Maintenance Processing
+142,ERP EHP7,6.0,/MRSS/D_BAS_ASG,30,3,MRS Basis Assignments,Maintenance Processing
+143,ERP EHP7,6.0,/MRSS/D_BAS_REQQ,13,2,Required Qualifications for Demands,Maintenance Processing
+144,ERP EHP7,6.0,/MRSS/D_BAS_RES,16,3,Resource Master Data,Maintenance Processing
+145,ERP EHP7,6.0,/MRSS/D_DEM_DATA,15,1,Demand Master Data,Maintenance Processing
+146,ERP EHP7,6.0,/MRSS/D_DPR_ASGN,3,1,Map MRS Assignment to cPro Staffing,Maintenance Processing
+147,ERP EHP7,6.0,/MRSS/D_DPR_FORM,3,1,Forms for Communication via E-Mail and Groupware,Maintenance Processing
+148,ERP EHP7,6.0,/MRSS/D_DPR_MAP,5,3,Mapping of external keys of project and role guid in cpro,Maintenance Processing
+149,ERP EHP7,6.0,/MRSS/D_DPR_REJ,22,1,Rejected resoruces,Maintenance Processing
+150,ERP EHP7,6.0,/MRSS/D_RES_QUAL,12,3,Resource Qualifications,Maintenance Processing
+151,ERP EHP7,6.0,/MRSS/D_RES_TA,18,3,Time allocations for resources,Maintenance Processing
+152,ERP EHP7,6.0,/MRSS/D_RES_ZIPA,6,1,Postal Code Areas of Resource,Maintenance Processing
+153,ERP EHP7,6.0,/MRSS/D_TA_INT,7,2,Complex time allocations intervals,Maintenance Processing
+154,ERP EHP7,6.0,/MRSS/D_VARIANT,12,1,Variant details,Maintenance Processing
+155,ERP EHP7,6.0,/MRSS/RM_RATE_T,3,1,Resource Management K-Rate Table,Maintenance Processing
+156,ERP EHP7,6.0,/MRSS/RM_RFC_DES,4,1,RFC destinations for IL* landscape,Maintenance Processing
+157,ERP EHP7,6.0,ALM_MAT_PL_SL_SD,3,1,Material Pushing to Middleware for Server Driven,Maintenance Processing
+158,ERP EHP7,6.0,ALM_MESYNC_DB1,6,1,ME Sync Delta-Download Handling - Data Administration,Maintenance Processing
+159,ERP EHP7,6.0,ALM_MESYNC_DB2,10,1,ME Sync Delta-Download Handling: Data,Maintenance Processing
+160,ERP EHP7,6.0,ALM_MESYNC_RFC,2,1,ME Sync RFC Destination for the Backend,Maintenance Processing
+161,ERP EHP7,6.0,ALM_ME_C000,2,1,Mobile Asset Management Scenario,Maintenance Processing
+162,ERP EHP7,6.0,ALM_ME_C000T,4,1,Mobile Asset Management Scenario,Maintenance Processing
+163,ERP EHP7,6.0,ALM_ME_C001,29,1,MAM Scenario Business Processes,Maintenance Processing
+164,ERP EHP7,6.0,ALM_ME_C002,6,1,MAM Scenario Device Settings,Maintenance Processing
+165,ERP EHP7,6.0,ALM_ME_C010PRF,14,1,Order Processing,Maintenance Processing
+166,ERP EHP7,6.0,ALM_ME_C010PRFT,4,1,Short ID for Order Profile,Maintenance Processing
+167,ERP EHP7,6.0,ALM_ME_C011DEF,5,1,Details for Notification Profile,Maintenance Processing
+168,ERP EHP7,6.0,ALM_ME_C011PRF,5,1,Notification Profile,Maintenance Processing
+169,ERP EHP7,6.0,ALM_ME_C011PRFT,4,1,Short Description for Notification Profile,Maintenance Processing
+170,ERP EHP7,6.0,ALM_ME_C012DEF,10,1,Define Order Type Profile,Maintenance Processing
+171,ERP EHP7,6.0,ALM_ME_C012PRF,2,1,Order Type Profile,Maintenance Processing
+172,ERP EHP7,6.0,ALM_ME_C012PRFT,4,1,Text Table for Order Type Profile,Maintenance Processing
+173,ERP EHP7,6.0,ALM_ME_C014DEF,3,1,Control Key Profile Definition,Maintenance Processing
+174,ERP EHP7,6.0,ALM_ME_C014PRF,2,1,Control Key Profile,Maintenance Processing
+175,ERP EHP7,6.0,ALM_ME_C014PRFT,4,1,Text Table for Control Key Profile,Maintenance Processing
+176,ERP EHP7,6.0,ALM_ME_C015PRF,14,1,Confirmation profile,Maintenance Processing
+177,ERP EHP7,6.0,ALM_ME_C015PRFT,4,1,Text table for confirmation profile,Maintenance Processing
+178,ERP EHP7,6.0,ALM_ME_C016_DEF,4,1,Work Center Profile Definition,Maintenance Processing
+179,ERP EHP7,6.0,ALM_ME_C016_PRF,2,1,Work Center Profile,Maintenance Processing
+180,ERP EHP7,6.0,ALM_ME_C016_PRFT,4,1,Text Table for Work Center Profile,Maintenance Processing
+181,ERP EHP7,6.0,ALM_ME_C030PRF,41,1,Selection Settings for Master Data,Maintenance Processing
+182,ERP EHP7,6.0,ALM_ME_C070,9,1,Order- and Stock Assignment,Maintenance Processing
+183,ERP EHP7,6.0,ALM_ME_C070T,4,1,Text Table for Resource Profile,Maintenance Processing
+184,ERP EHP7,6.0,ALM_ME_C900DEF,4,1,Deactivate Standard Methods,Maintenance Processing
+185,ERP EHP7,6.0,ALM_ME_CALCMDEF,5,1,Accounting Indicator Profile,Maintenance Processing
+186,ERP EHP7,6.0,ALM_ME_CALCMPRF,2,1,Accounting Indicator Profile,Maintenance Processing
+187,ERP EHP7,6.0,ALM_ME_CALCMPRFT,4,1,Accounting Indicator Profile Description,Maintenance Processing
+188,ERP EHP7,6.0,ALM_ME_CMUL_LANG,3,1,Customizing Table for Default and Subset languages.,Maintenance Processing
+189,ERP EHP7,6.0,ALM_ME_D997,24,1,User-specific settings,Maintenance Processing
+190,ERP EHP7,6.0,ALM_ME_D999,3,1,Scenario Assignment for User,Maintenance Processing
+191,ERP EHP7,6.0,ALM_ME_DEBUG_SET,9,1,Debugging Settings,Maintenance Processing
+192,ERP EHP7,6.0,ALM_ME_DEST,2,1,MAM RFC Destinations,Maintenance Processing
+193,ERP EHP7,6.0,ALM_ME_DEST_SD,7,1,MAM RFC Destinations for Server Drives,Maintenance Processing
+194,ERP EHP7,6.0,ALM_ME_EQUIHPRF,12,1,ALM ME: Equi history profile,Maintenance Processing
+195,ERP EHP7,6.0,ALM_ME_EQUI_TEMP,5,1,Table to store template equipments,Maintenance Processing
+196,ERP EHP7,6.0,ALM_ME_GENRAL_SD,14,1,General Server Driven Settings,Maintenance Processing
+197,ERP EHP7,6.0,ALM_ME_GIS_CUST,3,1,GIS Attribute Assignment,Maintenance Processing
+198,ERP EHP7,6.0,ALM_ME_PARTNER_T,3,1,Auxiliary Table for Part Replication Scenario Partner,Maintenance Processing
+199,ERP EHP7,6.0,ALM_ME_PUSH_DEST,2,1,MAM RFC Target System for Push,Maintenance Processing
+200,ERP EHP7,6.0,ALM_ME_PUSH_LOG,7,2,ALM_ME: Push Log,Maintenance Processing
+201,ERP EHP7,6.0,ALM_ME_PUSH_NTYP,3,1,Define Notification Types for Push,Maintenance Processing
+202,ERP EHP7,6.0,ALM_ME_PUSH_OTYP,3,1,Define Order Types for Push,Maintenance Processing
+203,ERP EHP7,6.0,ALM_ME_PUSH_PRIO,4,1,Priorities for MAM Push,Maintenance Processing
+204,ERP EHP7,6.0,ALM_ME_SIG_LINK,9,1,MAM Signature to Order Link,Maintenance Processing
+205,ERP EHP7,6.0,ALM_ME_SIG_LINKS,7,1,Signature Key - Link Table,Maintenance Processing
+206,ERP EHP7,6.0,ALM_ME_STOBJ,3,1,Status,Maintenance Processing
+207,ERP EHP7,6.0,ALM_ME_STOBJT,4,1,Status,Maintenance Processing
+208,ERP EHP7,6.0,ALM_ME_SYNC,29,2,Sync Status,Maintenance Processing
+209,ERP EHP7,6.0,ALM_NOTI_TYP_SD,2,1,Notification Type maintenance for Server Driven Notification,Maintenance Processing
+210,ERP EHP7,6.0,ALM_NO_PL_WC_SD,3,1,Plant and Work Center maintenance Server Driven Notification,Maintenance Processing
+211,ERP EHP7,6.0,ALM_ORD_PART_SD,3,1,Partner Maintenance for Server Driven order pushing,Maintenance Processing
+212,ERP EHP7,6.0,ALM_ORD_TYP_SD,2,1,Order Type Maintenance for Server Driven push of orders,Maintenance Processing
+213,ERP EHP7,6.0,ALM_OR_PG_PL_SD,3,1,Planning Plant and Planner groups for Server Driven Order,Maintenance Processing
+214,ERP EHP7,6.0,ALM_OR_PL_WC_SD,3,1,Plant and Workcenter for Server Driven Order,Maintenance Processing
+215,ERP EHP7,6.0,EAMWS_SAFETY,5,1,Safety Data for Objects,Maintenance Processing
+216,ERP EHP7,6.0,EAMWS_SAF_CHAR,2,1,Safety Relevance Values,Maintenance Processing
+217,ERP EHP7,6.0,EAMWS_SAF_CHAR_T,4,1,Safety Relevance Value Descriptons,Maintenance Processing
+218,ERP EHP7,6.0,EAM_AUT_JOBSELID,5,1,IDs of Orders/Notifs. for unit test of job selection in EAMS,Maintenance Processing
+219,ERP EHP7,6.0,MSAM_ATT_TMP,4,1,Table to store object specific attachment data,Maintenance Processing
+220,ERP EHP7,6.0,MSAM_BGRFC_QUEUE,4,1,database table to configure BGRFC queues,Maintenance Processing
+221,ERP EHP7,6.0,MSAM_CACT_BPRO,11,1,Activate Business Processes,Maintenance Processing
+222,ERP EHP7,6.0,MSAM_CCONFPRF,12,1,Confirmation profile,Maintenance Processing
+223,ERP EHP7,6.0,MSAM_CCONFPRFT,4,1,Text table for confirmation profile,Maintenance Processing
+224,ERP EHP7,6.0,MSAM_CDEST_SD,7,1,MSAM RFC Destinations for Server Drives,Maintenance Processing
+225,ERP EHP7,6.0,MSAM_CEQUIPPRF,19,1,Selection Settings for Master Data - Equipment,Maintenance Processing
+226,ERP EHP7,6.0,MSAM_CEQUI_TMP,5,1,Table to store template equipments,Maintenance Processing
+227,ERP EHP7,6.0,MSAM_CFUNLOCPRF,19,1,Selection Settings for Master Data - Functional Location,Maintenance Processing
+228,ERP EHP7,6.0,MSAM_CGEN_TRANS,17,1,General and Transaction Data,Maintenance Processing
+229,ERP EHP7,6.0,MSAM_CMASTRDAT,18,1,Selection Settings for Master Data,Maintenance Processing
+230,ERP EHP7,6.0,MSAM_CMUL_LANG,3,1,Customizing Table for Default and Subset languages.,Maintenance Processing
+231,ERP EHP7,6.0,MSAM_CNOTIDEF,4,1,Details for Notification Profile,Maintenance Processing
+232,ERP EHP7,6.0,MSAM_CNOTIPRF,2,1,Notification Profile,Maintenance Processing
+233,ERP EHP7,6.0,MSAM_CNOTIPRFT,4,1,Short Description for Notification Profile,Maintenance Processing
+234,ERP EHP7,6.0,MSAM_CORDERPRF,4,1,Order Processing Profile,Maintenance Processing
+235,ERP EHP7,6.0,MSAM_CORDPRFT,4,1,Short ID for Order Profile,Maintenance Processing
+236,ERP EHP7,6.0,MSAM_CORDTYPE,2,1,Order Type Profile,Maintenance Processing
+237,ERP EHP7,6.0,MSAM_CORTYPDEF,6,1,Details for Order Type Profile,Maintenance Processing
+238,ERP EHP7,6.0,MSAM_CORTYPRFT,4,1,Text Table for Order Type Profile,Maintenance Processing
+239,ERP EHP7,6.0,MSAM_FUNCLOC_PRF,5,1,Function location template profile,Maintenance Processing
+240,ERP EHP7,6.0,MSAM_PARTNER_T,3,1,Auxiliary Table for Part Replication Scenario Partner,Maintenance Processing
+241,ERP EHP7,6.0,EAML_CM_PROFID,3,1,EAML: Profile ID for Context Menu in graphical display,Technical Objects
+242,ERP EHP7,6.0,EAML_CM_PROFID_T,4,1,EAML: Context Menu Profile Description,Technical Objects
+243,ERP EHP7,6.0,EAML_CM_PROFIT,6,1,EAML: Profile Elements for Context Menu in graphical display,Technical Objects
+244,ERP EHP7,6.0,EAML_D_AUSP_CDOC,9,1,Linear Data for Characteristics,Technical Objects
+245,ERP EHP7,6.0,EAML_D_AUSP_LFE,19,1,Linear Data for Characteristics - Database table,Technical Objects
+246,ERP EHP7,6.0,EAML_D_EVT,18,2,EAML: Events DB Table,Technical Objects
+247,ERP EHP7,6.0,EAML_D_EVT_ATVAL,6,1,EAML: Event Attribute Value,Technical Objects
+248,ERP EHP7,6.0,EAML_D_LFE_CDOC,19,1,Linear Data,Technical Objects
+249,ERP EHP7,6.0,EAML_D_LFE_DATA,19,2,Linear Asset Management  - Database,Technical Objects
+250,ERP EHP7,6.0,EAML_D_LFE_NDR,3,1,Linear Data - Notif.Item Default Rules dep. on Message Types,Technical Objects
+251,ERP EHP7,6.0,EAML_D_LINK_CDOC,2,1,Link IDs for CDOC,Technical Objects
+252,ERP EHP7,6.0,EAML_D_LOL_DATA,13,1,Linear Asset Mgmt.  - Object Link Enhancements - Database,Technical Objects
+253,ERP EHP7,6.0,EAML_D_LRP_HDR,9,1,Linear Reference Pattern Header,Technical Objects
+254,ERP EHP7,6.0,EAML_D_LRP_HDR_T,4,1,Linear Reference Pattern Header Texts,Technical Objects
+255,ERP EHP7,6.0,EAML_D_LRP_ITEM,5,1,Linear Reference Pattern Items,Technical Objects
+256,ERP EHP7,6.0,EAML_D_LRP_ITM_T,5,1,Linear Reference Pattern Item Texts,Technical Objects
+257,ERP EHP7,6.0,EAML_D_OFFSET_TC,5,1,Offset Type Codes,Technical Objects
+258,ERP EHP7,6.0,EAML_D_OFFSET_TT,4,1,Offset Type Codes Text and Documentation,Technical Objects
+259,ERP EHP7,6.0,EAML_D_TCLS,4,1,Organizational area for characteristics with linear data,Technical Objects
+260,ERP EHP7,6.0,EAML_EDGE_PROF,9,1,EAML Display profile for Edge types,Technical Objects
+261,ERP EHP7,6.0,EAML_EDGE_PROF_T,4,1,EAML Display profile texts,Technical Objects
+262,ERP EHP7,6.0,EAML_EDGE_TYPE,3,1,EAML: Type for Link Object,Technical Objects
+263,ERP EHP7,6.0,EAML_EDGE_TYPE_T,4,1,EAML: Type for Link Object (Text table),Technical Objects
+264,ERP EHP7,6.0,EAML_EVT_ATT_REL,4,1,EAML: Attribute - Event Object Type Assignment,Technical Objects
+265,ERP EHP7,6.0,EAML_EVT_A_VAL,5,1,EAML Event  Attribute Allowed Values,Technical Objects
+266,ERP EHP7,6.0,EAML_EVT_A_VAL_T,6,1,EAML Event  Attribute Allowed Values Description,Technical Objects
+267,ERP EHP7,6.0,EAML_EVT_OBJ,4,1,EAML Event Object,Technical Objects
+268,ERP EHP7,6.0,EAML_EVT_OBJ_T,5,1,EAML Event Object,Technical Objects
+269,ERP EHP7,6.0,EAML_EVT_OTYPE,3,1,EAML Event Object Types,Technical Objects
+270,ERP EHP7,6.0,EAML_EVT_OTYPE_T,4,1,EAML: Event Object Types Text,Technical Objects
+271,ERP EHP7,6.0,EAML_EVT_O_ATT,8,1,EAML Event Object Attribute,Technical Objects
+272,ERP EHP7,6.0,EAML_EVT_O_ATT_T,5,1,EAML: Event Object Attribute Text,Technical Objects
+273,ERP EHP7,6.0,EAML_JNET_COLORS,2,1,EAML: Colors for JNET Graphics,Technical Objects
+274,ERP EHP7,6.0,EAML_LRP_TYPE,2,1,EAML: LRP Type,Technical Objects
+275,ERP EHP7,6.0,EAML_LRP_TYPE_T,4,1,EAML: LRP Type Text,Technical Objects
+276,ERP EHP7,6.0,EAML_NET_EVT_REL,3,1,EAML: Network Type - Event Object Type Assignment,Technical Objects
+277,ERP EHP7,6.0,EAML_NODE_PROF,6,1,EAML Display profile for Node types,Technical Objects
+278,ERP EHP7,6.0,EAML_NODE_PROF_T,4,1,EAML Display profile texts,Technical Objects
+279,ERP EHP7,6.0,EAML_NODE_TYPE,3,1,EAML: Node Type for Object Link From / To,Technical Objects
+280,ERP EHP7,6.0,EAML_NODE_TYPE_T,4,1,EAML: Node Type for Object Link From / To,Technical Objects
+281,ERP EHP7,6.0,EAML_NW_GROUP,2,1,EAML: IMG Network Group,Technical Objects
+282,ERP EHP7,6.0,EAML_NW_GROUP_T,4,1,EAML: IMG Network Group Text,Technical Objects
+283,ERP EHP7,6.0,EAML_NW_TYPE,4,1,EAML: IMG Network Type,Technical Objects
+284,ERP EHP7,6.0,EAML_NW_TYPE_T,4,1,EAML: IMG Network Type Text,Technical Objects
+285,ERP EHP7,6.0,EAML_OL_POS,3,1,EAML: Define Link Position on FROM/TO object,Technical Objects
+286,ERP EHP7,6.0,EAML_OL_POS_T,4,1,EAML: Define Link Position on FROM/TO object,Technical Objects
+287,ERP EHP7,6.0,EAML_TT_PROFID,3,1,EAML: Profile ID  for Tooltips in graphical display,Technical Objects
+288,ERP EHP7,6.0,EAML_TT_PROFID_T,4,1,EAML: Tooltip Profile Description,Technical Objects
+289,ERP EHP7,6.0,EAML_TT_PROFIT,7,1,EAML: Profile Elements for Tooltips in graphical display,Technical Objects
+290,ERP EHP7,6.0,FLEET,55,5,Fleet Attributes,Technical Objects
+291,ERP EHP7,6.0,T370CLC,9,1,Fleet Consumption Calculation Keys,Technical Objects
+292,ERP EHP7,6.0,T370CLC_T,4,1,Text for Fleet Consumption Calculation Keys,Technical Objects
+293,ERP EHP7,6.0,T370CON,2,1,Fleet Consumption Unit Group,Technical Objects
+294,ERP EHP7,6.0,T370CONV,5,1,Fleet Consumption Units,Technical Objects
+295,ERP EHP7,6.0,T370CON_T,4,1,Short Text For Fleet Consumption Unit Groups,Technical Objects
+296,ERP EHP7,6.0,T370DMP,3,1,Default Measuring Point For Technical Object,Technical Objects
+297,ERP EHP7,6.0,T370ENG,2,1,Engine Type,Technical Objects
+298,ERP EHP7,6.0,T370ENG_T,4,1,Engine Type: Multilingual Short Texts,Technical Objects
+299,ERP EHP7,6.0,T370FLD,2,1,Fluid Types,Technical Objects
+300,ERP EHP7,6.0,T370FLD_T,4,1,Fluid Types: Multilingual Short Texts,Technical Objects
+301,ERP EHP7,6.0,T370FLT,4,1,Fleet Types,Technical Objects
+302,ERP EHP7,6.0,T370FLT_R,4,1,Fleet Types: Reference to Technical Object Types (Equi/FL),Technical Objects
+303,ERP EHP7,6.0,T370POS,3,1,Valid Measuring Point Positions (Sort Field),Technical Objects
+304,ERP EHP7,6.0,T370POS_T,4,1,Valid Measuring Point Positions (Sort Field) - Short Texts,Technical Objects
+305,ERP EHP7,6.0,T370POS_USG,3,1,Fleet Objects: Counter Usage,Technical Objects
+306,ERP EHP7,6.0,T370USG,2,1,Fleet Usage,Technical Objects
+307,ERP EHP7,6.0,T370USG_T,4,1,Fleet Usage: Multilingual Short Texts,Technical Objects
+308,ERP EHP7,6.0,TITOBPROF,3,1,Technical Objects: View Profiles for Tab Index Customizing,Technical Objects
+309,ERP EHP7,6.0,TITOBPROFT,5,1,Technical Objects: Texts for Profiles from Table TITOBPROF,Technical Objects
+310,ERP EHP7,6.0,TITOBPROF_SUB,9,1,Technical Objects: Customizing Tab Index in View Profiles,Technical Objects
+311,ERP EHP7,6.0,TITOBSUB,6,1,Technical Objects: Subscreens with Customizable Assignment,Technical Objects
+312,ERP EHP7,6.0,TITOBSUBT,4,1,Technical Objects: Texts for Subscreens from Table TITOBSUB,Technical Objects
+313,ERP EHP7,6.0,TITOBTABS,5,1,Technical Objects: Customizing (Tabstrip) Buttons,Technical Objects
+314,ERP EHP7,6.0,TITOBTABST,6,1,Technical Objects: Customizing Texts (Tabstrip) Buttons,Technical Objects
+315,ERP EHP7,6.0,TITOB_IBASE,11,3,Creation of IBase: Buffer Table Structures,Technical Objects
+316,ERP EHP7,6.0,WCA2,61,1,WCM: Work and Requirements,Work Clearance Management
+317,ERP EHP7,6.0,WCAAP,128,4,WCM: Application,Work Clearance Management
+318,ERP EHP7,6.0,WCAB,8,1,WCM: Valuation,Work Clearance Management
+319,ERP EHP7,6.0,WCABQ,10,1,WCM: Log (Valuation),Work Clearance Management
+320,ERP EHP7,6.0,WCACD,5,2,WCM: Operational Class <-> PM Object,Work Clearance Management
+321,ERP EHP7,6.0,WCACE,5,1,WCM: Operational Condition <-> Operational Class,Work Clearance Management
+322,ERP EHP7,6.0,WCACG,15,1,WCM: WCM Object <-> Catalog,Work Clearance Management
+323,ERP EHP7,6.0,WCACGQ,20,2,WCM: Log (WCM Object <-> Catalog),Work Clearance Management
+324,ERP EHP7,6.0,WCACH,13,3,WCM: (Temporary) Log for Tagging/Untagging (Time-Frame),Work Clearance Management
+325,ERP EHP7,6.0,WCACI,36,2,WCM: (Temporary) Log for Tagging/Untagging (Conflict Check),Work Clearance Management
+326,ERP EHP7,6.0,WCACM,15,2,WCM: Current Operational Condition/Type,Work Clearance Management
+327,ERP EHP7,6.0,WCACN,20,6,WCM: (Temporary) Log (Tag/Test Tag),Work Clearance Management
+328,ERP EHP7,6.0,WCACNQ,22,3,WCM: Log (Operational Tag),Work Clearance Management
+329,ERP EHP7,6.0,WCACO,8,3,WCM: (Temporary) Log for Tagging/Untagging (Ref. Object),Work Clearance Management
+330,ERP EHP7,6.0,WCACQ,37,2,WCM: Log for Tagging/Untagging (Conflict Check),Work Clearance Management
+331,ERP EHP7,6.0,WCACS,10,2,WCM: (Temporary) Log (Protected Area),Work Clearance Management
+332,ERP EHP7,6.0,WCAD,12,1,WCM: Approval Group,Work Clearance Management
+333,ERP EHP7,6.0,WCADQ,14,1,WCM: Log (Approval Group),Work Clearance Management
+334,ERP EHP7,6.0,WCAE,7,1,WCM: Order Operation <-> Approval Group,Work Clearance Management
+335,ERP EHP7,6.0,WCAEQ,9,1,WCM: Log (Order Operation <-> Approval Group),Work Clearance Management
+336,ERP EHP7,6.0,WCAF,9,2,WCM: Order Operation <-> Work Clearance Document,Work Clearance Management
+337,ERP EHP7,6.0,WCAFQ,11,1,WCM: Log (Order Operation <-> Work Clearance Document),Work Clearance Management
+338,ERP EHP7,6.0,WCAG,14,1,WCM: Data for Mode-Dependent Tagging,Work Clearance Management
+339,ERP EHP7,6.0,WCAGN,9,2,WCM: Approvals,Work Clearance Management
+340,ERP EHP7,6.0,WCAGNS,16,2,WCM: Approval Segment,Work Clearance Management
+341,ERP EHP7,6.0,WCAHE,81,4,WCM: Work Clearance Document (Header),Work Clearance Management
+342,ERP EHP7,6.0,WCAIT,35,3,WCM: Work Clearance Document (Item),Work Clearance Management
+343,ERP EHP7,6.0,WCAJ,32,2,WCM: Lineup,Work Clearance Management
+344,ERP EHP7,6.0,WCAK,14,1,WCM: Verification List (Header Data),Work Clearance Management
+345,ERP EHP7,6.0,WCALA,10,3,WCM: WCM Object <-> WCM Object,Work Clearance Management
+346,ERP EHP7,6.0,WCALQ,17,3,WCM: Log (WCM Object <-> WCM Object),Work Clearance Management
+347,ERP EHP7,6.0,WCAMA,6,1,WCM: General User Settings,Work Clearance Management
+348,ERP EHP7,6.0,WCAMB,7,2,WCM: Plant-Specific User Settings,Work Clearance Management
+349,ERP EHP7,6.0,WCAMC,15,2,WCM: Log of Operational Lists (Header Data),Work Clearance Management
+350,ERP EHP7,6.0,WCAME,54,3,WCM: (Temporary) Log of Operational Lists (Items),Work Clearance Management
+351,ERP EHP7,6.0,WCAMI,52,2,WCM: Log of Operational Lists (Items),Work Clearance Management
+352,ERP EHP7,6.0,WCAOD,5,2,WCM: Technical Object (Object List),Work Clearance Management
+353,ERP EHP7,6.0,WCAPL,12,2,WCM: Print Log,Work Clearance Management
+354,ERP EHP7,6.0,WCAQ,22,1,WCM: Verification List (Items),Work Clearance Management
+355,ERP EHP7,6.0,WCAR,14,3,WCM: Operational Step,Work Clearance Management
+356,ERP EHP7,6.0,WCAS,7,2,WCM: Application <-> Order Operation,Work Clearance Management
+357,ERP EHP7,6.0,WCASQ,9,1,WCM: Log (Application <-> Order Operation),Work Clearance Management
+358,ERP EHP7,6.0,WCAT,8,2,WCM: Templates,Work Clearance Management
+359,ERP EHP7,6.0,WCAW,66,4,WCM: Work Approval,Work Clearance Management
+360,ERP EHP7,6.0,WCC0,3,1,WCM: View Profile,Work Clearance Management
+361,ERP EHP7,6.0,WCC0A,7,1,WCM: Screen Areas of a View Profile,Work Clearance Management
+362,ERP EHP7,6.0,WCC0B,6,1,WCM: Tab Pages of a View Profile,Work Clearance Management
+363,ERP EHP7,6.0,WCC0BT,6,1,WCM: Tab Pages of a View Profile (Texts),Work Clearance Management
+364,ERP EHP7,6.0,WCC0C,9,1,WCM: Screen Areas of a Tab Page,Work Clearance Management
+365,ERP EHP7,6.0,WCC0R,5,1,WCM: WCM Object <-> View Profile,Work Clearance Management
+366,ERP EHP7,6.0,WCC0S,8,1,WCM: Subscreens for View Profiles,Work Clearance Management
+367,ERP EHP7,6.0,WCC0SR,4,1,WCM: Restriction Subscreen <-> WCM Object,Work Clearance Management
+368,ERP EHP7,6.0,WCC0ST,4,1,WCM: Subscreens for View Profiles (Texts),Work Clearance Management
+369,ERP EHP7,6.0,WCC0SU,4,1,WCM: Subscreens with Individual Attributes,Work Clearance Management
+370,ERP EHP7,6.0,WCC0SUT,5,1,WCM: Subscreens with Individual Attributes (Texts),Work Clearance Management
+371,ERP EHP7,6.0,WCC0T,4,1,WCM: View Profile (Texts),Work Clearance Management
+372,ERP EHP7,6.0,WCC1,5,1,WCM: Work Permits,Work Clearance Management
+373,ERP EHP7,6.0,WCC2N,10,1,WCM: Requirements,Work Clearance Management
+374,ERP EHP7,6.0,WCC2W,10,1,WCM: Work,Work Clearance Management
+375,ERP EHP7,6.0,WCC3,9,1,WCM: Selection of WCM Objects,Work Clearance Management
+376,ERP EHP7,6.0,WCCA,10,1,WCM: Switching Data,Work Clearance Management
+377,ERP EHP7,6.0,WCCB,2,1,WCM: Operational Condition,Work Clearance Management
+378,ERP EHP7,6.0,WCCBT,4,1,WCM: Operational Condition (Texts),Work Clearance Management
+379,ERP EHP7,6.0,WCCC,2,1,WCM: Operational Type,Work Clearance Management
+380,ERP EHP7,6.0,WCCCT,4,1,WCM: Operational Type (Texts),Work Clearance Management
+381,ERP EHP7,6.0,WCCD,2,1,WCM: Operational Group,Work Clearance Management
+382,ERP EHP7,6.0,WCCDT,4,1,WCM: Operational Group (Texts),Work Clearance Management
+383,ERP EHP7,6.0,WCCE,11,1,WCM: Conflict Rules,Work Clearance Management
+384,ERP EHP7,6.0,WCCF,3,1,WCM: Revision Phase,Work Clearance Management
+385,ERP EHP7,6.0,WCCFT,5,1,WCM: Revision Phase (Texts),Work Clearance Management
+386,ERP EHP7,6.0,WCCG,3,1,WCM: Overall Conditions of Technical System,Work Clearance Management
+387,ERP EHP7,6.0,WCCGT,5,1,WCM: Overall Conditions of Technical System (Texts),Work Clearance Management
+388,ERP EHP7,6.0,WCCH,3,1,WCM: Train,Work Clearance Management
+389,ERP EHP7,6.0,WCCHT,5,1,WCM: Train (Texts),Work Clearance Management
+390,ERP EHP7,6.0,WCCI,6,1,WCM: Tag <-> (Operational Group Operational Type; Test Tag),Work Clearance Management
+391,ERP EHP7,6.0,WCCJ,6,1,WCM: Selection Fields for Creation with Template,Work Clearance Management
+392,ERP EHP7,6.0,WCCK,3,1,WCM: Operational Class,Work Clearance Management
+393,ERP EHP7,6.0,WCCKT,5,1,WCM: Operational Class (Texts),Work Clearance Management
+394,ERP EHP7,6.0,WCCL,16,1,WCM: Print,Work Clearance Management
+395,ERP EHP7,6.0,WCCLT,6,1,WCM: Print (Texts),Work Clearance Management
+396,ERP EHP7,6.0,WCCLU,5,1,WCM: Lineup Usage,Work Clearance Management
+397,ERP EHP7,6.0,WCCLUT,5,1,WCM: Lineup Usage,Work Clearance Management
+398,ERP EHP7,6.0,WCCLV,9,1,WCM: Lineup,Work Clearance Management
+399,ERP EHP7,6.0,WCCLX,13,1,WCM: Print (User-Specific),Work Clearance Management
+400,ERP EHP7,6.0,WCCM,5,1,WCM: PM Order <-> WCM Object,Work Clearance Management
+401,ERP EHP7,6.0,WCCMR,11,1,WCM: Order Operation,Work Clearance Management
+402,ERP EHP7,6.0,WCCMS,9,1,WCM: Operational Step,Work Clearance Management
+403,ERP EHP7,6.0,WCCMST,6,1,WCM: Operational Step (Texts),Work Clearance Management
+404,ERP EHP7,6.0,WCCMU,9,1,WCM: Operational Step,Work Clearance Management
+405,ERP EHP7,6.0,WCCN,4,1,WCM: Valuation,Work Clearance Management
+406,ERP EHP7,6.0,WCCO,30,1,WCM: WCM Object,Work Clearance Management
+407,ERP EHP7,6.0,WCCOG,3,1,WCM: WCM Object,Work Clearance Management
+408,ERP EHP7,6.0,WCCOGT,6,1,WCM: WCM Object (General Texts),Work Clearance Management
+409,ERP EHP7,6.0,WCCOR,14,1,WCM: WCM Object (Master) <-> WCM Object (Slave),Work Clearance Management
+410,ERP EHP7,6.0,WCCOT,7,1,WCM: WCM Object (Texts),Work Clearance Management
+411,ERP EHP7,6.0,WCCP,22,1,WCM: WCM Object <-> Approvals,Work Clearance Management
+412,ERP EHP7,6.0,WCCPN,6,1,WCM: Approval Group,Work Clearance Management
+413,ERP EHP7,6.0,WCCPV,11,1,WCM: Approval Groups,Work Clearance Management
+414,ERP EHP7,6.0,WCCQ,2,1,WCM: Group,Work Clearance Management
+415,ERP EHP7,6.0,WCCQT,4,1,WCM: Group (Texts),Work Clearance Management
+416,ERP EHP7,6.0,WCCR,35,1,WCM: Application Profile,Work Clearance Management
+417,ERP EHP7,6.0,WCCS,2,1,WCM: Selection Fields for Data Transfer,Work Clearance Management
+418,ERP EHP7,6.0,WCCST,4,1,WCM: Selection Fields for Data Transfer (Texts),Work Clearance Management
+419,ERP EHP7,6.0,WCCTA,3,1,WCM: Grouping (Status),Work Clearance Management
+420,ERP EHP7,6.0,WCCTB,3,1,WCM: Grouping (Approval Status),Work Clearance Management
+421,ERP EHP7,6.0,WCCTC,3,1,WCM: Grouping (Additional Data),Work Clearance Management
+422,ERP EHP7,6.0,WCCU,23,1,WCM: Use of Work Clearance Document,Work Clearance Management
+423,ERP EHP7,6.0,WCCUT,7,1,WCM: Use of Work Clearance Document (Texts),Work Clearance Management
+424,ERP EHP7,6.0,WCCV,3,1,WCM: Physical Blocking Type,Work Clearance Management
+425,ERP EHP7,6.0,WCCVT,5,1,WCM: Physical Blocking Type (Texts),Work Clearance Management
+426,ERP EHP7,6.0,WCCWA,7,1,WCM: Changes (Additional Data) Forbidden,Work Clearance Management
+427,ERP EHP7,6.0,WCCWB,8,1,WCM: Assignment Forbidden,Work Clearance Management
+428,ERP EHP7,6.0,WCCX,8,1,WCM: Use of Work Approval,Work Clearance Management
+429,ERP EHP7,6.0,WCCXT,7,1,WCM: Use of Work Approval (Texts),Work Clearance Management
+430,ERP EHP7,6.0,WCCY,13,1,WCM: Use of Application,Work Clearance Management
+431,ERP EHP7,6.0,WCCYT,7,1,WCM: Use of Application (Texts),Work Clearance Management
+432,ERP EHP7,6.0,WCCZ,7,1,WCM: Text Processing,Work Clearance Management
+433,ERP EHP7,6.0,MCIPMIS,47,1,PMIS: Master data characteristics for PMIS before image,Reporting
+434,ERP EHP7,6.0,PMCO2,3,1,Cost structure: Job key figures (PMIS),Reporting
+435,ERP EHP7,6.0,PMCOCKF,5,1,Cost/Quantity structure: Customer-specific key figs (PMIS),Reporting
+436,ERP EHP7,6.0,PMMRCKF,4,1,IMG: Assign QUAN Fields to UNIT Fields,Reporting
+437,ERP EHP7,6.0,PMMRCKFA,5,1,IMG: Update PMIS Measurement Document: Assignments and Units,Reporting
+438,ERP EHP7,6.0,PMMRCKFB,9,1,IMG: Consumption Key Figures in PMIS: Function and Arguments,Reporting
+439,ERP EHP7,6.0,S061,42,3,Location and planning,Reporting
+440,ERP EHP7,6.0,S061E,19,2,S061 - Structural Information,Reporting
+441,ERP EHP7,6.0,S062,38,1,Object class and manufacturer,Reporting
+442,ERP EHP7,6.0,S062E,16,2,S062 - Structural Information,Reporting
+443,ERP EHP7,6.0,S063,21,1,Damage Analysis 30 .,Reporting
+444,ERP EHP7,6.0,S063E,16,2,S063 - Structural Information,Reporting
+445,ERP EHP7,6.0,S064,20,1,Single object - damage analysis,Reporting
+446,ERP EHP7,6.0,S065,44,1,Object statistics,Reporting
+447,ERP EHP7,6.0,S065E,17,2,S065 - Structural Information,Reporting
+448,ERP EHP7,6.0,S070,16,3,Breakdown Statistics,Reporting
+449,ERP EHP7,6.0,S070E,12,2,S070 - Structural Information,Reporting
+450,ERP EHP7,6.0,S114,40,1,Fahrzeugverbrauchsanalyse,Reporting
+451,ERP EHP7,6.0,S114E,38,2,S114 - Strukturinformationen,Reporting
+452,ERP EHP7,6.0,S115,29,1,Cost Evaluation,Reporting
+453,ERP EHP7,6.0,S115E,13,2,S115 - Structural Information,Reporting
+454,ERP EHP7,6.0,S205,57,1,MAP: Store Planning Movements,Reporting
+455,ERP EHP7,6.0,S205E,14,2,S205 - Structure Information,Reporting
+456,ERP EHP7,6.0,TPMCKF,3,1,PMIS: customer-specific value and quantity key figures,Reporting
+457,ERP EHP7,6.0,TPMCKFT,4,1,PMIS: texts for cust.-specific value and quantity key figs,Reporting
+458,ERP EHP7,6.0,TPMK,2,1,Cost key figures of the maintenance order,Reporting
+459,ERP EHP7,6.0,TPMKT,4,1,Texts for cost key figures of the maintenance order,Reporting
+460,ERP EHP7,6.0,/MRSS/CF999,11,1,Broadcast Targets,Capacity and Resource Planning
+461,ERP EHP7,6.0,/MRSS/C_CDOPP_T,4,1,CD Opportunity Description,Capacity and Resource Planning
+462,ERP EHP7,6.0,/MRSS/C_CD_OPPOR,2,1,Opportunity Type,Capacity and Resource Planning
+463,ERP EHP7,6.0,/MRSS/C_FAV_LINK,3,1,Favorite Links in the Left Frame,Capacity and Resource Planning
+464,ERP EHP7,6.0,/MRSS/C_FV_LNK_T,4,1,Text Table for /MRSS/C_FAV_LINK,Capacity and Resource Planning
+465,ERP EHP7,6.0,/MRSS/C_HIER_EVA,4,1,Evaluation Paths,Capacity and Resource Planning
+466,ERP EHP7,6.0,/MRSS/C_MAPASTXT,4,1,Status texts for assignments,Capacity and Resource Planning
+467,ERP EHP7,6.0,/MRSS/C_MAPNPOS,9,1,Code Groups for Notification Items,Capacity and Resource Planning
+468,ERP EHP7,6.0,/MRSS/C_MAPROLE,6,1,Mapping of R/3 partner roles,Capacity and Resource Planning
+469,ERP EHP7,6.0,/MRSS/C_MAPSTAT,8,1,Mapping of R/3 status,Capacity and Resource Planning
+470,ERP EHP7,6.0,/MRSS/C_MAPTASK,8,1,Mapping of R/3 task,Capacity and Resource Planning
+471,ERP EHP7,6.0,/MRSS/C_MAPWC,3,1,Mapping of R/3 work center types,Capacity and Resource Planning
+472,ERP EHP7,6.0,/MRSS/C_MOB_STAT,6,1,Assignment of Abstract Status to Plants (Mobile Integration),Capacity and Resource Planning
+473,ERP EHP7,6.0,/MRSS/C_OPPR_TYP,2,1,Opportunity Type,Capacity and Resource Planning
+474,ERP EHP7,6.0,/MRSS/C_PRO_PHAS,2,1,Table for Project Phase,Capacity and Resource Planning
+475,ERP EHP7,6.0,/MRSS/C_PRO_SERV,2,1,Table for Project Service,Capacity and Resource Planning
+476,ERP EHP7,6.0,/MRSS/C_PRSERV_T,4,1,Description for Project Service,Capacity and Resource Planning
+477,ERP EHP7,6.0,/MRSS/C_RCT_MRSD,2,1,Define RFC location for MRS system,Capacity and Resource Planning
+478,ERP EHP7,6.0,/MRSS/C_RCT_NPRV,12,1,Determination of MRS relevance,Capacity and Resource Planning
+479,ERP EHP7,6.0,/MRSS/C_RCT_PRRV,3,1,MRS relevence for Projects,Capacity and Resource Planning
+480,ERP EHP7,6.0,/MRSS/C_RM_AB_CA,3,1,RM Abstract Statuses at the Candidate Level,Capacity and Resource Planning
+481,ERP EHP7,6.0,/MRSS/C_RM_AB_RO,3,1,RM Abstract Statuses at the Role Level,Capacity and Resource Planning
+482,ERP EHP7,6.0,/MRSS/C_RM_AB_RQ,3,1,RM Abstract Statuses at the Request Level,Capacity and Resource Planning
+483,ERP EHP7,6.0,/MRSS/C_RM_ACSU,5,1,Customizing table for Automatic Candidate Status Update,Capacity and Resource Planning
+484,ERP EHP7,6.0,/MRSS/C_RM_ADDNL,8,1,Broadcast targets - Additional (Marked as default),Capacity and Resource Planning
+485,ERP EHP7,6.0,/MRSS/C_RM_ASG_S,3,1,Map Booking Types to MRS Assignment Status,Capacity and Resource Planning
+486,ERP EHP7,6.0,/MRSS/C_RM_ASSFL,6,1,Customizing table for Assignment Filter,Capacity and Resource Planning
+487,ERP EHP7,6.0,/MRSS/C_RM_ASSFT,4,1,Text table for Assignment  Filter,Capacity and Resource Planning
+488,ERP EHP7,6.0,/MRSS/C_RM_ASSGC,5,1,Maintain Colors for Assignments display,Capacity and Resource Planning
+489,ERP EHP7,6.0,/MRSS/C_RM_AT,5,1,Assignment Types,Capacity and Resource Planning
+490,ERP EHP7,6.0,/MRSS/C_RM_AT_MP,3,1,Mapping table to map RM assignment Types to MRS Settlm types,Capacity and Resource Planning
+491,ERP EHP7,6.0,/MRSS/C_RM_AT_T,4,1,Texts for Assignment Types,Capacity and Resource Planning
+492,ERP EHP7,6.0,/MRSS/C_RM_A_CA1,4,1,RM Abstract Statuses at the Candidate Level,Capacity and Resource Planning
+493,ERP EHP7,6.0,/MRSS/C_RM_BCCON,4,1,Broadcast regions- country details,Capacity and Resource Planning
+494,ERP EHP7,6.0,/MRSS/C_RM_BCOAC,4,1,Broadcast Regions- Others,Capacity and Resource Planning
+495,ERP EHP7,6.0,/MRSS/C_RM_BCOT2,6,1,Broadcast Regions- Others,Capacity and Resource Planning
+496,ERP EHP7,6.0,/MRSS/C_RM_BCOTH,4,1,Broadcast Regions- Others,Capacity and Resource Planning
+497,ERP EHP7,6.0,/MRSS/C_RM_BCPRT,3,1,Portal Broadcasts,Capacity and Resource Planning
+498,ERP EHP7,6.0,/MRSS/C_RM_BCRMC,4,1,Countries assignment for RM groups,Capacity and Resource Planning
+499,ERP EHP7,6.0,/MRSS/C_RM_BCRMO,4,1,Others assignment for RM groups,Capacity and Resource Planning
+500,ERP EHP7,6.0,/MRSS/C_RM_BCRMV,4,1,Vendors assignment for RM groups,Capacity and Resource Planning
+501,ERP EHP7,6.0,/MRSS/C_RM_BCVEN,3,1,Vendors assignment to vendor groups,Capacity and Resource Planning
+502,ERP EHP7,6.0,/MRSS/C_RM_BCVGP,5,1,Vendors group for tree hierarchy,Capacity and Resource Planning
+503,ERP EHP7,6.0,/MRSS/C_RM_BOOK,4,1,Map Booking Type to Candidate Statuses,Capacity and Resource Planning
+504,ERP EHP7,6.0,/MRSS/C_RM_BT,5,1,Broadcast Targets,Capacity and Resource Planning
+505,ERP EHP7,6.0,/MRSS/C_RM_BTN,2,1,Table for buttons,Capacity and Resource Planning
+506,ERP EHP7,6.0,/MRSS/C_RM_BTNV,9,1,UI settings,Capacity and Resource Planning
+507,ERP EHP7,6.0,/MRSS/C_RM_BTN_T,4,1,Table for buttons,Capacity and Resource Planning
+508,ERP EHP7,6.0,/MRSS/C_RM_BT_T,4,1,Texts for Broadcast Targets,Capacity and Resource Planning
+509,ERP EHP7,6.0,/MRSS/C_RM_CAND,3,1,Candidate Status Profiles,Capacity and Resource Planning
+510,ERP EHP7,6.0,/MRSS/C_RM_CAT,4,1,Request Category,Capacity and Resource Planning
+511,ERP EHP7,6.0,/MRSS/C_RM_CAT_T,4,1,Request Category Descriptions,Capacity and Resource Planning
+512,ERP EHP7,6.0,/MRSS/C_RM_CC,4,1,Corporate Company,Capacity and Resource Planning
+513,ERP EHP7,6.0,/MRSS/C_RM_CC_T,4,1,Texts for Corporate Company,Capacity and Resource Planning
+514,ERP EHP7,6.0,/MRSS/C_RM_CDOPR,4,1,Opportunity Type,Capacity and Resource Planning
+515,ERP EHP7,6.0,/MRSS/C_RM_CDOPT,4,1,CD Opportunity Description,Capacity and Resource Planning
+516,ERP EHP7,6.0,/MRSS/C_RM_CDRF,4,1,Activate Refinement E-Mail,Capacity and Resource Planning
+517,ERP EHP7,6.0,/MRSS/C_RM_CO,4,1,Corporate Organization,Capacity and Resource Planning
+518,ERP EHP7,6.0,/MRSS/C_RM_COLS,3,1,Maintain Column Display for WDA ALV,Capacity and Resource Planning
+519,ERP EHP7,6.0,/MRSS/C_RM_CO_T,4,1,Texts for Corporate Organization,Capacity and Resource Planning
+520,ERP EHP7,6.0,/MRSS/C_RM_CRMOP,4,1,CRM Order Probablity,Capacity and Resource Planning
+521,ERP EHP7,6.0,/MRSS/C_RM_CRMOT,4,1,Texts for Order Probablity,Capacity and Resource Planning
+522,ERP EHP7,6.0,/MRSS/C_RM_CT,4,1,Contract Types,Capacity and Resource Planning
+523,ERP EHP7,6.0,/MRSS/C_RM_CT_T,4,1,Texts for Contract Types,Capacity and Resource Planning
+524,ERP EHP7,6.0,/MRSS/C_RM_CUST,4,1,Config Table for Custom Fields in RM screen,Capacity and Resource Planning
+525,ERP EHP7,6.0,/MRSS/C_RM_DT,6,1,Default settings for worklist date range,Capacity and Resource Planning
+526,ERP EHP7,6.0,/MRSS/C_RM_DT_T,4,1,Text table for /MRSS/C_RM_DT,Capacity and Resource Planning
+527,ERP EHP7,6.0,/MRSS/C_RM_ET,4,1,Escalation Types,Capacity and Resource Planning
+528,ERP EHP7,6.0,/MRSS/C_RM_ET_T,4,1,Texts for Escalation Types,Capacity and Resource Planning
+529,ERP EHP7,6.0,/MRSS/C_RM_FD,4,1,Flow Down Terms,Capacity and Resource Planning
+530,ERP EHP7,6.0,/MRSS/C_RM_FD_T,4,1,Texts for Flow Down Terms,Capacity and Resource Planning
+531,ERP EHP7,6.0,/MRSS/C_RM_HTF,4,1,Call Filters,Capacity and Resource Planning
+532,ERP EHP7,6.0,/MRSS/C_RM_HTF_T,4,1,Description for the Hard to Fill FLag,Capacity and Resource Planning
+533,ERP EHP7,6.0,/MRSS/C_RM_ICONS,3,1,RM: Icons for assignments,Capacity and Resource Planning
+534,ERP EHP7,6.0,/MRSS/C_RM_INTP,4,1,Consulting gorup assignment for RM groups,Capacity and Resource Planning
+535,ERP EHP7,6.0,/MRSS/C_RM_JT,5,1,Job Texts,Capacity and Resource Planning
+536,ERP EHP7,6.0,/MRSS/C_RM_JT_T,7,1,Description for Job Texts,Capacity and Resource Planning
+537,ERP EHP7,6.0,/MRSS/C_RM_LBL_T,4,1,Text Table for Custom Fields,Capacity and Resource Planning
+538,ERP EHP7,6.0,/MRSS/C_RM_LOB,4,1,Line of Business,Capacity and Resource Planning
+539,ERP EHP7,6.0,/MRSS/C_RM_LOB_T,4,1,Texts for Line of business,Capacity and Resource Planning
+540,ERP EHP7,6.0,/MRSS/C_RM_OP,4,1,Order Probablity,Capacity and Resource Planning
+541,ERP EHP7,6.0,/MRSS/C_RM_OP_T,4,1,Texts for Order Probablity,Capacity and Resource Planning
+542,ERP EHP7,6.0,/MRSS/C_RM_OR,4,1,Request Origins,Capacity and Resource Planning
+543,ERP EHP7,6.0,/MRSS/C_RM_ORG,4,2,Responsible RM Group,Capacity and Resource Planning
+544,ERP EHP7,6.0,/MRSS/C_RM_ORG_T,4,1,Text table for Responsible RM Group,Capacity and Resource Planning
+545,ERP EHP7,6.0,/MRSS/C_RM_OR_T,4,1,Texts for Origins,Capacity and Resource Planning
+546,ERP EHP7,6.0,/MRSS/C_RM_PA,4,1,Project Activity types,Capacity and Resource Planning
+547,ERP EHP7,6.0,/MRSS/C_RM_PACE,4,1,Customizing for PACE Profiles,Capacity and Resource Planning
+548,ERP EHP7,6.0,/MRSS/C_RM_PA_T,4,1,Texts for Project Activity types,Capacity and Resource Planning
+549,ERP EHP7,6.0,/MRSS/C_RM_PRC,4,1,Partner Rejection Codes,Capacity and Resource Planning
+550,ERP EHP7,6.0,/MRSS/C_RM_PRC_T,5,1,Texts for Partner Rejection codes,Capacity and Resource Planning
+551,ERP EHP7,6.0,/MRSS/C_RM_PRRQ,4,1,Proposed to Requester Email Flag by Region / RM Group,Capacity and Resource Planning
+552,ERP EHP7,6.0,/MRSS/C_RM_PRSRV,4,1,Table for Project Service,Capacity and Resource Planning
+553,ERP EHP7,6.0,/MRSS/C_RM_PRSVT,4,1,Description for Project Service,Capacity and Resource Planning
+554,ERP EHP7,6.0,/MRSS/C_RM_PSTA2,17,1,Partner Statuses,Capacity and Resource Planning
+555,ERP EHP7,6.0,/MRSS/C_RM_PSTA4,9,1,Partner Statuses,Capacity and Resource Planning
+556,ERP EHP7,6.0,/MRSS/C_RM_PSTAT,9,1,Partner Statuses,Capacity and Resource Planning
+557,ERP EHP7,6.0,/MRSS/C_RM_PST_T,9,1,Text Table for Partner Statuses,Capacity and Resource Planning
+558,ERP EHP7,6.0,/MRSS/C_RM_PS_4,4,1,Texts for Partner status,Capacity and Resource Planning
+559,ERP EHP7,6.0,/MRSS/C_RM_PS_T,4,1,Texts for Partner status,Capacity and Resource Planning
+560,ERP EHP7,6.0,/MRSS/C_RM_QK_C,7,1,Customizing table for Quick Close / Book,Capacity and Resource Planning
+561,ERP EHP7,6.0,/MRSS/C_RM_RC,5,1,Reason for Close,Capacity and Resource Planning
+562,ERP EHP7,6.0,/MRSS/C_RM_RC_T,4,1,Texts for Reason Close,Capacity and Resource Planning
+563,ERP EHP7,6.0,/MRSS/C_RM_ROUTE,2,1,Routing Table,Capacity and Resource Planning
+564,ERP EHP7,6.0,/MRSS/C_RM_RT,4,1,Request Type,Capacity and Resource Planning
+565,ERP EHP7,6.0,/MRSS/C_RM_RTY,4,1,Role Type,Capacity and Resource Planning
+566,ERP EHP7,6.0,/MRSS/C_RM_RTY_T,4,1,Text for Role Types,Capacity and Resource Planning
+567,ERP EHP7,6.0,/MRSS/C_RM_RT_T,4,1,Texts for Request Types,Capacity and Resource Planning
+568,ERP EHP7,6.0,/MRSS/C_RM_RWL,5,1,Regional Defaults for worklists,Capacity and Resource Planning
+569,ERP EHP7,6.0,/MRSS/C_RM_SCEN,2,1,PS integration Scenario with RM,Capacity and Resource Planning
+570,ERP EHP7,6.0,/MRSS/C_RM_SLA,2,1,Exclude From SLA Tracking,Capacity and Resource Planning
+571,ERP EHP7,6.0,/MRSS/C_RM_SLA_T,4,1,Text Table for SLA Exclude Reason codes,Capacity and Resource Planning
+572,ERP EHP7,6.0,/MRSS/C_RM_SPH_T,4,1,Resource Management Service Phase Text Table,Capacity and Resource Planning
+573,ERP EHP7,6.0,/MRSS/C_RM_SR,3,1,Sub-regions,Capacity and Resource Planning
+574,ERP EHP7,6.0,/MRSS/C_RM_SRCHC,8,1,Colors for Search Results,Capacity and Resource Planning
+575,ERP EHP7,6.0,/MRSS/C_RM_SRVPH,3,1,Resource Management Service Phase,Capacity and Resource Planning
+576,ERP EHP7,6.0,/MRSS/C_RM_SR_T,5,1,Texts for Sub-regions,Capacity and Resource Planning
+577,ERP EHP7,6.0,/MRSS/C_RM_STAT,5,1,RM Request/Role Status management,Capacity and Resource Planning
+578,ERP EHP7,6.0,/MRSS/C_RM_ST_OB,2,1,Customizing for Maintaining Status obj type for Candidatates,Capacity and Resource Planning
+579,ERP EHP7,6.0,/MRSS/C_RM_SUBM,4,1,Role Submit Email Flag by Region / RM Group,Capacity and Resource Planning
+580,ERP EHP7,6.0,/MRSS/C_RM_UNIT,4,1,Units for duration,Capacity and Resource Planning
+581,ERP EHP7,6.0,/MRSS/C_RM_USR,2,1,RM: unstructured qual for concatenated display on search res,Capacity and Resource Planning
+582,ERP EHP7,6.0,/MRSS/C_RM_USRT,4,1,Types of unstructured qualifications for RM@FS scenario,Capacity and Resource Planning
+583,ERP EHP7,6.0,/MRSS/C_RM_VALI,4,1,Activate Validation E-Mail,Capacity and Resource Planning
+584,ERP EHP7,6.0,/MRSS/C_RM_WEEK,3,1,Week Number and Date,Capacity and Resource Planning
+585,ERP EHP7,6.0,/MRSS/C_RM_WF_IC,3,1,Alert Icon Configuration,Capacity and Resource Planning
+586,ERP EHP7,6.0,/MRSS/C_RM_WL,6,1,Custom table for Worklists,Capacity and Resource Planning
+587,ERP EHP7,6.0,/MRSS/C_RM_WL_T,4,1,Text Table for Worklist Custom table,Capacity and Resource Planning
+588,ERP EHP7,6.0,/MRSS/C_STAT_CTR,10,1,Status Control for  Assignment Operations,Capacity and Resource Planning
+589,ERP EHP7,6.0,/MRSS/C_SUPERVSR,5,1,Site Supervisor Indicator,Capacity and Resource Planning
+590,ERP EHP7,6.0,/MRSS/C_TRV_TIME,10,1,Customizing for travel times,Capacity and Resource Planning
+591,ERP EHP7,6.0,/MRSS/C_WF_ACKN,3,1,Automatic Alerts Acknowledgement Flag by Region,Capacity and Resource Planning
+592,ERP EHP7,6.0,/MRSS/C_WKND_DET,8,1,Maintain the Days which will be set as weekend.,Capacity and Resource Planning
+593,ERP EHP7,6.0,/MRSS/D_EBL_LINK,4,1,Enable Links in the Left Frame,Capacity and Resource Planning
+594,ERP EHP7,6.0,/MRSS/D_RM_ASG_I,3,1,Additional assignment info,Capacity and Resource Planning
+595,ERP EHP7,6.0,/MRSS/D_RM_BCDAT,23,1,Broadcast Worklist Data,Capacity and Resource Planning
+596,ERP EHP7,6.0,/MRSS/D_RM_BCHIS,15,1,Broadcast History Table,Capacity and Resource Planning
+597,ERP EHP7,6.0,/MRSS/D_RM_CAND,29,4,Candidates for Demands,Capacity and Resource Planning
+598,ERP EHP7,6.0,/MRSS/D_RM_CUST,5,1,Additional Informational fields for the  RM Request,Capacity and Resource Planning
+599,ERP EHP7,6.0,/MRSS/D_RM_DEM,7,2,Additional Informational fields for the  Demand,Capacity and Resource Planning
+600,ERP EHP7,6.0,/MRSS/D_RM_FWUP,8,2,Table to Store Follow Up Data,Capacity and Resource Planning
+601,ERP EHP7,6.0,/MRSS/D_RM_HEADR,62,2,Request Details,Capacity and Resource Planning
+602,ERP EHP7,6.0,/MRSS/D_RM_IOL,6,1,Link time allocations and web requests with internal orders,Capacity and Resource Planning
+603,ERP EHP7,6.0,/MRSS/D_RM_MBODY,37,1,Smart Forms for E-Mail Message Body,Capacity and Resource Planning
+604,ERP EHP7,6.0,/MRSS/D_RM_MDATA,37,1,Maintain Master Data settings for Resource Management,Capacity and Resource Planning
+605,ERP EHP7,6.0,/MRSS/D_RM_MDISC,8,1,Smart Forms for E-Mail Message Disclaimer,Capacity and Resource Planning
+606,ERP EHP7,6.0,/MRSS/D_RM_MSUBJ,7,1,Smart Forms for E-Mail Message Subject,Capacity and Resource Planning
+607,ERP EHP7,6.0,/MRSS/D_RM_MTRIG,3,1,E-Mail Triggers,Capacity and Resource Planning
+608,ERP EHP7,6.0,/MRSS/D_RM_PRTF,5,1,Portal Additional Data for Resource,Capacity and Resource Planning
+609,ERP EHP7,6.0,/MRSS/D_RM_ROLE,60,4,Role Details,Capacity and Resource Planning
+610,ERP EHP7,6.0,/MRSS/D_SB_EXP,4,1,History of softbooking expiry date,Capacity and Resource Planning
+611,ERP EHP7,6.0,/MRSS/D_VARIANTS,6,1,Variants for RM Application,Capacity and Resource Planning
+612,ERP EHP7,6.0,/MRSS/RM_PN_CONF,4,1,Automatic Routing for Demand Confidentiality,Capacity and Resource Planning
+613,ERP EHP7,6.0,/MRSS/SADRPX,10,1,IS-Zusatzstruktur zu den SADR*-Strukturen,Capacity and Resource Planning
+614,ERP EHP7,6.0,/MRSS/SETHEADERT,6,1,Short description of Sets,Capacity and Resource Planning
+615,ERP EHP7,6.0,/MRSS/SETNODE,9,1,Lower-level sets in sets,Capacity and Resource Planning
+616,ERP EHP7,6.0,/MRSS/T_RM_TCOTK,5,1,Order information system: Selection table fields,Capacity and Resource Planning
+617,ERP EHP7,6.0,/MRSS/T_RM_TCOTX,7,1,Order Information System: Key Texts for Data Elements,Capacity and Resource Planning
+618,ERP EHP7,6.0,/MRSS/T_SETNAME,6,1,Cluster table for Setname,Capacity and Resource Planning
+619,ERP EHP7,6.0,TCMFUL,25,1,Screen Layout for Completion Confirmations,Completion Confirmations
+620,ERP EHP7,6.0,/OLC/PMCO_OP,29,1,OLC: PMCO for operations,Maintenance History
+621,ERP EHP7,6.0,AFKO_KAL,6,1,Storing calendar selections for Maintenance Order,Maintenance History
+622,ERP EHP7,6.0,AFVC_DIS_SIG,5,2,Digital Signature of Order Operation for Distribution,Maintenance History
+623,ERP EHP7,6.0,AFVC_DS,3,1,Digital signatures for Order Operation,Maintenance History
+624,ERP EHP7,6.0,HIKO,82,4,Order master data history,Maintenance History
+625,ERP EHP7,6.0,HIMA,24,1,PM order history - materials,Maintenance History
+626,ERP EHP7,6.0,HIVG,72,2,PM order history - operations,Maintenance History
+627,ERP EHP7,6.0,PMCO,29,1,Cost structure of maintenance order,Maintenance History
+628,ERP EHP7,6.0,PMCO1,2,1,Cost profile: Value category proposal,Maintenance History
+629,ERP EHP7,6.0,PMCO3,4,1,Plan version: Estimated costs for maintenance orders,Maintenance History
+630,ERP EHP7,6.0,PMCO_OP,29,1,Cost structure of maintenance order,Maintenance History
+631,ERP EHP7,6.0,T003O_DS,7,1,Digital Signatues for Order Operations,Maintenance History
+632,ERP EHP7,6.0,T003O_SC,4,1,Status Change Control For PM Orders,Maintenance History
+633,ERP EHP7,6.0,T370N,8,1,Object link category,Maintenance History
+634,ERP EHP7,6.0,T370N_T,4,1,Language dependent texts for T370N,Maintenance History
+635,ERP EHP7,6.0,TPAER_PM,4,1,Partner Functions in Partner Schema (PM) with Copy Flag,Maintenance History
+636,ERP EHP7,6.0,IBDU,5,1,Postprocessing of PM/SM Objects,Maintenance Notifications
+637,ERP EHP7,6.0,OPROL,5,1,AVO Link to Object List Entry,Maintenance Notifications
+638,ERP EHP7,6.0,PMSDO,15,1,PM organizational data for SD documents,Maintenance Notifications
+639,ERP EHP7,6.0,QMEL,149,10,Quality Notification,Maintenance Notifications
+640,ERP EHP7,6.0,QMFE,57,3,Quality notification - items,Maintenance Notifications
+641,ERP EHP7,6.0,QMIH,47,4,Quality message - maintenance data excerpt,Maintenance Notifications
+642,ERP EHP7,6.0,QMMA,30,1,Quality notification - activities,Maintenance Notifications
+643,ERP EHP7,6.0,QMSM,51,2,Quality notification - tasks,Maintenance Notifications
+644,ERP EHP7,6.0,QMUR,29,1,Quality notification - causes,Maintenance Notifications
+645,ERP EHP7,6.0,QNAOC_NTYPE,4,1,Linkage of Notification Types to Object Categories,Maintenance Notifications
+646,ERP EHP7,6.0,QNAOC_OBJCAT,3,1,Object categories,Maintenance Notifications
+647,ERP EHP7,6.0,QNAOC_OBJCATT,4,1,Object Categories - Text Table,Maintenance Notifications
+648,ERP EHP7,6.0,QNAOD_AOBJECT,14,3,Assigned Objects for Notification Item,Maintenance Notifications
+649,ERP EHP7,6.0,SMZB_BINREL,6,2,Object Relationship Service: Generic Binary Links,Maintenance Notifications
+650,ERP EHP7,6.0,T352B,13,1,Technical report,Maintenance Notifications
+651,ERP EHP7,6.0,T352B_T,4,1,Catalog profile texts,Maintenance Notifications
+652,ERP EHP7,6.0,T355E,4,1,Response time monitor,Maintenance Notifications
+653,ERP EHP7,6.0,T355E_T,4,1,Response profile text,Maintenance Notifications
+654,ERP EHP7,6.0,T355E_W,10,1,Response times,Maintenance Notifications
+655,ERP EHP7,6.0,T355R,3,1,Service window,Maintenance Notifications
+656,ERP EHP7,6.0,T355R_T,4,1,Service window text,Maintenance Notifications
+657,ERP EHP7,6.0,T355R_W,15,1,Service window,Maintenance Notifications
+658,ERP EHP7,6.0,T356,7,1,Priorities,Maintenance Notifications
+659,ERP EHP7,6.0,T356A,2,1,Priority type table,Maintenance Notifications
+660,ERP EHP7,6.0,T356A_T,4,1,Priority type texts,Maintenance Notifications
+661,ERP EHP7,6.0,T356_T,5,1,Priority text,Maintenance Notifications
+662,ERP EHP7,6.0,T357A,2,1,Effect of malfunction on the system,Maintenance Notifications
+663,ERP EHP7,6.0,T357A_T,4,1,Texts for effect of malfunction on the system,Maintenance Notifications
+664,ERP EHP7,6.0,T357M,3,1,Machine operating condition,Maintenance Notifications
+665,ERP EHP7,6.0,T357Z,2,1,Syst.Condition,Maintenance Notifications
+666,ERP EHP7,6.0,T357Z_T,4,1,System condition - Text table,Maintenance Notifications
+667,ERP EHP7,6.0,TIH02,3,1,Field Selection for Partner Addresses,Maintenance Notifications
+668,ERP EHP7,6.0,TIWOL,10,1,Control table for SAPLIWOL - Object list,Maintenance Notifications
+669,ERP EHP7,6.0,TQ80,82,1,Notification Types,Maintenance Notifications
+670,ERP EHP7,6.0,TQ80O,19,1,Object info parameters,Maintenance Notifications
+671,ERP EHP7,6.0,TQ80_PR,1,1,QM Process,Maintenance Notifications
+672,ERP EHP7,6.0,TQ80_PRT,3,1,QM Process (Text Table),Maintenance Notifications
+673,ERP EHP7,6.0,TQ80_T,4,1,Notification type texts,Maintenance Notifications
+674,ERP EHP7,6.0,TQ8T,15,1,Notification category,Maintenance Notifications
+675,ERP EHP7,6.0,TQ8T_T,4,1,Notication category texts,Maintenance Notifications
+676,ERP EHP7,6.0,TQBER,3,1,Notification: Tabstrip Division,Maintenance Notifications
+677,ERP EHP7,6.0,TQBERT,3,1,Notification: Tab Strip Distribution Text Table,Maintenance Notifications
+678,ERP EHP7,6.0,TQSCR,18,1,Notification: Screen control,Maintenance Notifications
+679,ERP EHP7,6.0,TQSCRT,6,1,Notification: Text table heading tabstrip,Maintenance Notifications
+680,ERP EHP7,6.0,TQSUB,4,1,Notification: Subscreen control for notification,Maintenance Notifications
+681,ERP EHP7,6.0,TQSUBT,4,1,Notification: Subscreen control for notification text table,Maintenance Notifications
+682,ERP EHP7,6.0,TQTABS,5,1,Notification: Contol table tabstrip function code,Maintenance Notifications
+683,ERP EHP7,6.0,TQTABST,4,1,Notification: Tabstrip Control,Maintenance Notifications
+684,ERP EHP7,6.0,TWOBL,9,1,Control table for SAPLIWOL - Object list,Maintenance Notifications
+685,ERP EHP7,6.0,/CUM/ACPOS,3,1,CU: Value Categories for Distrib. Costs in CATS,Maintenance Orders
+686,ERP EHP7,6.0,/CUM/ACTION,2,1,CU: Compatible Unit Action,Maintenance Orders
+687,ERP EHP7,6.0,/CUM/ACTIONM,3,1,CU: Example Action-Task List Operation Mapping Table,Maintenance Orders
+688,ERP EHP7,6.0,/CUM/ACTIONR,6,1,CU: Reference Object Allocation for Action,Maintenance Orders
+689,ERP EHP7,6.0,/CUM/ACTIONT,4,1,CU: Description of Action,Maintenance Orders
+690,ERP EHP7,6.0,/CUM/AFCU,27,4,CU: CU Instances,Maintenance Orders
+691,ERP EHP7,6.0,/CUM/CLASS,2,1,CU: Class,Maintenance Orders
+692,ERP EHP7,6.0,/CUM/CLASST,4,1,CU: Class Description,Maintenance Orders
+693,ERP EHP7,6.0,/CUM/CMTYPE,6,1,CU: Construction Measure Type,Maintenance Orders
+694,ERP EHP7,6.0,/CUM/CMTYPET,4,1,CU: Construction Measure Type Descriptions,Maintenance Orders
+695,ERP EHP7,6.0,/CUM/CONMS,19,2,CU: Construction Measure Master Data,Maintenance Orders
+696,ERP EHP7,6.0,/CUM/CONMST,4,1,CU: Construction Measure Description,Maintenance Orders
+697,ERP EHP7,6.0,/CUM/CUDESIGN,30,5,CU: Design Header Data,Maintenance Orders
+698,ERP EHP7,6.0,/CUM/CUNIT,17,1,CU: Master Data,Maintenance Orders
+699,ERP EHP7,6.0,/CUM/CUNITWERK,9,1,CU: TL selection: group center for plant virtual CUI deter.,Maintenance Orders
+700,ERP EHP7,6.0,/CUM/CUNITXT,5,1,CU: Descriptions,Maintenance Orders
+701,ERP EHP7,6.0,/CUM/CUTYPE,10,1,CU: Compatible Unit Type,Maintenance Orders
+702,ERP EHP7,6.0,/CUM/CUTYPET,4,1,CU: Compatible Unit Type,Maintenance Orders
+703,ERP EHP7,6.0,/CUM/CU_SRD,10,1,CU: Settlement Rule Determination Rules,Maintenance Orders
+704,ERP EHP7,6.0,/CUM/CU_TO,4,1,CU: CU Reference Technical Object,Maintenance Orders
+705,ERP EHP7,6.0,/CUM/DESTYPE,6,1,CU: Number Range Customizing for Compatible Unit Design Type,Maintenance Orders
+706,ERP EHP7,6.0,/CUM/DESTYPET,4,1,CU: Number Range Customizing for Compatible Unit Design Type,Maintenance Orders
+707,ERP EHP7,6.0,/CUM/FUNCTION,2,1,CU: Function,Maintenance Orders
+708,ERP EHP7,6.0,/CUM/FUNCTIONT,4,1,CU: Function Description,Maintenance Orders
+709,ERP EHP7,6.0,/CUM/G_CHAR,7,1,CU: Classes for CU and CUI,Maintenance Orders
+710,ERP EHP7,6.0,/CUM/INH_CHAR,2,1,CU: Characteristics Used in Validation,Maintenance Orders
+711,ERP EHP7,6.0,/CUM/KOKRS,4,1,CU: Settings for Controlling Area,Maintenance Orders
+712,ERP EHP7,6.0,/CUM/PRF_ORD,18,1,CU: Profile for Order Generation,Maintenance Orders
+713,ERP EHP7,6.0,/CUM/PRF_ORDT,4,1,CU: Description of Profile for Order Generation,Maintenance Orders
+714,ERP EHP7,6.0,/CUM/SERVICE,2,1,CU: Type of Service,Maintenance Orders
+715,ERP EHP7,6.0,/CUM/SERVICET,4,1,CU: Description of Service,Maintenance Orders
+716,ERP EHP7,6.0,/CUM/T413,3,1,CU: Critical Parts,Maintenance Orders
+717,ERP EHP7,6.0,/CUM/TYPE,2,1,CU: Type,Maintenance Orders
+718,ERP EHP7,6.0,/CUM/TYPET,4,1,CU: Description of CU Type,Maintenance Orders
+719,ERP EHP7,6.0,/CUM/VARIANTS,7,1,CU: Function,Maintenance Orders
+720,ERP EHP7,6.0,/CUM/VARIANTS_IO,8,1,CU: I/O Structure Variants,Maintenance Orders
+721,ERP EHP7,6.0,/CUM/VCUI,5,1,CU: Additional Virtual CU Instance Data,Maintenance Orders
+722,ERP EHP7,6.0,/MRSS/C_1TO1_REL,3,1,1:1 Relation Between Demand and Assignment,Maintenance Orders
+723,ERP EHP7,6.0,/MRSS/C_ABROLE,3,1,Abstract Partner Role,Maintenance Orders
+724,ERP EHP7,6.0,/MRSS/C_ABROLET,4,1,Abstract Partner Role: Texts,Maintenance Orders
+725,ERP EHP7,6.0,/MRSS/C_ABSTAT,2,1,Abstract Status,Maintenance Orders
+726,ERP EHP7,6.0,/MRSS/C_ABSTAT_T,4,1,Abstract Status: Texts,Maintenance Orders
+727,ERP EHP7,6.0,/MRSS/C_AIG,2,1,Date Interval Groups,Maintenance Orders
+728,ERP EHP7,6.0,/MRSS/C_AIG_INT,3,1,Date Interval based on Time Interval ID,Maintenance Orders
+729,ERP EHP7,6.0,/MRSS/C_AIG_INTD,6,1,Date Interval based on Duration,Maintenance Orders
+730,ERP EHP7,6.0,/MRSS/C_AIG_T,4,1,Date Interval Group Text,Maintenance Orders
+731,ERP EHP7,6.0,/MRSS/C_ALERTS,7,1,Assignment of Alert Types and Messages,Maintenance Orders
+732,ERP EHP7,6.0,/MRSS/C_AL_PAST,2,1,Customizing for alert creation in past,Maintenance Orders
+733,ERP EHP7,6.0,/MRSS/C_AL_PROF,2,1,Scheduling Alert Profiles,Maintenance Orders
+734,ERP EHP7,6.0,/MRSS/C_AL_PROFT,4,1,Text Table of Alert Profiles,Maintenance Orders
+735,ERP EHP7,6.0,/MRSS/C_AL_TYPE,2,1,Alert types,Maintenance Orders
+736,ERP EHP7,6.0,/MRSS/C_AL_TYPET,5,1,Texts for Alert Types,Maintenance Orders
+737,ERP EHP7,6.0,/MRSS/C_AL_TYP_N,3,1,Non-Relevant Alert Types,Maintenance Orders
+738,ERP EHP7,6.0,/MRSS/C_ANON_RES,3,1,Confidential resource Anonymous name,Maintenance Orders
+739,ERP EHP7,6.0,/MRSS/C_APPOINT,5,1,Appointment Offering Settings,Maintenance Orders
+740,ERP EHP7,6.0,/MRSS/C_APP_CANC,2,1,Status to cancel Appointment,Maintenance Orders
+741,ERP EHP7,6.0,/MRSS/C_APP_HOLD,4,1,Status Customizing for Remote Service Area,Maintenance Orders
+742,ERP EHP7,6.0,/MRSS/C_AUT_ASGN,14,1,Control table for automatic assignment creation,Maintenance Orders
+743,ERP EHP7,6.0,/MRSS/C_AUT_ASGR,3,1,Control Automatic Assignment Creation Based On Resource Type,Maintenance Orders
+744,ERP EHP7,6.0,/MRSS/C_AUT_ASGS,6,1,Control Automatic Asssignment Creation Based on Status Type,Maintenance Orders
+745,ERP EHP7,6.0,/MRSS/C_AVAIL_CR,7,1,Control creation of concretization attributes,Maintenance Orders
+746,ERP EHP7,6.0,/MRSS/C_BACK_INT,3,1,Back integraton Active ?,Maintenance Orders
+747,ERP EHP7,6.0,/MRSS/C_BUT_NAVI,5,1,Navigation buttons to launch transactions,Maintenance Orders
+748,ERP EHP7,6.0,/MRSS/C_BUT_NAVT,5,1,Maintain texts for pushbuttons,Maintenance Orders
+749,ERP EHP7,6.0,/MRSS/C_BUT_PARA,6,1,Parameters for navigation pushbuttons,Maintenance Orders
+750,ERP EHP7,6.0,/MRSS/C_CAG_CUST,2,1,Include Capacitive Assignments During Slot-Based Avail. Det.,Maintenance Orders
+751,ERP EHP7,6.0,/MRSS/C_CAG_EXC,2,1,Demands with abstract status excluded from CAG calculation,Maintenance Orders
+752,ERP EHP7,6.0,/MRSS/C_CAP_DATE,6,1,Capacitive Assignment - Dates,Maintenance Orders
+753,ERP EHP7,6.0,/MRSS/C_CAP_PLAN,7,1,MRS: capacitive planning,Maintenance Orders
+754,ERP EHP7,6.0,/MRSS/C_CHECK_AC,3,1,Scheduling Engine: Active Checks,Maintenance Orders
+755,ERP EHP7,6.0,/MRSS/C_CHECK_CL,2,1,Definition of Check Classes,Maintenance Orders
+756,ERP EHP7,6.0,/MRSS/C_CHECK_OR,4,1,MRS Checks While Saving Order,Maintenance Orders
+757,ERP EHP7,6.0,/MRSS/C_CHECK_P,5,1,Profile for Checks in the Planning Board,Maintenance Orders
+758,ERP EHP7,6.0,/MRSS/C_CHECK_PO,4,1,Parameters for Checking the Percentage of Completion,Maintenance Orders
+759,ERP EHP7,6.0,/MRSS/C_CHECK_PT,4,1,Text Table for Check Profiles,Maintenance Orders
+760,ERP EHP7,6.0,/MRSS/C_CHECK_T,5,1,Parameters for Checking the Time Differences,Maintenance Orders
+761,ERP EHP7,6.0,/MRSS/C_CHECK_TR,3,1,Define Transaction for MRS Checks: Save Order,Maintenance Orders
+762,ERP EHP7,6.0,/MRSS/C_CHNG_FRM,7,1,Classes for handling the Change Framework,Maintenance Orders
+763,ERP EHP7,6.0,/MRSS/C_CM_INACT,5,1,Inactivate the context menu function,Maintenance Orders
+764,ERP EHP7,6.0,/MRSS/C_CSG_SL,4,1,Customize the Unit of Measure for slots,Maintenance Orders
+765,ERP EHP7,6.0,/MRSS/C_CUSTPARM,12,1,RCCF: Experteneinstellungen,Maintenance Orders
+766,ERP EHP7,6.0,/MRSS/C_CUST_AT,4,1,Additional Customer defined attributes for various objects,Maintenance Orders
+767,ERP EHP7,6.0,/MRSS/C_CUST_ATH,3,1,Additional Customer Attribute ( Valid Fields),Maintenance Orders
+768,ERP EHP7,6.0,/MRSS/C_CUST_ATT,5,1,Customer Attributes,Maintenance Orders
+769,ERP EHP7,6.0,/MRSS/C_DBM_STAT,3,1,This Table maps DBM order status to graphical element type,Maintenance Orders
+770,ERP EHP7,6.0,/MRSS/C_DEF_DUR,8,1,MRS: work of operation (default value for integration),Maintenance Orders
+771,ERP EHP7,6.0,/MRSS/C_DEMSCHED,3,1,Demand Scheduling Active?,Maintenance Orders
+772,ERP EHP7,6.0,/MRSS/C_DEM_AS,2,1,Assignment of the Demand Item Categories to Subobjects,Maintenance Orders
+773,ERP EHP7,6.0,/MRSS/C_DEM_SO,3,1,Subobjects of a Demand Item,Maintenance Orders
+774,ERP EHP7,6.0,/MRSS/C_DEM_TY,1,1,Demand Types,Maintenance Orders
+775,ERP EHP7,6.0,/MRSS/C_DEM_TYI,2,1,Demand Item Categories,Maintenance Orders
+776,ERP EHP7,6.0,/MRSS/C_DEM_TYIT,3,1,Texts for Demand Item Types,Maintenance Orders
+777,ERP EHP7,6.0,/MRSS/C_DEM_TYT,3,1,Texts for Demand Types,Maintenance Orders
+778,ERP EHP7,6.0,/MRSS/C_DEM_WL_F,7,1,Work list fields to be displayed as Gantt cols in Demand Vie,Maintenance Orders
+779,ERP EHP7,6.0,/MRSS/C_DSG_CLR,3,1,Hold the color details of the properties of the graph,Maintenance Orders
+780,ERP EHP7,6.0,/MRSS/C_DSG_COL,4,1,Color Properties for Web Util Report,Maintenance Orders
+781,ERP EHP7,6.0,/MRSS/C_DSG_EXCE,4,1,Defining exceptions for each team,Maintenance Orders
+782,ERP EHP7,6.0,/MRSS/C_DSG_TBUF,4,1,Table to store the buffer properties of a team,Maintenance Orders
+783,ERP EHP7,6.0,/MRSS/C_DSG_TCOL,3,1,Table to store the team colour properties,Maintenance Orders
+784,ERP EHP7,6.0,/MRSS/C_DSG_TEAM,3,1,Table to hold the Organizal unit ID for DBM customizing,Maintenance Orders
+785,ERP EHP7,6.0,/MRSS/C_DSG_TWAR,4,1,Table specifying the warning factor of the teams,Maintenance Orders
+786,ERP EHP7,6.0,/MRSS/C_DWS_VAR,2,1,Display Daily Work Schedule Variant in substitution details,Maintenance Orders
+787,ERP EHP7,6.0,/MRSS/C_EMP_PRNT,5,1,Smartform customizing for Employee Profiles,Maintenance Orders
+788,ERP EHP7,6.0,/MRSS/C_ENGINES,7,1,Externe Engines im RCCF,Maintenance Orders
+789,ERP EHP7,6.0,/MRSS/C_ENG_DEST,12,1,RCCF: Destinationen für Engines,Maintenance Orders
+790,ERP EHP7,6.0,/MRSS/C_FCHG_FLD,5,1,Checks During Field Changes,Maintenance Orders
+791,ERP EHP7,6.0,/MRSS/C_FCHG_GRP,2,1,Groupings for Field Checks,Maintenance Orders
+792,ERP EHP7,6.0,/MRSS/C_FCHG_GRT,4,1,Text Table: Groupings for Field Checks,Maintenance Orders
+793,ERP EHP7,6.0,/MRSS/C_FCHG_OBJ,7,1,Objects for Checking Field Changes,Maintenance Orders
+794,ERP EHP7,6.0,/MRSS/C_GANTT_CL,3,1,Gantt Classes,Maintenance Orders
+795,ERP EHP7,6.0,/MRSS/C_GANTT_T,4,1,Text Table for/MRSS/C_GANTT_CL,Maintenance Orders
+796,ERP EHP7,6.0,/MRSS/C_GEOLOC,2,1,Settings for Connection to Geographical Information,Maintenance Orders
+797,ERP EHP7,6.0,/MRSS/C_GEO_CODE,5,1,Define settings for GEO coding,Maintenance Orders
+798,ERP EHP7,6.0,/MRSS/C_GEO_CODT,4,1,Description of Geo coding profile,Maintenance Orders
+799,ERP EHP7,6.0,/MRSS/C_GEO_MAP,5,1,Definition of Map Display in MRS,Maintenance Orders
+800,ERP EHP7,6.0,/MRSS/C_GEO_MAPT,4,1,Definition of Map Display in MRS (Texts),Maintenance Orders
+801,ERP EHP7,6.0,/MRSS/C_GEO_SYS,6,1,Define settings for Geo Information System,Maintenance Orders
+802,ERP EHP7,6.0,/MRSS/C_GEO_SYST,4,1,Description of Geo profile,Maintenance Orders
+803,ERP EHP7,6.0,/MRSS/C_HCMPTLRP,8,1,Mapping HR Time Data to WFM Time Allocations,Maintenance Orders
+804,ERP EHP7,6.0,/MRSS/C_HCMTZONE,4,1,Assignment: Personnel (Sub)Area - MRS Time Zone,Maintenance Orders
+805,ERP EHP7,6.0,/MRSS/C_HCM_MRSD,2,1,RFC Destination of MRS,Maintenance Orders
+806,ERP EHP7,6.0,/MRSS/C_HRES_CTY,5,1,HR communication methods to be displayed in additional data,Maintenance Orders
+807,ERP EHP7,6.0,/MRSS/C_HRES_DAT,5,1,Communication Data,Maintenance Orders
+808,ERP EHP7,6.0,/MRSS/C_HR_ADDR,3,1,Mapping table for HR address subtypes to MRS address types,Maintenance Orders
+809,ERP EHP7,6.0,/MRSS/C_MATCHING,10,1,Customizing table for general qualification matching,Maintenance Orders
+810,ERP EHP7,6.0,/MRSS/C_MIG_STAT,3,1,Migration: Mapping of WFM Status and MRS Abstract Status,Maintenance Orders
+811,ERP EHP7,6.0,/MRSS/C_MOB_ABS,2,1,Abstract Assignment Statuses: Mobile Integration,Maintenance Orders
+812,ERP EHP7,6.0,/MRSS/C_MOB_ABST,4,1,Texts for Abstract Status (Integration of Mobile Devices),Maintenance Orders
+813,ERP EHP7,6.0,/MRSS/C_MULT_DEM,8,1,Demand Settings for Scheduling of Multiday Assignments,Maintenance Orders
+814,ERP EHP7,6.0,/MRSS/C_MULT_RES,9,1,Resource Selection for Multiday Resource Planning,Maintenance Orders
+815,ERP EHP7,6.0,/MRSS/C_M_WEIGHT,4,1,Rating factors for matching criteria,Maintenance Orders
+816,ERP EHP7,6.0,/MRSS/C_NW_ABS_A,4,1,Extended/Abstract assignments(Netweaver),Maintenance Orders
+817,ERP EHP7,6.0,/MRSS/C_NW_AFD,5,1,Assignment follows Demand (NW Addon),Maintenance Orders
+818,ERP EHP7,6.0,/MRSS/C_NW_AVAIL,4,1,Control creation of concretization attributes,Maintenance Orders
+819,ERP EHP7,6.0,/MRSS/C_NW_CAP_A,5,1,MRS: capacitive planning(Netweaver),Maintenance Orders
+820,ERP EHP7,6.0,/MRSS/C_NW_MAPRO,4,1,Mapping of partner roles,Maintenance Orders
+821,ERP EHP7,6.0,/MRSS/C_NW_MAPST,6,1,Mapping of Standard Status,Maintenance Orders
+822,ERP EHP7,6.0,/MRSS/C_NW_STCTR,7,1,Status Control for  Assignment Operations(Netweaver),Maintenance Orders
+823,ERP EHP7,6.0,/MRSS/C_NW_STR_A,4,1,Extended/Stretched assignments(Netweaver),Maintenance Orders
+824,ERP EHP7,6.0,/MRSS/C_NW_SUPVI,3,1,Site Supervisor Indicator(Netweaver),Maintenance Orders
+825,ERP EHP7,6.0,/MRSS/C_NW_TRV_T,7,1,Customizing for travel times(Netweaver),Maintenance Orders
+826,ERP EHP7,6.0,/MRSS/C_ONCALL,3,1,Describes the On Call Types,Maintenance Orders
+827,ERP EHP7,6.0,/MRSS/C_ONCALL_D,3,1,Describes the On Call Type Determination,Maintenance Orders
+828,ERP EHP7,6.0,/MRSS/C_ONCALL_T,5,1,Describes the On Call Type,Maintenance Orders
+829,ERP EHP7,6.0,/MRSS/C_ONCL_TSP,3,1,On call types  for particular time allocations,Maintenance Orders
+830,ERP EHP7,6.0,/MRSS/C_OPT_DEM,11,1,Demand-Dependent Cost Parameters for Optimization,Maintenance Orders
+831,ERP EHP7,6.0,/MRSS/C_OPT_DPRI,3,1,Assignment of Demand Prioritites to Factors,Maintenance Orders
+832,ERP EHP7,6.0,/MRSS/C_OPT_FIL,10,1,Demand Filter Definition for Optimization,Maintenance Orders
+833,ERP EHP7,6.0,/MRSS/C_OPT_FILT,4,1,Text Table for Definition of Optimizer Scenario,Maintenance Orders
+834,ERP EHP7,6.0,/MRSS/C_OPT_LOG,7,1,Customizing Table for Optimizer Log Definition,Maintenance Orders
+835,ERP EHP7,6.0,/MRSS/C_OPT_LOGT,4,1,Customizing Table for Definition of Optimizer Log (Texts),Maintenance Orders
+836,ERP EHP7,6.0,/MRSS/C_OPT_MSG,4,1,Customizing for individual error level of optimizer messages,Maintenance Orders
+837,ERP EHP7,6.0,/MRSS/C_OPT_QUAL,4,1,Qualification-Based Costs for Assignments,Maintenance Orders
+838,ERP EHP7,6.0,/MRSS/C_OPT_RES,18,1,Resource-Dependent Optimization Parameters,Maintenance Orders
+839,ERP EHP7,6.0,/MRSS/C_OPT_SCE,10,1,Scenario Definition for Optimization,Maintenance Orders
+840,ERP EHP7,6.0,/MRSS/C_OPT_SCET,4,1,Text Table for Definition of Optimizer Scenario,Maintenance Orders
+841,ERP EHP7,6.0,/MRSS/C_OPT_SYS,26,1,Define Optimization Profile,Maintenance Orders
+842,ERP EHP7,6.0,/MRSS/C_OPT_SYST,4,1,Text Table for Optimizer System Settings,Maintenance Orders
+843,ERP EHP7,6.0,/MRSS/C_PARAM,6,1,RCCF: Generelle Einstellungen,Maintenance Orders
+844,ERP EHP7,6.0,/MRSS/C_PLBOMGR,4,1,Settings for Planning Board Manager,Maintenance Orders
+845,ERP EHP7,6.0,/MRSS/C_PLB_UNIT,4,1,Time unit for planning board profile,Maintenance Orders
+846,ERP EHP7,6.0,/MRSS/C_PN_BREAK,7,1,Break information for Planning nodes,Maintenance Orders
+847,ERP EHP7,6.0,/MRSS/C_PREV_DEL,7,1,Prevent Deletion of Operations,Maintenance Orders
+848,ERP EHP7,6.0,/MRSS/C_QUEUEPAR,4,1,Parameters for RFC Qeuee Processing,Maintenance Orders
+849,ERP EHP7,6.0,/MRSS/C_R3_AFD,7,1,Assignment follows Demand (ERP Addon),Maintenance Orders
+850,ERP EHP7,6.0,/MRSS/C_RAP_ASG,5,1,Degree of Coverage of Demands,Maintenance Orders
+851,ERP EHP7,6.0,/MRSS/C_RAP_NPAU,5,1,Field control in connection with authorizations,Maintenance Orders
+852,ERP EHP7,6.0,/MRSS/C_RAP_NPPR,9,1,Field control in connection with process progress,Maintenance Orders
+853,ERP EHP7,6.0,/MRSS/C_RAP_PAR,8,1,Parameters for PS Integration,Maintenance Orders
+854,ERP EHP7,6.0,/MRSS/C_RAP_PROC,3,1,Processes in PS order,Maintenance Orders
+855,ERP EHP7,6.0,/MRSS/C_RAP_PV,6,1,Settings for Process Variants,Maintenance Orders
+856,ERP EHP7,6.0,/MRSS/C_RAP_TREE,3,1,Layouts for Resource Overview,Maintenance Orders
+857,ERP EHP7,6.0,/MRSS/C_REQ_PRNT,3,1,Smartform customizing for Requirement Profiles,Maintenance Orders
+858,ERP EHP7,6.0,/MRSS/C_REQ_WUSD,7,1,Whereused customizing for notification purposes,Maintenance Orders
+859,ERP EHP7,6.0,/MRSS/C_RESSTAT,3,1,Possible Resource Status,Maintenance Orders
+860,ERP EHP7,6.0,/MRSS/C_RESSTATT,5,1,Short and Longtexts for Resource Status,Maintenance Orders
+861,ERP EHP7,6.0,/MRSS/C_RES_PLAN,3,1,Base Resources from Explicit Planning Node,Maintenance Orders
+862,ERP EHP7,6.0,/MRSS/C_RMI_PS,11,1,Project System data required for creating Request,Maintenance Orders
+863,ERP EHP7,6.0,/MRSS/C_RM_DEST,2,1,RFC Destination of RM application,Maintenance Orders
+864,ERP EHP7,6.0,/MRSS/C_RSG_AA,7,1,Allow Abstract Assignment,Maintenance Orders
+865,ERP EHP7,6.0,/MRSS/C_RSG_BACK,15,1,Settings for PM/CS Integration,Maintenance Orders
+866,ERP EHP7,6.0,/MRSS/C_RSG_CTRL,8,1,MRS: resource planning relevance of operations,Maintenance Orders
+867,ERP EHP7,6.0,/MRSS/C_RSG_DEAS,3,1,Control: one own demand for each assignment,Maintenance Orders
+868,ERP EHP7,6.0,/MRSS/C_RSG_OITG,7,1,Control of PM/CS Order Integration,Maintenance Orders
+869,ERP EHP7,6.0,/MRSS/C_RSG_PAR,2,1,Parameters for Multiresource Planning,Maintenance Orders
+870,ERP EHP7,6.0,/MRSS/C_RSG_SA,7,1,Extended assignments,Maintenance Orders
+871,ERP EHP7,6.0,/MRSS/C_RSG_STAT,2,1,MRS Customizing for Status Object Type (Release 46C),Maintenance Orders
+872,ERP EHP7,6.0,/MRSS/C_RSG_STEF,6,1,Control Keys for Production Resources/Tools in Resource Plng,Maintenance Orders
+873,ERP EHP7,6.0,/MRSS/C_RSG_STEU,4,1,Multiresource Planning Control Keys,Maintenance Orders
+874,ERP EHP7,6.0,/MRSS/C_RSG_ST_V,6,1,Control-Key Default Values for Production Resources & Tools,Maintenance Orders
+875,ERP EHP7,6.0,/MRSS/C_SCEN_ACT,4,1,Active scenario,Maintenance Orders
+876,ERP EHP7,6.0,/MRSS/C_SGE_BPR,7,1,Business process Customizing,Maintenance Orders
+877,ERP EHP7,6.0,/MRSS/C_SGE_CD,11,1,Collision definition,Maintenance Orders
+878,ERP EHP7,6.0,/MRSS/C_SGE_CD_T,4,1,Collision definition,Maintenance Orders
+879,ERP EHP7,6.0,/MRSS/C_SGE_CH,5,1,Activate Change Documents,Maintenance Orders
+880,ERP EHP7,6.0,/MRSS/C_SGE_EXBL,2,1,Check classes for external business logic,Maintenance Orders
+881,ERP EHP7,6.0,/MRSS/C_SGE_HCMD,2,1,RFC Destination of HCM,Maintenance Orders
+882,ERP EHP7,6.0,/MRSS/C_SGE_HCMI,4,1,Function Modules for Transferring MRS to HR,Maintenance Orders
+883,ERP EHP7,6.0,/MRSS/C_SGE_LOG,9,1,Definition of the SAP Multiresource Scheduling Log,Maintenance Orders
+884,ERP EHP7,6.0,/MRSS/C_SGE_MRSD,2,1,Define RFC location for MRS system,Maintenance Orders
+885,ERP EHP7,6.0,/MRSS/C_SGE_OS,2,1,Collision profile,Maintenance Orders
+886,ERP EHP7,6.0,/MRSS/C_SGE_OS_T,4,1,Collision profile texts,Maintenance Orders
+887,ERP EHP7,6.0,/MRSS/C_SGE_PR,82,1,Scheduling Engine Profile,Maintenance Orders
+888,ERP EHP7,6.0,/MRSS/C_SGE_PROC,34,1,Business process Customizing,Maintenance Orders
+889,ERP EHP7,6.0,/MRSS/C_SGE_PR_D,4,1,Determination of Scheduling Engine Profile,Maintenance Orders
+890,ERP EHP7,6.0,/MRSS/C_SGE_PR_T,4,1,Text for Scheduling Engine Profile,Maintenance Orders
+891,ERP EHP7,6.0,/MRSS/C_SGE_RFC,3,1,Table for Defining RFC location for each Logical System,Maintenance Orders
+892,ERP EHP7,6.0,/MRSS/C_SGE_RFCT,4,1,Text table for logical systems,Maintenance Orders
+893,ERP EHP7,6.0,/MRSS/C_SGE_SCA,4,1,Scenario Attributes for Multiresource Planning,Maintenance Orders
+894,ERP EHP7,6.0,/MRSS/C_SGE_SCAC,37,1,Customer-scenario attribute of Multi Resource Scheduling,Maintenance Orders
+895,ERP EHP7,6.0,/MRSS/C_SGE_SC_A,2,1,Active Scenario for Multiresource Planning,Maintenance Orders
+896,ERP EHP7,6.0,/MRSS/C_SGE_SIND,5,1,Demand status individualization for assignments,Maintenance Orders
+897,ERP EHP7,6.0,/MRSS/C_SGE_TECH,4,1,Technical Settings for the Resource Selection,Maintenance Orders
+898,ERP EHP7,6.0,/MRSS/C_SGU_ATXT,4,1,Assignment description/tooltip in planning board Gnatt,Maintenance Orders
+899,ERP EHP7,6.0,/MRSS/C_SGU_CFLD,4,1,To customize fied name & corresponding value for a color key,Maintenance Orders
+900,ERP EHP7,6.0,/MRSS/C_SGU_CNTR,6,1,Define layout: container item,Maintenance Orders
+901,ERP EHP7,6.0,/MRSS/C_SGU_COLR,5,1,To display different colors in hotlist,Maintenance Orders
+902,ERP EHP7,6.0,/MRSS/C_SGU_CON,5,1,Define layout: container item,Maintenance Orders
+903,ERP EHP7,6.0,/MRSS/C_SGU_CONT,6,1,Define layout: container item,Maintenance Orders
+904,ERP EHP7,6.0,/MRSS/C_SGU_CVAR,7,1,Define layout: container item,Maintenance Orders
+905,ERP EHP7,6.0,/MRSS/C_SGU_DEF,9,1,Default Settings for the Planning Board,Maintenance Orders
+906,ERP EHP7,6.0,/MRSS/C_SGU_ENH,5,1,Customer menu entries,Maintenance Orders
+907,ERP EHP7,6.0,/MRSS/C_SGU_ENHT,5,1,Text table for customer menu entries,Maintenance Orders
+908,ERP EHP7,6.0,/MRSS/C_SGU_GANT,5,1,UI Planning Profile: Gantt Charts,Maintenance Orders
+909,ERP EHP7,6.0,/MRSS/C_SGU_GRPH,4,1,Graphical element for time specifications,Maintenance Orders
+910,ERP EHP7,6.0,/MRSS/C_SGU_LAY,4,1,Define layout: container item,Maintenance Orders
+911,ERP EHP7,6.0,/MRSS/C_SGU_LAYT,5,1,Define layout: container item,Maintenance Orders
+912,ERP EHP7,6.0,/MRSS/C_SGU_LTS,5,1,Graphical element for time specifications,Maintenance Orders
+913,ERP EHP7,6.0,/MRSS/C_SGU_PRO,59,1,UI Planning Profiles,Maintenance Orders
+914,ERP EHP7,6.0,/MRSS/C_SGU_PROT,4,1,UI Planning Profile,Maintenance Orders
+915,ERP EHP7,6.0,/MRSS/C_SGU_RES,4,1,Resource list fields on Resource Gantt,Maintenance Orders
+916,ERP EHP7,6.0,/MRSS/C_SGU_SGD,5,1,Status groups for Demands,Maintenance Orders
+917,ERP EHP7,6.0,/MRSS/C_SGU_SGDS,5,1,Individual status in status groups,Maintenance Orders
+918,ERP EHP7,6.0,/MRSS/C_SGU_SGL,2,1,Used Language for Status Checks,Maintenance Orders
+919,ERP EHP7,6.0,/MRSS/C_SGU_SGR,9,1,Status groups,Maintenance Orders
+920,ERP EHP7,6.0,/MRSS/C_SGU_SGRS,7,1,Individual status in status groups,Maintenance Orders
+921,ERP EHP7,6.0,/MRSS/C_SGU_SGRT,5,1,Status groups: description,Maintenance Orders
+922,ERP EHP7,6.0,/MRSS/C_SGU_SORT,4,1,Sort Resource Based on Resource Type,Maintenance Orders
+923,ERP EHP7,6.0,/MRSS/C_SGU_SRTG,4,1,Sort groups,Maintenance Orders
+924,ERP EHP7,6.0,/MRSS/C_SGU_SRTP,4,1,Features of sort groups,Maintenance Orders
+925,ERP EHP7,6.0,/MRSS/C_SGU_SRTT,5,1,Texts for sort groups,Maintenance Orders
+926,ERP EHP7,6.0,/MRSS/C_SGU_STT,4,1,UI Planning Profile - Status Display for Time Data,Maintenance Orders
+927,ERP EHP7,6.0,/MRSS/C_SGU_VIE,21,1,UI Planning Profile: Views,Maintenance Orders
+928,ERP EHP7,6.0,/MRSS/C_SGU_VIET,5,1,UI Planning Profile: Views,Maintenance Orders
+929,ERP EHP7,6.0,/MRSS/C_SMS_DEST,2,1,Communication Types for Short Messages,Maintenance Orders
+930,ERP EHP7,6.0,/MRSS/C_SQE_DEF,2,1,To maintain default plant in MRS qualifications,Maintenance Orders
+931,ERP EHP7,6.0,/MRSS/C_SQE_ONCA,4,1,MRS: (Partial) on-call matching of fulfillment values,Maintenance Orders
+932,ERP EHP7,6.0,/MRSS/C_SQE_PSEL,5,1,Customizing table for Preselection of free employee matching,Maintenance Orders
+933,ERP EHP7,6.0,/MRSS/C_SQE_PTXT,4,1,Preselection of Employee Qualification Check (Texts),Maintenance Orders
+934,ERP EHP7,6.0,/MRSS/C_SQE_RSAD,5,1,MRS system table: info fields in results list,Maintenance Orders
+935,ERP EHP7,6.0,/MRSS/C_SQE_RSST,5,1,MRS: structure for matching result,Maintenance Orders
+936,ERP EHP7,6.0,/MRSS/C_SQE_TRDS,2,1,RFC destination of the TREX interface,Maintenance Orders
+937,ERP EHP7,6.0,/MRSS/C_SQE_UQLG,3,1,MRS: Language for matching unstr. qual. per res. plng node,Maintenance Orders
+938,ERP EHP7,6.0,/MRSS/C_SQM_CAT,5,1,Qualification Catalog: System Parameters,Maintenance Orders
+939,ERP EHP7,6.0,/MRSS/C_SQM_CH,5,1,Change Document Creation,Maintenance Orders
+940,ERP EHP7,6.0,/MRSS/C_SQM_MNT,3,1,Maintenance Group,Maintenance Orders
+941,ERP EHP7,6.0,/MRSS/C_SQM_MNTT,4,1,Text table for maintenance group,Maintenance Orders
+942,ERP EHP7,6.0,/MRSS/C_SQP_ACTN,3,1,Action/Status Matrix Table,Maintenance Orders
+943,ERP EHP7,6.0,/MRSS/C_SQP_HRTY,2,1,Mapping of subtype for HR infotype 0105 (webuser),Maintenance Orders
+944,ERP EHP7,6.0,/MRSS/C_SQP_WFC,4,1,Workflow customizing for employee profile approval,Maintenance Orders
+945,ERP EHP7,6.0,/MRSS/C_SQP_WURL,4,1,Profile : Entry of URL Components of Portal UI,Maintenance Orders
+946,ERP EHP7,6.0,/MRSS/C_SQU_USR,3,1,Types of unstructured qualifications,Maintenance Orders
+947,ERP EHP7,6.0,/MRSS/C_SQU_USRT,4,1,Types of unstructured qualifications,Maintenance Orders
+948,ERP EHP7,6.0,/MRSS/C_SRCH_H,8,1,Customizing table for Search strategy - Header level,Maintenance Orders
+949,ERP EHP7,6.0,/MRSS/C_SRCH_HT,4,1,Search Strategy Header - Text Table,Maintenance Orders
+950,ERP EHP7,6.0,/MRSS/C_SRCH_I,7,1,Customizing table for Search strategy - Item level,Maintenance Orders
+951,ERP EHP7,6.0,/MRSS/C_STATUSES,11,1,Pushbutton for User Status,Maintenance Orders
+952,ERP EHP7,6.0,/MRSS/C_STAT_ACT,10,1,MRS: Customizing for mapping of Status to Action on Assignm.,Maintenance Orders
+953,ERP EHP7,6.0,/MRSS/C_STAT_PRG,4,1,Assignments in Progress,Maintenance Orders
+954,ERP EHP7,6.0,/MRSS/C_STAT_TAB,2,1,Customizing table for Tab Strips,Maintenance Orders
+955,ERP EHP7,6.0,/MRSS/C_STAT_TX,5,1,Text table for Customizable Assignment statuses,Maintenance Orders
+956,ERP EHP7,6.0,/MRSS/C_SUMBAR,5,1,Control Sumbars,Maintenance Orders
+957,ERP EHP7,6.0,/MRSS/C_SYMSTAT,3,1,Mapping Symbolic Status to Abstract Status,Maintenance Orders
+958,ERP EHP7,6.0,/MRSS/C_TAB_TEXT,4,1,Text table for Tab Strips,Maintenance Orders
+959,ERP EHP7,6.0,/MRSS/C_TBS_RES,4,1,Resource fields customizing in table-based scheduling,Maintenance Orders
+960,ERP EHP7,6.0,/MRSS/C_TBS_WL_F,4,1,Work list fields to be displayed in Table-based Scheduling,Maintenance Orders
+961,ERP EHP7,6.0,/MRSS/C_TOUR,7,1,Activity mid-point determination,Maintenance Orders
+962,ERP EHP7,6.0,/MRSS/C_TRV_PROF,9,1,Customizing for Travel-type profiles,Maintenance Orders
+963,ERP EHP7,6.0,/MRSS/C_TRV_PROT,4,1,Customizing for Travel-type profiles (Text-table),Maintenance Orders
+964,ERP EHP7,6.0,/MRSS/C_TRV_RES,7,1,Travel time relevant parameters per resource,Maintenance Orders
+965,ERP EHP7,6.0,/MRSS/C_TRV_SYS,6,1,General Travel Time Settings,Maintenance Orders
+966,ERP EHP7,6.0,/MRSS/C_USR_PROC,4,1,Buisness Processes defined user specefic,Maintenance Orders
+967,ERP EHP7,6.0,/MRSS/C_UTL_DEST,2,1,RFC Destination of MRS Util Report,Maintenance Orders
+968,ERP EHP7,6.0,/MRSS/C_WFM_DEST,2,1,RFC Destination of WFM Core,Maintenance Orders
+969,ERP EHP7,6.0,/MRSS/C_WFM_TOLT,2,1,Time Allocation Type for Tools,Maintenance Orders
+970,ERP EHP7,6.0,/MRSS/C_WL_CSTAT,4,1,Customer Status in Demand,Maintenance Orders
+971,ERP EHP7,6.0,/MRSS/C_WL_F,8,1,Worklist Attributes at Item Level,Maintenance Orders
+972,ERP EHP7,6.0,/MRSS/C_WL_FPR,4,1,Assignment of Attributes to Worklist Profile,Maintenance Orders
+973,ERP EHP7,6.0,/MRSS/C_WL_FT,4,1,Texts for Worklist Fields,Maintenance Orders
+974,ERP EHP7,6.0,/MRSS/C_WL_F_CL,2,1,Definition of Classes for Determination of Worklist Fields,Maintenance Orders
+975,ERP EHP7,6.0,/MRSS/C_WL_F_DAT,6,1,Worklist Attributes: Time Stamp - Reference to Date/Time,Maintenance Orders
+976,ERP EHP7,6.0,/MRSS/C_WL_F_G,4,1,Origin of Worklist Fields from Generic Demand,Maintenance Orders
+977,ERP EHP7,6.0,/MRSS/C_WL_PR,2,1,Worklist Profile,Maintenance Orders
+978,ERP EHP7,6.0,/MRSS/C_WL_PRT,4,1,Texts for Worklist Profiles,Maintenance Orders
+979,ERP EHP7,6.0,/MRSS/D_ADDRESS,28,2,Stores Primary/Secondary address,Maintenance Orders
+980,ERP EHP7,6.0,/MRSS/D_ALERTS,22,2,Alerts,Maintenance Orders
+981,ERP EHP7,6.0,/MRSS/D_ASGN_INF,22,1,Additional Info for Assignment,Maintenance Orders
+982,ERP EHP7,6.0,/MRSS/D_ASG_CHLD,3,2,stores the link betw. child assignt. and the parent assignt.,Maintenance Orders
+983,ERP EHP7,6.0,/MRSS/D_ASG_INFX,6,1,Add. attributes of partial concretization of streched assign,Maintenance Orders
+984,ERP EHP7,6.0,/MRSS/D_CAG_CG_A,9,3,Type A Capacity Graphs: W/ Cap. Assignments & Reservations,Maintenance Orders
+985,ERP EHP7,6.0,/MRSS/D_CAG_CG_B,9,2,Type B Capacity Graphs: W/o Cap. Assgmnts w/ Reservations,Maintenance Orders
+986,ERP EHP7,6.0,/MRSS/D_CAG_CG_C,9,2,Type C Capacity Graphs: with Cap. Assgmnts w/o Reservations,Maintenance Orders
+987,ERP EHP7,6.0,/MRSS/D_CAG_CG_D,9,2,Type D Capacity Graphs: w/o Cap. Assgmnts w/ Reservations,Maintenance Orders
+988,ERP EHP7,6.0,/MRSS/D_CAG_CG_G,9,2,Type G Capacity Graphs: Basic Availability w/o On-Call Times,Maintenance Orders
+989,ERP EHP7,6.0,/MRSS/D_CAG_CG_H,9,2,Capacity Graph Type H: Basic Availability,Maintenance Orders
+990,ERP EHP7,6.0,/MRSS/D_CAG_CG_J,9,2,Type J Capacity Graphs: W/ Cap. Assgn & Resv w/o Oncall,Maintenance Orders
+991,ERP EHP7,6.0,/MRSS/D_CAG_CG_K,9,2,Type K Capacity Graphs: W/o Cap. Assgmnts w/Res w/o Oncal,Maintenance Orders
+992,ERP EHP7,6.0,/MRSS/D_CAG_CG_L,9,2,Type L Cap. Graphs: with Cap. Assgmnts w/o Res W/o Oncall,Maintenance Orders
+993,ERP EHP7,6.0,/MRSS/D_CAG_CG_M,9,2,Type M Capacity Graphs: w/o Cap. Assgmnts w/Res. w/o Oncall,Maintenance Orders
+994,ERP EHP7,6.0,/MRSS/D_CAG_CG_P,9,2,Capacity Graph Type P: Basic Availability for Planning Node,Maintenance Orders
+995,ERP EHP7,6.0,/MRSS/D_CAG_CG_Q,9,2,Capacity Graph Type Q: Net Availability for Planning Nodes,Maintenance Orders
+996,ERP EHP7,6.0,/MRSS/D_CAG_LONG,15,2,Day wise  Capacity Graphs,Maintenance Orders
+997,ERP EHP7,6.0,/MRSS/D_CHG_HISM,11,7,Change Documents (Text Attributes),Maintenance Orders
+998,ERP EHP7,6.0,/MRSS/D_CHG_HIST,12,2,Change Documents (Field Changes),Maintenance Orders
+999,ERP EHP7,6.0,/MRSS/D_CH_ORD,4,1,Time of Last Change for Assignments for an Order,Maintenance Orders
+1000,ERP EHP7,6.0,/MRSS/D_CH_RES,5,1,Time of Last Change for Resources,Maintenance Orders
+1001,ERP EHP7,6.0,/MRSS/D_CLOCK,6,3,Time Recording Information for the Scheduling Engine,Maintenance Orders
+1002,ERP EHP7,6.0,/MRSS/D_COMPO,4,2,Alert Components,Maintenance Orders
+1003,ERP EHP7,6.0,/MRSS/D_DEM_ADM,27,2,Administrative Demand Item Data,Maintenance Orders
+1004,ERP EHP7,6.0,/MRSS/D_DEM_AREA,4,1,Mapping Demand and Service Area,Maintenance Orders
+1005,ERP EHP7,6.0,/MRSS/D_DEM_H,31,3,Complex Demand,Maintenance Orders
+1006,ERP EHP7,6.0,/MRSS/D_DEM_HIST,6,1,Old and new planned start and end dates,Maintenance Orders
+1007,ERP EHP7,6.0,/MRSS/D_DEM_INFO,44,2,Informative Fields for Demand Items,Maintenance Orders
+1008,ERP EHP7,6.0,/MRSS/D_DEM_MAP,4,2,Mapping External Keys,Maintenance Orders
+1009,ERP EHP7,6.0,/MRSS/D_DEM_MATE,5,1,Data for Spare Part Items,Maintenance Orders
+1010,ERP EHP7,6.0,/MRSS/D_DEM_PLR,62,4,Data required for planning-relevant items,Maintenance Orders
+1011,ERP EHP7,6.0,/MRSS/D_DEM_PLRS,6,1,Data for Service Items,Maintenance Orders
+1012,ERP EHP7,6.0,/MRSS/D_DEM_PS,14,2,Rejected and/or deleted requirements,Maintenance Orders
+1013,ERP EHP7,6.0,/MRSS/D_DEM_REL,10,3,Relationships Between Demand Items,Maintenance Orders
+1014,ERP EHP7,6.0,/MRSS/D_DEM_SPLI,5,4,Split Information of Demands,Maintenance Orders
+1015,ERP EHP7,6.0,/MRSS/D_DEM_STAT,11,1,Status of demand items,Maintenance Orders
+1016,ERP EHP7,6.0,/MRSS/D_DEM_TOOL,5,1,Data for Tool Items,Maintenance Orders
+1017,ERP EHP7,6.0,/MRSS/D_DESTSLOT,10,1,Übersicht über belegte Zieladressen im RCCF,Maintenance Orders
+1018,ERP EHP7,6.0,/MRSS/D_ENG_LOG,19,1,Protokolltabelle für Engineläufe,Maintenance Orders
+1019,ERP EHP7,6.0,/MRSS/D_EQU_GUID,4,2,Mapping Equnr(containing characters) with Guids,Maintenance Orders
+1020,ERP EHP7,6.0,/MRSS/D_GEO_GPS,6,1,Data table to hold actual GPS coordinates of a resource,Maintenance Orders
+1021,ERP EHP7,6.0,/MRSS/D_GEO_ZIP,11,1,Postal Codes for Georeferencing,Maintenance Orders
+1022,ERP EHP7,6.0,/MRSS/D_LINK,12,3,Link Table for the Scheduling Engine,Maintenance Orders
+1023,ERP EHP7,6.0,/MRSS/D_MRS_LOG,9,1,Log Protocols,Maintenance Orders
+1024,ERP EHP7,6.0,/MRSS/D_PARTNER,5,1,Partner for demands,Maintenance Orders
+1025,ERP EHP7,6.0,/MRSS/D_PN_CAPA,19,2,Capacity Rule Definition for Planning Nodes,Maintenance Orders
+1026,ERP EHP7,6.0,/MRSS/D_PN_HD,10,2,Planning Node - Header Data,Maintenance Orders
+1027,ERP EHP7,6.0,/MRSS/D_PN_HD_T,4,1,Node - Language dependent Texts,Maintenance Orders
+1028,ERP EHP7,6.0,/MRSS/D_QSTATE,4,1,t-RFC Q-State,Maintenance Orders
+1029,ERP EHP7,6.0,/MRSS/D_R46_MAP,4,2,Mapping External Keys,Maintenance Orders
+1030,ERP EHP7,6.0,/MRSS/D_REPL_CAR,7,1,Vehicle Data,Maintenance Orders
+1031,ERP EHP7,6.0,/MRSS/D_RES_H,4,1,Resource Data (Status),Maintenance Orders
+1032,ERP EHP7,6.0,/MRSS/D_RES_INFO,6,1,Resource information in addition to WFM data,Maintenance Orders
+1033,ERP EHP7,6.0,/MRSS/D_RM_ADDN,4,2,Additional Attributes : Integration,Maintenance Orders
+1034,ERP EHP7,6.0,/MRSS/D_RSBUFADM,6,1,Resource Buffering Admin Data,Maintenance Orders
+1035,ERP EHP7,6.0,/MRSS/D_RSBUFDAT,13,1,Resource Buffering Data,Maintenance Orders
+1036,ERP EHP7,6.0,/MRSS/D_SGE_RI,6,1,Resources - Integration of Transfer Status Time Stamp,Maintenance Orders
+1037,ERP EHP7,6.0,/MRSS/D_SHIFTS,8,1,Standard Shift Schedule for Organizational Unit,Maintenance Orders
+1038,ERP EHP7,6.0,/MRSS/D_SQM_KH,15,1,Qualification Catalog: Header Data,Maintenance Orders
+1039,ERP EHP7,6.0,/MRSS/D_SQM_KHT,5,1,Qualification Catalog: Header Data Texts,Maintenance Orders
+1040,ERP EHP7,6.0,/MRSS/D_SQM_KP,8,2,Qualification Catalog: Items,Maintenance Orders
+1041,ERP EHP7,6.0,/MRSS/D_SQM_KPF,6,1,Qualification Catalog: Person-Specific Filter,Maintenance Orders
+1042,ERP EHP7,6.0,/MRSS/D_SQM_KPO,7,1,Qualification Catalog: Organization-Specific Filter,Maintenance Orders
+1043,ERP EHP7,6.0,/MRSS/D_SQM_KPT,8,2,Qualification Catalog: Item Texts,Maintenance Orders
+1044,ERP EHP7,6.0,/MRSS/D_SQM_MEG,4,1,Association of Matrices to Employee Groups,Maintenance Orders
+1045,ERP EHP7,6.0,/MRSS/D_SQM_MH,12,1,Qualification Matrix,Maintenance Orders
+1046,ERP EHP7,6.0,/MRSS/D_SQM_MHT,4,1,Qualification matrix: texts,Maintenance Orders
+1047,ERP EHP7,6.0,/MRSS/D_SQM_MPL,3,1,Association of Matrices to Plants,Maintenance Orders
+1048,ERP EHP7,6.0,/MRSS/D_SQP_EAPP,6,2,Employee Profile : Approval details,Maintenance Orders
+1049,ERP EHP7,6.0,/MRSS/D_SQP_EHDR,7,3,Employee Profile : Header Attributes,Maintenance Orders
+1050,ERP EHP7,6.0,/MRSS/D_SQP_EHIS,6,1,Employee Profile : History of changes,Maintenance Orders
+1051,ERP EHP7,6.0,/MRSS/D_SQP_ESTR,11,2,Employee Profile - Structured Qualifications,Maintenance Orders
+1052,ERP EHP7,6.0,/MRSS/D_SQP_EUST,11,1,Employee Profile : Unstructured Qualifications,Maintenance Orders
+1053,ERP EHP7,6.0,/MRSS/D_SQP_HDTX,6,1,Profile/structured qualifications: text table,Maintenance Orders
+1054,ERP EHP7,6.0,/MRSS/D_SQP_PROF,7,1,Profile Master Table : Contains all Profile Guids,Maintenance Orders
+1055,ERP EHP7,6.0,/MRSS/D_SQP_RADT,18,1,Requirements Profile: Information of Additional attributes,Maintenance Orders
+1056,ERP EHP7,6.0,/MRSS/D_SQP_RHDR,6,2,Requirements Profile: Header Attributes,Maintenance Orders
+1057,ERP EHP7,6.0,/MRSS/D_SQP_ROCS,4,1,Requirement Profie on call types with search types,Maintenance Orders
+1058,ERP EHP7,6.0,/MRSS/D_SQP_ROCT,3,1,Requirement Profie on call types,Maintenance Orders
+1059,ERP EHP7,6.0,/MRSS/D_SQP_RSTR,8,2,Requirements Profile : Structured Qualifications,Maintenance Orders
+1060,ERP EHP7,6.0,/MRSS/D_SQP_RUSR,8,1,Requirements Profile: Unstructured Qualifications,Maintenance Orders
+1061,ERP EHP7,6.0,/MRSS/D_SQP_RUST,24,1,Requirements Profile: Unstruct Qualif. - Language depend.,Maintenance Orders
+1062,ERP EHP7,6.0,/MRSS/D_TEAM,14,3,Team in Scheduling Engine,Maintenance Orders
+1063,ERP EHP7,6.0,/MRSS/D_TOUR_ATT,11,1,Attributes of Tour (Centroid),Maintenance Orders
+1064,ERP EHP7,6.0,/MRSS/D_TRAVEL,19,2,Travel Times,Maintenance Orders
+1065,ERP EHP7,6.0,/MRSS/D_TS_INFO,3,1,Time Spec Additional Info,Maintenance Orders
+1066,ERP EHP7,6.0,/MRSS/D_USER_CON,3,1,Confirmed Messages for Each User,Maintenance Orders
+1067,ERP EHP7,6.0,/MRSS/D_USR_CPOS,9,2,Table for maintaining the user persistent control info,Maintenance Orders
+1068,ERP EHP7,6.0,/MRSS/D_WORKTIME,7,2,Pers. Resource: HCM - Base Normal and Planning Working Time,Maintenance Orders
+1069,ERP EHP7,6.0,ADCOMP,2,1,PM/PS Reference Element,Maintenance Orders
+1070,ERP EHP7,6.0,ADCOMPT,4,1,PM/PS Text Table for ADCOMP,Maintenance Orders
+1071,ERP EHP7,6.0,AFIH,47,7,Maintenance order header,Maintenance Orders
+1072,ERP EHP7,6.0,AUFM,42,2,Goods movements for order,Maintenance Orders
+1073,ERP EHP7,6.0,CNOCI_ORGU,11,1,OCI Interface: Control Parameter Network,Maintenance Orders
+1074,ERP EHP7,6.0,IOCI_FCON2,6,1,OCI Interface: Field Assignment SAP - HTML,Maintenance Orders
+1075,ERP EHP7,6.0,IOCI_FCONV,6,1,OCI Interface: Field Conversion,Maintenance Orders
+1076,ERP EHP7,6.0,IOCI_FUNCM,4,1,OCI Interface: Conversion Modules,Maintenance Orders
+1077,ERP EHP7,6.0,IOCI_ORGU,11,1,OCI Interface: Control Parameter PM/CS Order,Maintenance Orders
+1078,ERP EHP7,6.0,IOCI_ORGU_TL,11,1,OCI Interface: Control Parameter Task List,Maintenance Orders
+1079,ERP EHP7,6.0,IWOT_HEAD,5,1,Assignment of Header Data Screens for External Labels,Maintenance Orders
+1080,ERP EHP7,6.0,IWOT_HEADT,3,1,Assignment of Header Data Screens for External Labels: Texts,Maintenance Orders
+1081,ERP EHP7,6.0,IWOT_LNK,5,1,Assignment of View Profiles,Maintenance Orders
+1082,ERP EHP7,6.0,IWOT_PROF,2,1,View Profiles for Basic Order View,Maintenance Orders
+1083,ERP EHP7,6.0,IWOT_PROFN,4,1,Assignment of Pushbuttons to Tab Pages,Maintenance Orders
+1084,ERP EHP7,6.0,IWOT_PROFT,4,1,View Profile Texts for Basic Order View,Maintenance Orders
+1085,ERP EHP7,6.0,IWOT_PROF_HEAD,3,1,Header Data Format for Basic Order View,Maintenance Orders
+1086,ERP EHP7,6.0,IWOT_PROF_SUB,13,1,Tab Pages for View Profiles,Maintenance Orders
+1087,ERP EHP7,6.0,IWOT_PROF_SUBT,5,1,Tab Page Titles for View Profiles,Maintenance Orders
+1088,ERP EHP7,6.0,IWOT_SUB,4,1,Assignment of Subscreens to External Labels,Maintenance Orders
+1089,ERP EHP7,6.0,IWOT_SUBT,3,1,Assignment of Subscreens to External Labels: Texts,Maintenance Orders
+1090,ERP EHP7,6.0,PMCOQT,48,1,Quantity structure for the maintenance order,Maintenance Orders
+1091,ERP EHP7,6.0,PMCOQT_OP,48,1,Quantity structure for the maintenance order,Maintenance Orders
+1092,ERP EHP7,6.0,PMFLAGS,31,1,Flags if certain conversions have been run,Maintenance Orders
+1093,ERP EHP7,6.0,T350,36,1,Maintenance Control Parameters: Client/Order Type,Maintenance Orders
+1094,ERP EHP7,6.0,T350E,9,1,Access sequence addresses for address proposal purch. data,Maintenance Orders
+1095,ERP EHP7,6.0,T350I,3,1,Combination of order type and PM activity type allowed,Maintenance Orders
+1096,ERP EHP7,6.0,T352R,26,3,Maintenance revisions,Maintenance Orders
+1097,ERP EHP7,6.0,T353I,4,1,Maintenance activity types,Maintenance Orders
+1098,ERP EHP7,6.0,T353I_T,4,1,Maintenance activity type description,Maintenance Orders
+1099,ERP EHP7,6.0,T357M_T,4,1,Operating condition texts,Maintenance Orders
+1100,ERP EHP7,6.0,T399I,5,1,Planning plant parameters,Maintenance Orders
+1101,ERP EHP7,6.0,T418V,4,1,Item category proposal for component assignment,Maintenance Orders
+1102,ERP EHP7,6.0,TEAMS,2,1,Table for Controlling the Setting of Statuses,Maintenance Orders
+1103,ERP EHP7,6.0,TPEXT,9,1,Profile for external procurement,Maintenance Orders
+1104,ERP EHP7,6.0,TPEXT_T,4,1,Text tables for profiles (external procurement),Maintenance Orders
+1105,ERP EHP7,6.0,TPMIM,11,1,IM allocation key,Maintenance Orders
+1106,ERP EHP7,6.0,TPMP,15,1,Maintenance profile,Maintenance Orders
+1107,ERP EHP7,6.0,TPMPO,7,1,Maintenance order processing profile,Maintenance Orders
+1108,ERP EHP7,6.0,TPMUC,2,1,Deactivate the Update Check CO_ZV_CONSISTENCY_CHECK,Maintenance Orders
+1109,ERP EHP7,6.0,TPMUS,78,1,PM/SM - User default values,Maintenance Orders
+1110,ERP EHP7,6.0,EAPL,19,3,Allocation of task lists to pieces of equipment,Maintenance Task Lists
+1111,ERP EHP7,6.0,MHIO,20,2,Call Object from Maintenance Order,Maintenance Task Lists
+1112,ERP EHP7,6.0,MHIS,64,2,Maintenance plan history,Maintenance Task Lists
+1113,ERP EHP7,6.0,MMPT,16,2,Cycle definitions and MeasPoints for MaintPlan,Maintenance Task Lists
+1114,ERP EHP7,6.0,MMPX,6,1,Maintenance cycle short texts,Maintenance Task Lists
+1115,ERP EHP7,6.0,MPLA,47,1,Maintenance plan,Maintenance Task Lists
+1116,ERP EHP7,6.0,MPLAN_STRAT_UPD,5,1,Maintenance Plans Relevant to Restart in Cycle,Maintenance Task Lists
+1117,ERP EHP7,6.0,MPOS,70,10,Maintenance item,Maintenance Task Lists
+1118,ERP EHP7,6.0,PLWP,20,2,Allocation of maintenance packages to task list operations,Maintenance Task Lists
+1119,ERP EHP7,6.0,T351,18,1,Maintenance strategy,Maintenance Task Lists
+1120,ERP EHP7,6.0,T351P,14,1,Maintenance packages,Maintenance Task Lists
+1121,ERP EHP7,6.0,T351P_OLD,14,1,Old Version of Maintenance Packages,Maintenance Task Lists
+1122,ERP EHP7,6.0,T351T,4,1,Maintenance strategy texts,Maintenance Task Lists
+1123,ERP EHP7,6.0,T351X,11,1,Maintenance strategy package texts,Maintenance Task Lists
+1124,ERP EHP7,6.0,T351_OLD,17,1,Old Status of Maintenance Strategy,Maintenance Task Lists
+1125,ERP EHP7,6.0,T399G,2,1,Maintenance Plan Sort Field,Maintenance Task Lists
+1126,ERP EHP7,6.0,T399G_T,4,1,Descriptions for Maintenance Plan Sort Fields,Maintenance Task Lists
+1127,ERP EHP7,6.0,TAPL,17,3,Allocation of task lists to functional locations,Maintenance Task Lists
+1128,ERP EHP7,6.0,CCMEQBOM,5,1,Equi. BOM Customizing for Configuration Control,Configuration Control
+1129,ERP EHP7,6.0,CCMHOLE,17,4,Structure Gap Table,Configuration Control
+1130,ERP EHP7,6.0,CCMINSTOPT,2,1,Configuration Control Customizing: Installation Options,Configuration Control
+1131,ERP EHP7,6.0,IE4N_CGP,7,1,General IE4N Settings for Installation/Dismantling,Configuration Control
+1132,ERP EHP7,6.0,IE4N_USP,4,1,Definition of User-Specific Settings,Configuration Control
+1133,ERP EHP7,6.0,IE4N_USPI,6,1,Definition of User-Specific Settings: Installation,Configuration Control
+1134,ERP EHP7,6.0,IE4N_USPR,6,1,Definition of User-Specific Settings: Dismantling,Configuration Control
+1135,ERP EHP7,6.0,MPL_C_ADAPTER,12,1,Adapter for iPPE Workbench,Configuration Control
+1136,ERP EHP7,6.0,MPL_C_DOCTYPES,4,1,Adapter for iPPE Workbench: Document Types,Configuration Control
+1137,ERP EHP7,6.0,TIWEVENTNOTIF,14,1,Properties of Installation/Dismantling Notifications,Configuration Control
+1138,ERP EHP7,6.0,EQKT,7,3,Equipment Short Texts,Equipment
+1139,ERP EHP7,6.0,EQUI,90,7,Equipment master data,Equipment
+1140,ERP EHP7,6.0,EQUZ,46,5,Equipment time segment,Equipment
+1141,ERP EHP7,6.0,IEQT_WL_HDR_BAC,16,2,Interim Statuses - Header Data (Backup),Equipment
+1142,ERP EHP7,6.0,IEQT_WL_HEADER,18,1,Interim Statuses - Header Data,Equipment
+1143,ERP EHP7,6.0,IEQT_WL_ITEMS,110,2,Interim Statuses - Items,Equipment
+1144,ERP EHP7,6.0,IEQT_WL_ITM_BAC,111,1,Interim Statuses - Items (Backup),Equipment
+1145,ERP EHP7,6.0,IEQT_WL_MP,9,1,Interim Statuses: Measurement Objects,Equipment
+1146,ERP EHP7,6.0,T024I,7,1,Maintenance planner groups,Equipment
+1147,ERP EHP7,6.0,T370T,37,1,Equipment categories,Equipment
+1148,ERP EHP7,6.0,T370U,4,1,Language-dependent texts for T370T,Equipment
+1149,ERP EHP7,6.0,EAM_D_IHPA_TIME,10,1,Validity for Partner Assignment in Plant Maintenance,Functional Locations
+1150,ERP EHP7,6.0,IFLOALT,4,1,Labeling Systems for Functional Locations,Functional Locations
+1151,ERP EHP7,6.0,IFLOALT_T,4,1,Labeling Systems for Functional Locations: Short Texts,Functional Locations
+1152,ERP EHP7,6.0,IFLOCUST,3,1,System-Specific Settings,Functional Locations
+1153,ERP EHP7,6.0,IFLOCUSTA,5,1,System-Specific Settings (Permitted Labeling Systems),Functional Locations
+1154,ERP EHP7,6.0,IFLOS,11,2,Functional Location Labels,Functional Locations
+1155,ERP EHP7,6.0,IFLOS_VS,12,2,Functional Location Labels (Version Table),Functional Locations
+1156,ERP EHP7,6.0,IFLOT,59,7,Functional Location (Table),Functional Locations
+1157,ERP EHP7,6.0,IFLOTX,7,2,Functional Location: Short Texts,Functional Locations
+1158,ERP EHP7,6.0,IFLOTX_VS,8,2,Functional Location Data Fields: Short Texts (Version Table),Functional Locations
+1159,ERP EHP7,6.0,IFLOT_VS,60,5,Functional Location (Version Table),Functional Locations
+1160,ERP EHP7,6.0,IFLOUSR,10,1,User Profile for Labeling Functional Locations,Functional Locations
+1161,ERP EHP7,6.0,IHPA,16,3,Plant Maintenance: Partners,Functional Locations
+1162,ERP EHP7,6.0,ILOA,48,7,PM Object Location and Account Assignment,Functional Locations
+1163,ERP EHP7,6.0,ILOA_VS,49,5,Location & Account Assignment for PM Object (Version Table),Functional Locations
+1164,ERP EHP7,6.0,INHB,4,1,Termination of Data Transfer to Technical Objects,Functional Locations
+1165,ERP EHP7,6.0,IRLOT,30,4,Reference Functional Location (Table),Functional Locations
+1166,ERP EHP7,6.0,IRLOTX,7,2,Reference Functional Location: Short Texts,Functional Locations
+1167,ERP EHP7,6.0,ITOBCUST,4,1,System Settings for Alternative Labeling of FunctLocations,Functional Locations
+1168,ERP EHP7,6.0,T357,5,1,Plant Section,Functional Locations
+1169,ERP EHP7,6.0,T370F,13,1,Functional Location Category,Functional Locations
+1170,ERP EHP7,6.0,T370F_T,4,1,Language-Dependent Texts for T370F,Functional Locations
+1171,ERP EHP7,6.0,T370R,4,1,Reference Functional Location Category,Functional Locations
+1172,ERP EHP7,6.0,T370R_T,4,1,Language-Dependent Texts for T370R,Functional Locations
+1173,ERP EHP7,6.0,T370S,4,1,Functional Location Structure Indicators,Functional Locations
+1174,ERP EHP7,6.0,T370S_T,4,1,Language-Dependent Texts for T370S,Functional Locations
+1175,ERP EHP7,6.0,INET,28,6,Object networking,Object Networking
+1176,ERP EHP7,6.0,INETX,6,2,Language-dependent texts for INET,Object Networking
+1177,ERP EHP7,6.0,T372I,5,1,Network identification,Object Networking
+1178,ERP EHP7,6.0,T372I_T,4,1,Language-dependent texts for network ID,Object Networking
+1179,ERP EHP7,6.0,T372M,7,1,Medium,Object Networking
+1180,ERP EHP7,6.0,T372M_T,4,1,Language-dependent texts for link medium (T372)M,Object Networking
+1181,ERP EHP7,6.0,PHINH,18,2,Header Table for Take Over,TakeoverHandover of Technical Objects
+1182,ERP EHP7,6.0,PHINT,61,2,Phase In Table,TakeoverHandover of Technical Objects
+1183,ERP EHP7,6.0,PHIN_MSG,17,1,table for internal message handling in Takeover/Handover,TakeoverHandover of Technical Objects
+1184,ERP EHP7,6.0,PHIN_MSG_REPL,6,1,TOHO Messages to be replaced in Message Log,TakeoverHandover of Technical Objects
+1185,ERP EHP7,6.0,TPHIN_CF,3,1,Configuration for Customer-Specific Fields,TakeoverHandover of Technical Objects
+1186,ERP EHP7,6.0,TPHIN_CFT,4,1,Text Table for Customer-Specific Fields,TakeoverHandover of Technical Objects
+1187,ERP EHP7,6.0,TPHIN_MPT_EXT,7,2,External ID of Supported PHIN Counters,TakeoverHandover of Technical Objects
+1188,ERP EHP7,6.0,TPHIN_MPT_EXT1,7,1,External ID of Supported PHIN Counters,TakeoverHandover of Technical Objects
+1189,ERP EHP7,6.0,TPHIN_PI_PRO,7,1,Takeover Profile Table,TakeoverHandover of Technical Objects
+1190,ERP EHP7,6.0,TPHIN_PI_PROT,4,1,Texttable for Takeover Profiles,TakeoverHandover of Technical Objects
+1191,ERP EHP7,6.0,TPHIN_PO_ACT,13,1,Handover Profile,TakeoverHandover of Technical Objects
+1192,ERP EHP7,6.0,TPHIN_PO_ACTT,4,1,Text Table for Handover Profiles,TakeoverHandover of Technical Objects
+1193,ERP EHP7,6.0,TPHIN_TCB03,3,1,Internal Characteristic Numbers for ToHo Characteristics,TakeoverHandover of Technical Objects
+1194,ERP EHP7,6.0,PAMS_FSET,7,1,Settings for Pool Asset Management,Pool Asset Management
+1195,ERP EHP7,6.0,PAMS_MERK,6,1,Links: Characteristics/Fields,Pool Asset Management
+1196,ERP EHP7,6.0,PAMS_NEED,58,1,Graphical Planning Board: Requests (Objects to Schedule),Pool Asset Management
+1197,ERP EHP7,6.0,PAMS_OBJE,8,1,Objects for Processing,Pool Asset Management
+1198,ERP EHP7,6.0,PAMS_ROWE,4,1,Assignment: Element Row Key,Pool Asset Management
+1199,ERP EHP7,6.0,PAMS_ROWG,3,1,Assignment: Group Row Key,Pool Asset Management
+1200,ERP EHP7,6.0,PAMS_SETT,11,1,Graphical Planning Board: Settings for Planning Board,Pool Asset Management
+1201,ERP EHP7,6.0,PAMS_SPLIT,59,1,Graphical Planning Board: Splits (Scheduled Objects),Pool Asset Management
+1202,ERP EHP7,6.0,PAMS_STA,7,1,Graphical Planning Board: Status Model for Planning Board,Pool Asset Management
+1203,ERP EHP7,6.0,PAMS_STAI,6,1,Graphical Planning Board: Status Model for Planning Board,Pool Asset Management
+1204,ERP EHP7,6.0,PAMS_STAIT,5,1,Graphical Planning Board: Status Model for Planning Board,Pool Asset Management
+1205,ERP EHP7,6.0,PAMS_STATD,6,1,Default Status Settings,Pool Asset Management
+1206,ERP EHP7,6.0,PAMS_STATT,5,1,Graphical Planning Board: Status Model for Planning Board,Pool Asset Management
+1207,ERP EHP7,6.0,PAMS_TIMS,14,1,Time Scale for Bar Chart,Pool Asset Management
+1208,ERP EHP7,6.0,PAMS_TPOOL,6,1,PAM Pools,Pool Asset Management
+1209,ERP EHP7,6.0,PAMS_TPOOLO,5,2,PAM Pools for Org. Units,Pool Asset Management
+1210,ERP EHP7,6.0,PAMS_TPOOLT,4,1,PAM Pool Descriptions,Pool Asset Management
+1211,ERP EHP7,6.0,PAMS_TPOOLTP,3,1,PAM Pools for Functional Locations,Pool Asset Management
+1212,ERP EHP7,6.0,PAMS_TTYPOOL,2,1,Pool Types,Pool Asset Management
+1213,ERP EHP7,6.0,PAMS_TTYPOOLT,4,1,Description of Car Pool Categories,Pool Asset Management
+1214,ERP EHP7,6.0,PAMS_VARI,7,1,Graphical Planning Board: Field Settings,Pool Asset Management
+1215,ERP EHP7,6.0,PAMS_VARIT,7,1,Graphical Planning Board: Field Settings - Text Tab.,Pool Asset Management
+1216,ERP EHP7,6.0,PAMS_VCO,8,1,Settlement Information for Vehicle Category,Pool Asset Management
+1217,ERP EHP7,6.0,PAMS_VHC,2,1,Vehicle Classification,Pool Asset Management
+1218,ERP EHP7,6.0,PAMS_VHT,4,1,Vehicle Category Names,Pool Asset Management
+1219,ERP EHP7,6.0,CLFT1,3,1,Customizing for Reference Object Screen for Vehicle Data,Measuring Points and Counters
+1220,ERP EHP7,6.0,EAM_IFCU,7,1,Goods Movement for Technical Object,Measuring Points and Counters
+1221,ERP EHP7,6.0,IMEL,9,2,Entry List for Measurement Documents,Measuring Points and Counters
+1222,ERP EHP7,6.0,IMEP,6,1,Items in the Entry List,Measuring Points and Counters
+1223,ERP EHP7,6.0,IMPH,15,2,Measurement and Counter Reading Transmission History,Measuring Points and Counters
+1224,ERP EHP7,6.0,IMPTT,49,6,Measuring Point (Table),Measuring Points and Counters
+1225,ERP EHP7,6.0,IMRCCUST,3,1,System Settings for Measuring Points and Measurement Docs,Measuring Points and Counters
+1226,ERP EHP7,6.0,IMRG,53,4,Measurement Document,Measuring Points and Counters
+1227,ERP EHP7,6.0,IMRG_TEST_LOG,2,1,Log file for imrg tester,Measuring Points and Counters
+1228,ERP EHP7,6.0,IMTR,6,1,Termination of MeasRead. Data Transfer to Measuring Points,Measuring Points and Counters
+1229,ERP EHP7,6.0,INHB_MP_TRANS,3,1,Meas. Pt: TRANS - Post Logic for Transferring Meas. Vals,Measuring Points and Counters
+1230,ERP EHP7,6.0,T370CON_TOL,6,1,PM: Tolerance for Consumption Control Check,Measuring Points and Counters
+1231,ERP EHP7,6.0,T370CON_TOL_T,4,1,PM: Tolerance for Consumption Control Check Texts,Measuring Points and Counters
+1232,ERP EHP7,6.0,T370FLD_GMOVE,10,1,PM: Goods Movement/Account Assignment Usage Transaction,Measuring Points and Counters
+1233,ERP EHP7,6.0,T370FLD_GMOVE_T,4,1,PM: Goods Movement/Account Assignmt Consumpt.Transactn Texts,Measuring Points and Counters
+1234,ERP EHP7,6.0,T370FLD_MAT,5,1,Fluid Types,Measuring Points and Counters
+1235,ERP EHP7,6.0,T370FLD_STN,5,1,PM: Gas Stations for Fleet Management,Measuring Points and Counters
+1236,ERP EHP7,6.0,T370FLD_STN_T,4,1,PM: Gas Stations for Fleet Management Texts,Measuring Points and Counters
+1237,ERP EHP7,6.0,T370O,6,1,Object Categories Allowed for MeasPoints and MeasDocuments,Measuring Points and Counters
+1238,ERP EHP7,6.0,T370P,9,1,Measuring Point Category,Measuring Points and Counters
+1239,ERP EHP7,6.0,T370P_T,4,1,Language-Dependent Texts for T370P,Measuring Points and Counters
+1240,ERP EHP7,6.0,IHGNS,18,1,Permit Segment for Plant Maintenance,Permits
+1241,ERP EHP7,6.0,IHSG,27,5,Object-Related Permits in Plant Maintenance,Permits
+1242,ERP EHP7,6.0,T352T,2,1,Permit Categories,Permits
+1243,ERP EHP7,6.0,T352T_T,4,1,Text for Permit Categories,Permits
+1244,ERP EHP7,6.0,T357G,11,1,Permits,Permits
+1245,ERP EHP7,6.0,T357G_GR,3,1,PM: Permit groups,Permits
+1246,ERP EHP7,6.0,T357G_T,6,1,Text for Table 357GT,Permits
+1247,ERP EHP7,6.0,BGMK,21,1,Master Warranty Header,Warranties
+1248,ERP EHP7,6.0,BGMKOBJ,13,1,Master Warranty - Object Assignment,Warranties
+1249,ERP EHP7,6.0,BGMP,22,1,Master Warranty Item,Warranties
+1250,ERP EHP7,6.0,BGMS,7,1,Master Warranty Text Item,Warranties
+1251,ERP EHP7,6.0,BGMT,6,2,Master Warranty Text,Warranties
+1252,ERP EHP7,6.0,BGMZ,16,1,Warranty Counter,Warranties
+1253,ERP EHP7,6.0,T790,6,1,Warranty Transaction - Initial Values,Warranties
+1254,ERP EHP7,6.0,T790G,13,1,Warranty Type,Warranties
+1255,ERP EHP7,6.0,T790G_T,4,1,Warranty Type Text,Warranties
+1256,ERP EHP7,6.0,T790T,4,1,Warranty Category Functions,Warranties
+1257,ERP EHP7,6.0,T790T_C,3,1,Warranty Category Default Values,Warranties
+1258,ERP EHP7,6.0,T790_C,5,1,Warranty Default Values - Initial Transactions,Warranties
+1259,ERP EHP7,6.0,T791Z,4,1,Permitted Warranty Counters - General,Warranties
