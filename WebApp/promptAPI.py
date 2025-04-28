@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from openai import OpenAI
 from ValidationAndMapping.ScoreManager import ScoreManager
-from WebApp.Models import MappingQuery
+from Models import MappingQuery
 
 
 # Initialize OpenAI client

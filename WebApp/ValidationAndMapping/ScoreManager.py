@@ -9,7 +9,7 @@ from ValidationAndMapping import Score
 #Score Managers
 # from ValidationAndMapping.Quality import Quality
 from ValidationAndMapping.Accuracy import Accuracy
-from WebApp.Models import Mapping
+from Models import Mapping
 from typing import List
 
 class ScoreManager:
