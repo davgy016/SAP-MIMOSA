@@ -8,7 +8,7 @@ import uvicorn
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
-from WebApp.Models import MappingQuery
+from Models import MappingQuery
 
 
 # Initialize OpenAI client
