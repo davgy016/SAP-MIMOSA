@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from openai import OpenAI
 import json
 import os
@@ -8,10 +8,7 @@ import uvicorn
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
-from Models import MappingQuery
-
-from dotenv import load_dotenv
-load_dotenv()
+from Models import MappingQuery, Mapping as MappingDocument
 
 
 # Initialize OpenAI client
@@ -24,13 +21,13 @@ app = FastAPI()
 JSON_FILE = "Data/SAPMIMOSA.json"
 
 # Models
-from pydantic import BaseModel, Field
+
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
     class Config:
         allow_population_by_field_name = True
 
-
+"""
 class MappingField(BaseModel):
     platform: str
     entityName: str
@@ -50,7 +47,7 @@ class MappingDocument(BaseModel):
     mappings: List[MappingPair]
     prompt: Optional[str] = None
     #color: Optional[str] = None
-
+"""
 # JSON file operations
 def load_data():
     if not os.path.exists(JSON_FILE):
