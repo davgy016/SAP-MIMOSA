@@ -10,6 +10,9 @@ from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
 from Models import MappingQuery
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Initialize OpenAI client
 client = OpenAI()
