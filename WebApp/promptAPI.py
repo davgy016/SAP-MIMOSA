@@ -3,8 +3,7 @@
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
 from openai import OpenAI
-from ValidationAndMapping.ScoreManager import ScoreManager
-from WebApp.Models import MappingQuery
+
 
 
 # Initialize OpenAI client
@@ -29,12 +28,3 @@ app = FastAPI()
     
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/check_accuracy")
-async def check_accuracy(output: MappingQuery):
-    data = output.root 
-    print(data)
-    score = ScoreManager.scoreOutput(data)
-    print(score)
-    return score
-

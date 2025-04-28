@@ -7,6 +7,8 @@ import os
 import uvicorn
 from typing import List, Optional
 from uuid import uuid4
+from ValidationAndMapping.ScoreManager import ScoreManager
+from WebApp.Models import MappingQuery
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -148,6 +150,17 @@ async def delete_workorder(map_id: str):
         raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
     save_data(data)
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
+
+
+
+@app.post("/check_accuracy")
+async def check_accuracy(output: MappingQuery):
+    data = output.root 
+    score = ScoreManager.scoreOutput(data)
+    print(score)
+    return score
+
+
 
 # Run the FastAPI app
 if __name__ == "__main__":
