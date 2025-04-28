@@ -10,6 +10,7 @@ from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
 from WebApp.Models import MappingQuery
 
+
 # Initialize OpenAI client
 client = OpenAI()
 
