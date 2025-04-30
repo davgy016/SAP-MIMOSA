@@ -11,5 +11,6 @@ namespace SAP_MIMOSAapp.Models
         public int FilteredCount { get; set; }
         public List<MappingDocument> SearchResults { get; set; } = new List<MappingDocument>();
         public string? Query { get; set; }
+        public string? SelectedLLM { get; set; }
     }
 }

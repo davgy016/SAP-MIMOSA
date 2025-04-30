@@ -65,6 +65,7 @@ namespace SAP_MIMOSAapp.Controllers
                     if (mappingDoc != null)
                     {
                         TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
+                        TempData["llmT"] = model.SelectedLLM;
                         return RedirectToAction("Create", new { query = model.Query });
                     }
                     else
@@ -174,6 +175,10 @@ namespace SAP_MIMOSAapp.Controllers
                 model = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
                 if (query != null)
                     model.prompt = query;
+                if (TempData["llmT"] != null)
+                {
+                    model.LLMType = TempData["llmT"].ToString();
+                }
             }
             // If no AI mapping, model will be null and view will show empty form
             return View(model);
@@ -195,6 +200,11 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
+                // mapID is a string for backend validation
+                if (newDocument.mapID == null)
+                {
+                    newDocument.mapID = "";
+                }
                 // Ensure platform values are set correctly
                 if (newDocument.mappings != null)
                 {
