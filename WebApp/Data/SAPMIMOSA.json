@@ -1623,5 +1623,152 @@
             }
         ],
         "prompt": "generate asset mappings"
+    },
+    {
+        "mapID": "018",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Number",
+                    "description": "Unique identifier for equipment/asset within SAP",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-EQUNR",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique asset identifier within MIMOSA data model",
+                    "dataType": "String",
+                    "notes": "Serves as the primary asset key",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Serial Number",
+                    "description": "Manufacturer assigned serial number for equipment",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-SERNR",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Asset manufacturer’s serial number",
+                    "dataType": "String",
+                    "notes": "Captured for traceability",
+                    "fieldLength": "40"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Description",
+                    "description": "Textual description of the equipment",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-EQKTX",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "Name",
+                    "description": "Asset name or description",
+                    "dataType": "String",
+                    "notes": "Typically matches SAP description",
+                    "fieldLength": "128"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Category",
+                    "description": "Category or type of equipment/asset",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-EQART",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetTypeCode",
+                    "description": "Code representing the type/category of asset",
+                    "dataType": "String",
+                    "notes": "Mapped to standardized asset type code",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Name of equipment manufacturer",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-HERST",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "Manufacturer",
+                    "description": "Manufacturer of the asset",
+                    "dataType": "String",
+                    "notes": "Mapped directly for traceability",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Model Number",
+                    "description": "Model number of the equipment",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-TYPBZ",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ModelNumber",
+                    "description": "Manufacturer’s model number for the asset",
+                    "dataType": "String",
+                    "notes": "Model for specification and reference",
+                    "fieldLength": "40"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Location",
+                    "description": "Physical location code of the equipment",
+                    "dataType": "CHAR",
+                    "notes": "SAP PM: EQUIPMENT-STORT",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "AssetLocation",
+                    "fieldName": "LocationID",
+                    "description": "Unique identifier for asset location",
+                    "dataType": "String",
+                    "notes": "Reference to location master record",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate asset mappings"
     }
 ]
