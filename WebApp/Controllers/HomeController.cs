@@ -63,12 +63,10 @@ namespace SAP_MIMOSAapp.Controllers
                     var mappingDoc = ParseAIMapping(aiResponse);
 
                     if (mappingDoc != null)
-                    {
-                        // Set the selected LLM type on the mappingDoc so it is pre-selected in Create view
-                        mappingDoc.LLMType = model.SelectedLLM;
+                    {                                              
                         TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
-                        TempData["llmT"] = model.SelectedLLM;
-                        return RedirectToAction("Create", new { query = model.Query });
+                        
+                        return RedirectToAction("Create", new { query = model.Query, llmType = model.SelectedLLM });
                     }
                     else
                     {
@@ -169,7 +167,7 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create(string? query = null)
+        public IActionResult Create(string? query = null, string? llmType = null)
         {
             MappingDocument? model = null;
             if (TempData["AIMapping"] != null)
@@ -177,9 +175,9 @@ namespace SAP_MIMOSAapp.Controllers
                 model = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
                 if (query != null)
                     model.prompt = query;
-                if (TempData["llmT"] != null)
+                if (llmType!= null)
                 {
-                    model.LLMType = TempData["llmT"].ToString();
+                   model.LLMType= llmType;
                 }
             }
             // If no AI mapping, model will be null and view will show empty form
@@ -194,11 +192,11 @@ namespace SAP_MIMOSAapp.Controllers
                 return View(newDocument);
             }
 
-            // Ensure prompt is set if present in TempData (from AI workflow)
-            if (string.IsNullOrEmpty(newDocument.prompt) && TempData["Prompt"] != null)
-            {
-                newDocument.prompt = TempData["Prompt"].ToString();
-            }
+            //// Ensure prompt is set if present in TempData (from AI workflow)
+            //if (string.IsNullOrEmpty(newDocument.prompt) && TempData["Prompt"] != null)
+            //{
+            //    newDocument.prompt = TempData["Prompt"].ToString();
+            //}
 
             try
             {

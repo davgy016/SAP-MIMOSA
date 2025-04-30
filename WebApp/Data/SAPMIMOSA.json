@@ -1770,5 +1770,299 @@
             }
         ],
         "prompt": "generate asset mappings"
+    },
+    {
+        "mapID": "019",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Number",
+                    "description": "Unique identifier for an equipment asset in SAP.",
+                    "dataType": "CHAR",
+                    "notes": "Often stored as EQUNR in tables like EQUI.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Globally unique identifier for an asset.",
+                    "dataType": "String",
+                    "notes": "Acts as a primary key for the Asset entity.",
+                    "fieldLength": "36"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Serial Number",
+                    "description": "Manufacturer-provided unique serial number for the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Field used for tracking physical asset identity.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Serial number of the asset, typically issued by the manufacturer.",
+                    "dataType": "String",
+                    "notes": "Used for distinction among individual items of the same model.",
+                    "fieldLength": "30"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Description",
+                    "description": "User-defined description of the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Provides a human-readable identifier.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetDescription",
+                    "description": "Textual description of the asset.",
+                    "dataType": "String",
+                    "notes": "Used for identification and distinction.",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Category",
+                    "description": "Classifies equipment by category type (e.g. machine, vehicle).",
+                    "dataType": "CHAR",
+                    "notes": "SAP field EQUCAT.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetClass",
+                    "description": "Identifies the class/type of the asset.",
+                    "dataType": "String",
+                    "notes": "Usually maps to a predefined asset classification.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Name of the equipment manufacturer.",
+                    "dataType": "CHAR",
+                    "notes": "Field HERST.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ManufacturerName",
+                    "description": "Name of the manufacturer of the asset.",
+                    "dataType": "String",
+                    "notes": "Captures organization responsible for producing the asset.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Model Number",
+                    "description": "Model number assigned by manufacturer.",
+                    "dataType": "CHAR",
+                    "notes": "SAP field TYPBZ.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ModelNumber",
+                    "description": "Manufacturer's model number for the asset.",
+                    "dataType": "String",
+                    "notes": "Used for asset type identification.",
+                    "fieldLength": "30"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Start-up Date",
+                    "description": "Date on which the equipment was commissioned.",
+                    "dataType": "DATE",
+                    "notes": "Field INBDT.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "CommissionedDate",
+                    "description": "Date asset was placed into service.",
+                    "dataType": "Date",
+                    "notes": "Captured as the date when the asset became operational.",
+                    "fieldLength": "10"
+                }
+            }
+        ],
+        "prompt": "generate asset mappings"
+    },
+    {
+        "mapID": "020",
+        "LLMType": "o4-mini",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "ANLN1",
+                    "description": "Main Asset Number",
+                    "dataType": "CHAR",
+                    "notes": "Unique identifier for the primary asset record",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "assetNumber",
+                    "description": "Unique asset identifier",
+                    "dataType": "String",
+                    "notes": "Corresponds to SAP ANLN1",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "ANLN2",
+                    "description": "Asset Subnumber",
+                    "dataType": "CHAR",
+                    "notes": "Distinguishes sub-assets under a main asset",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "subAssetNumber",
+                    "description": "Sub-asset identifier",
+                    "dataType": "String",
+                    "notes": "Maps to SAP ANLN2 for hierarchical assets",
+                    "fieldLength": "32"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "TXZ01",
+                    "description": "Asset Description (Short Text)",
+                    "dataType": "CHAR",
+                    "notes": "Brief description of the asset",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "description",
+                    "description": "Detailed asset description",
+                    "dataType": "String",
+                    "notes": "Provides human-readable details about the asset",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "ANLKL",
+                    "description": "Asset Class",
+                    "dataType": "CHAR",
+                    "notes": "Classification code determining depreciation rules",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "assetClass",
+                    "description": "Classification of the asset",
+                    "dataType": "String",
+                    "notes": "Used for grouping and reporting",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "BEGDA",
+                    "description": "Capitalization Date",
+                    "dataType": "DATE",
+                    "notes": "Date asset was placed into service",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "installationDate",
+                    "description": "Date the asset became operational",
+                    "dataType": "DateTime",
+                    "notes": "ISO 8601 format for service start date",
+                    "fieldLength": "N/A"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "AKTIV",
+                    "description": "Acquisition Value",
+                    "dataType": "CURR",
+                    "notes": "Original purchase price in company currency",
+                    "fieldLength": "15,2"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "purchasePrice",
+                    "description": "Cost at acquisition",
+                    "dataType": "Decimal",
+                    "notes": "Monetary value when asset was acquired",
+                    "fieldLength": "18,2"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AssetMaster",
+                    "fieldName": "SERIALNO",
+                    "description": "Equipment Serial Number",
+                    "dataType": "CHAR",
+                    "notes": "Manufacturer serial number of the asset",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "serialNumber",
+                    "description": "Manufacturer-assigned serial number",
+                    "dataType": "String",
+                    "notes": "Links to OEM serial identification",
+                    "fieldLength": "32"
+                }
+            }
+        ],
+        "prompt": "generate asset mappings"
     }
 ]
