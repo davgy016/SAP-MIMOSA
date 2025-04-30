@@ -67,11 +67,11 @@
                                     <div>
                                         <select asp-for="SelectedLLM" class="form-select">
                                             <option value="">Select LLM</option>
-                                            <option value="GPT-4">GPT-4</option>
-                                            <option value="GPT-3.5">GPT-3.5</option>
+                                            <option value="gpt-4.1">GPT-4.1</option>
+                                            <option value="gpt-o4-mini">GPT-o4-mini</option>
                                         </select>
+                                        <div id="llmInputError" class="invalid-feedback" style="display:none;"></div>
                                     </div>
-
                                 </div>
                             </form>
                             <div id="aiResponse">
@@ -315,11 +315,24 @@
             document.getElementById('aiSearchForm').addEventListener('submit', function(e) {
                 const aiInput = document.getElementById('queryInput');
                 const errorElem = document.getElementById('aiInputError');
+                const llmSelect = document.querySelector('select[name="SelectedLLM"], select[asp-for="SelectedLLM"]');
+                const llmErrorElem = document.getElementById('llmInputError');
                 clearInputError(aiInput, errorElem);
+                llmErrorElem.style.display = 'none';
+                llmErrorElem.textContent = '';
                 if (!aiInput.value.trim()) {
                     showInputError(aiInput, errorElem, 'Please enter a question for the AI assistant.');
                     e.preventDefault();
                     return false;
+                }
+                if (!llmSelect.value) {
+                    llmErrorElem.textContent = 'Please select an LLM type.';
+                    llmErrorElem.style.display = 'block';
+                    llmSelect.classList.add('is-invalid');
+                    e.preventDefault();
+                    return false;
+                } else {
+                    llmSelect.classList.remove('is-invalid');
                 }
                 document.getElementById('aiResponse').innerHTML = '<div class="alert alert-info">Loading response...</div>';
                 return true;
@@ -347,7 +360,7 @@
             }
         }
 
-         setTimeout(function() {
+            setTimeout(function() {
             var msg = document.getElementById('success-message');
             if (msg) msg.style.display = 'none';
         }, 5000);

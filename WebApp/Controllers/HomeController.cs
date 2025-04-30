@@ -59,11 +59,13 @@ namespace SAP_MIMOSAapp.Controllers
                 //AI Assistant only handle Query if no EntityName/LLM search
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    var aiResponse = await GetAIResponse(model.Query); // returns the AI's JSON string
+                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM
                     var mappingDoc = ParseAIMapping(aiResponse);
 
                     if (mappingDoc != null)
                     {
+                        // Set the selected LLM type on the mappingDoc so it is pre-selected in Create view
+                        mappingDoc.LLMType = model.SelectedLLM;
                         TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
                         TempData["llmT"] = model.SelectedLLM;
                         return RedirectToAction("Create", new { query = model.Query });
@@ -107,14 +109,14 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         //AI Search Method
-        private async Task<string> GetAIResponse(string query)
+        private async Task<string> GetAIResponse(string query, string llmModel)
         {
             try
             {
                 Console.WriteLine($"GetAIResponse called with query: {query}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query }; // lowercase property name to match Python
+                var request = new { query = query, llm_model = llmModel }; // pass selected LLM model
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions

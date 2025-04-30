@@ -68,11 +68,12 @@ def save_data(data):
 @app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
-        print(f"Received query: {request.Query}")  # already camelCase usage
+        llm_model = getattr(request, 'llm_model', None) or getattr(request, 'llmModel', None) or 'gpt-4o'
+        print(f"Received query: {request.Query}, LLM Model: {llm_model}")
         
         # Call OpenAI API
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model=llm_model,
             messages=[
                 {"role": "system", "content": """You are an AI assistant for generating mapping between SAP and MIMOSA data models.
                 Generate a structured JSON response that follows this exact format:
