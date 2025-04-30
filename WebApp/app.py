@@ -24,6 +24,7 @@ JSON_FILE = "Data/SAPMIMOSA.json"
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
+    llm_model: Optional[str] = Field(None, alias="llm_model")
     class Config:
         allow_population_by_field_name = True
 
@@ -68,7 +69,7 @@ def save_data(data):
 @app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
     try:
-        llm_model = getattr(request, 'llm_model', None) or getattr(request, 'llmModel', None) or 'gpt-4o'
+        llm_model = request.llm_model 
         print(f"Received query: {request.Query}, LLM Model: {llm_model}")
         
         # Call OpenAI API
