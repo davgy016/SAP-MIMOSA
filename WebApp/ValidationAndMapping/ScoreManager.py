@@ -4,12 +4,12 @@
 # this object is then returned to the ModelOutput to be stored.
 
 # Score class used to store results
-from ValidationAndMapping import Score
+from .Score import Score
 
 #Score Managers
 # from ValidationAndMapping.Quality import Quality
-from ValidationAndMapping.Accuracy import Accuracy
-from Models import Mapping
+from .Accuracy import Accuracy
+from WebApp.Models import Mapping
 from typing import List
 
 class ScoreManager:
