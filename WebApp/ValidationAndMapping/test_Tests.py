@@ -1,8 +1,8 @@
 import pytest
 
-from ValidationAndMapping.Accuracy import DescriptionSimilarity, FieldLength, Accuracy
-from WebApp.Models import FieldMapping, MappingEntry, Mapping  
-from ValidationAndMapping.ScoreManager import ScoreManager
+from .Accuracy import DescriptionSimilarity, FieldLength, Accuracy
+from ..Models import FieldMapping, MappingEntry, Mapping
+from .ScoreManager import ScoreManager
 
 
 @pytest.fixture
