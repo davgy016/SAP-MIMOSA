@@ -59,12 +59,11 @@ namespace SAP_MIMOSAapp.Controllers
                 //AI Assistant only handle Query if no EntityName/LLM search
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM
-                    var mappingDoc = ParseAIMapping(aiResponse);
+                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM                   
 
-                    if (mappingDoc != null)
+                    if (aiResponse != null)
                     {                                              
-                        TempData["AIMapping"] = JsonSerializer.Serialize(mappingDoc);
+                        TempData["AIMapping"] = aiResponse;
                         
                         return RedirectToAction("Create", new { query = model.Query, llmType = model.SelectedLLM });
                     }
@@ -172,13 +171,14 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = null;
             if (TempData["AIMapping"] != null)
             {
-                model = JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]);
+                model = ParseAIMapping((string)TempData["AIMapping"]);
                 if (query != null)
                     model.prompt = query;
                 if (llmType!= null)
                 {
                    model.LLMType= llmType;
                 }
+                Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
             }
             // If no AI mapping, model will be null and view will show empty form
             return View(model);
