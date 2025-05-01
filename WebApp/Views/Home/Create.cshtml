@@ -14,6 +14,16 @@
         </div>
     }
 
+    @* Show accuracy/quality/matching scores if present *@
+    @if (!string.IsNullOrEmpty(Model?.accuracyRate) || !string.IsNullOrEmpty(Model?.qualityRate) || !string.IsNullOrEmpty(Model?.matchingRate))
+    {
+        <div class="alert alert-info mb-3">
+            @if (!string.IsNullOrEmpty(Model?.accuracyRate)) { <strong>Accuracy:</strong> @Model.accuracyRate <br /> }
+            @if (!string.IsNullOrEmpty(Model?.qualityRate)) { <strong>Quality:</strong> @Model.qualityRate <br /> }
+            @if (!string.IsNullOrEmpty(Model?.matchingRate)) { <strong>Matching:</strong> @Model.matchingRate }
+        </div>
+    }
+
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
         {
@@ -42,7 +52,6 @@
                         <span asp-validation-for="LLMType" class="text-danger"></span>
                     </div>
                 </div>
-               
             </div>
         </div>
 
@@ -55,7 +64,7 @@
                 @if (!string.IsNullOrWhiteSpace(Model?.prompt))
                 {
                     <div class="alert alert-warning">
-                        <strong>Prompt:</strong> @Model.prompt 
+                        <strong>Prompt:</strong> @Model.prompt
                     </div>
                 }
 
