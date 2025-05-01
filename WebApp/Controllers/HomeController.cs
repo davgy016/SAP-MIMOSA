@@ -60,11 +60,13 @@ namespace SAP_MIMOSAapp.Controllers
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
                     var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM                   
-
+                    var parseResponse = ParseAIMapping(aiResponse);
+                   
                     if (aiResponse != null)
-                    {                                              
-                        TempData["AIMapping"] = aiResponse;
-                        
+                    {
+                        parseResponse = await CheckAccuracy(parseResponse);
+                        TempData["AIMapping"] = JsonSerializer.Serialize(parseResponse);
+
                         return RedirectToAction("Create", new { query = model.Query, llmType = model.SelectedLLM });
                     }
                     else
@@ -90,7 +92,7 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-        // Helper to parse AI response JSON string into MappingDocument
+        //parse AI response JSON string into MappingDocument
         private MappingDocument? ParseAIMapping(string aiJson)
         {
             try
@@ -177,12 +179,12 @@ namespace SAP_MIMOSAapp.Controllers
                 if (llmType!= null)
                 {
                    model.LLMType= llmType;
-                }
-                Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
-            }
-            // If no AI mapping, model will be null and view will show empty form
+                }                
+            }           
             return View(model);
         }
+
+    
 
         [HttpPost]
         public async Task<IActionResult> Create(MappingDocument newDocument)
@@ -191,12 +193,6 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 return View(newDocument);
             }
-
-            //// Ensure prompt is set if present in TempData (from AI workflow)
-            //if (string.IsNullOrEmpty(newDocument.prompt) && TempData["Prompt"] != null)
-            //{
-            //    newDocument.prompt = TempData["Prompt"].ToString();
-            //}
 
             try
             {
@@ -372,87 +368,60 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ChangeColor(string id, string color)
-        //{
-        //    try
-        //    {
-        //        var response = await _httpClient.GetStringAsync("workorders");
-        //        var options = new JsonSerializerOptions
-        //        {
-        //            PropertyNameCaseInsensitive = true
-        //        };
-        //        var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+        // check accuracy of a mapping
+        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        {
+            try
+            {
+                var mappingQuery = new List<MappingDocument> { document };
 
-        //        if (documents == null)
-        //        {
-        //            return Json(new { success = false, message = "Mapping documents not found" });
-        //        }
+                // Serialize with proper casing
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
 
-        //        var document = documents.FirstOrDefault(d => d.mapID == id);
-        //        if (document == null)
-        //        {
-        //            return Json(new { success = false, message = "Mapping document not found" });
-        //        }
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery, jsonOptions), Encoding.UTF8, "application/json");
 
-        //        document.color = color;
 
-        //        var json = JsonSerializer.Serialize(documents);
-        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Send the request to check accuracy
+                var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
 
-        //        var updateResponse = await _httpClient.PutAsync("workorders", content);
-        //        updateResponse.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"Error checking accuracy: {response.StatusCode}");
+                    return document;
+                }
 
-        //        return Json(new { success = true });
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        return Json(new { success = false, message = $"Error updating color: {ex.Message}" });
-        //    }
-        //}
+                // Parse the response
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent, jsonOptions);
 
-        //[HttpPost]
-        //public async Task<IActionResult> ResetColors()
-        //{
-        //    try
-        //    {
-        //        var response = await _httpClient.GetStringAsync("workorders");
-        //        var options = new JsonSerializerOptions
-        //        {
-        //            PropertyNameCaseInsensitive = true
-        //        };
-        //        var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+                if (accuracyResult != null)
+                {
+                    // Format scores as percentages
+                    document.accuracyRate = $"{accuracyResult.accuracy_score:P0}";
+                    document.qualityRate = $"{accuracyResult.quality_score:P0}";
+                    document.matchingRate = $"{accuracyResult.matching_score:P0}";
+                }
 
-        //        if (documents == null)
-        //        {
-        //            _logger.LogWarning("No mapping documents found.");
-        //            return Json(new { success = false, message = "No mapping documents available." });
-        //        }
+                return document;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking accuracy");
+                return document;
+            }
+        }
 
-        //        // Update each document's color
-        //        foreach (var document in documents)
-        //        {
-        //            document.color = null;
-        //        }
-
-        //        var json = JsonSerializer.Serialize(documents);
-        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        //        var updateResponse = await _httpClient.PutAsync("workorders", content);
-        //        if (!updateResponse.IsSuccessStatusCode)
-        //        {
-        //            _logger.LogError($"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}");
-        //            return Json(new { success = false, message = $"Failed to update mapping documents. Status Code: {updateResponse.StatusCode}" });
-        //        }
-
-        //        return Json(new { success = true, message = "Mapping colors reset successfully." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error in ResetColor action.");
-        //        return Json(new { success = false, message = $"Error: {ex.Message}" });
-        //    }
-        //}
+        // Class to deserialize accuracy response
+        private class AccuracyResult
+        {
+            public float accuracy_score { get; set; }
+            public float quality_score { get; set; }
+            public float matching_score { get; set; }
+            public string status { get; set; }
+        }
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)
