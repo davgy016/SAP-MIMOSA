@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 
 namespace SAP_MIMOSAapp.Controllers
 {
-    public class HomeController : Controller   
+    public class HomeController : Controller
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<HomeController> _logger;
