@@ -1,7 +1,7 @@
 # FieldLength checks the length of each field mapped to see if the data contained to likely to be comparable. 
 # The closer they are in length the more likely it is they contain the same data. 
 
-from WebApp.Models import Mapping  
+from ..Models import Mapping
 
 class FieldLength:
     def score(self, mapping: Mapping) -> float:

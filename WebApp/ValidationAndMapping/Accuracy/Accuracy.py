@@ -6,7 +6,7 @@ from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 
-from WebApp.Models import Mapping
+from ..Models import Mapping
 
 
 class Accuracy:

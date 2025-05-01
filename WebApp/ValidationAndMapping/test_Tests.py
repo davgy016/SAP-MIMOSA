@@ -1,7 +1,7 @@
 import pytest
 
 from .Accuracy import DescriptionSimilarity, FieldLength, Accuracy
-from ..Models import FieldMapping, MappingEntry, Mapping
+from .Models import FieldMapping, MappingEntry, Mapping
 from .ScoreManager import ScoreManager
 
 
