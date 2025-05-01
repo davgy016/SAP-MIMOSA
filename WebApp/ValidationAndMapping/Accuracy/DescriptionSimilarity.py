@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from numpy.linalg import norm
-from WebApp.Models import Mapping  
+from ..Models import Mapping
 class DescriptionSimilarity:
     def __init__(self):
         self.model = SentenceTransformer('all-MiniLM-L6-v2')  # Lightweight BERT model
