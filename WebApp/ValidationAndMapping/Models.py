@@ -20,12 +20,12 @@ class MappingEntry(BaseModel):
 
 class Mapping(BaseModel):
     mapID: Optional[str] = None
-    LLMType: str = Field(..., alias="llmType")
+    LLMType: str
     mappings: List[MappingEntry]
     prompt: Optional[str] = None
-    accuracyRate: Optional[float]=Field(None, alias="accuracyRate")
-    qualityRate: Optional[float]=Field(None, alias="qualityRate")
-    matchingRate: Optional[float]=Field(None, alias="matchingRate")
+    accuracyRate: Optional[float]=None
+    qualityRate: Optional[float]=None
+    matchingRate: Optional[float]=None
 
     class Config:
         allow_population_by_field_name = True
