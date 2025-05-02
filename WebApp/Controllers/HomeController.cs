@@ -197,16 +197,7 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 return View(newDocument);
             }
-
-            var aiMapping = GetMappingTempData();
-            if(aiMapping != null)
-            {
-                aiMapping.prompt = newDocument.prompt;
-                aiMapping.LLMType= newDocument.LLMType;               
-                aiMapping.mappings = newDocument.mappings;
-                newDocument = aiMapping;
-
-            }
+            
             try
             {
                 // mapID is a string for backend validation
