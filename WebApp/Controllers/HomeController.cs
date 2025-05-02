@@ -60,13 +60,12 @@ namespace SAP_MIMOSAapp.Controllers
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
                     var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM                   
-                    var parseResponse = ParseAIMapping(aiResponse);
-                   
+                    var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
                     if (aiResponse != null)
                     {
                         parseResponse = await CheckAccuracy(parseResponse);
-                        TempData["AIMapping"] = JsonSerializer.Serialize(parseResponse);
-
+                        SetMappingTempData(parseResponse);
                         return RedirectToAction("Create", new { query = model.Query, llmType = model.SelectedLLM });
                     }
                     else
@@ -91,15 +90,21 @@ namespace SAP_MIMOSAapp.Controllers
 
             return View(model);
         }
+               
 
-        //parse AI response JSON string into MappingDocument
-        private MappingDocument? ParseAIMapping(string aiJson)
+        // Store MappingDocument in TempData
+        private void SetMappingTempData(MappingDocument doc)
         {
+            TempData["AIMapping"] = JsonSerializer.Serialize(doc);
+        }
+
+        // Retrieve MappingDocument from TempData
+        private MappingDocument? GetMappingTempData()
+        {
+            if (TempData["AIMapping"] == null) return null;
             try
             {
-                // The AI response is expected to be: { "mappings": [ ... ] }
-                var doc = JsonSerializer.Deserialize<MappingDocument>(aiJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                return doc;
+                return JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             catch
             {
@@ -170,21 +175,20 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpGet]
         public IActionResult Create(string? query = null, string? llmType = null)
         {
-            MappingDocument? model = null;
-            if (TempData["AIMapping"] != null)
+            MappingDocument? model = GetMappingTempData();
+            if (model != null)
             {
-                model = ParseAIMapping((string)TempData["AIMapping"]);
                 if (query != null)
                     model.prompt = query;
                 if (llmType!= null)
                 {
                    model.LLMType= llmType;
-                }                
-            }           
+                }
+                Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
+            }
+            // If no AI mapping, model will be null and view will show empty form
             return View(model);
         }
-
-    
 
         [HttpPost]
         public async Task<IActionResult> Create(MappingDocument newDocument)
@@ -194,6 +198,15 @@ namespace SAP_MIMOSAapp.Controllers
                 return View(newDocument);
             }
 
+            var aiMapping = GetMappingTempData();
+            if(aiMapping != null)
+            {
+                aiMapping.prompt = newDocument.prompt;
+                aiMapping.LLMType= newDocument.LLMType;               
+                aiMapping.mappings = newDocument.mappings;
+                newDocument = aiMapping;
+
+            }
             try
             {
                 // mapID is a string for backend validation
@@ -393,9 +406,9 @@ namespace SAP_MIMOSAapp.Controllers
                 if (accuracyResult != null)
                 {
                     // Format scores as percentages
-                    document.accuracyRate = $"{accuracyResult.accuracy_score:P0}";
-                    document.qualityRate = $"{accuracyResult.quality_score:P0}";
-                    document.matchingRate = $"{accuracyResult.matching_score:P0}";
+                    document.accuracyRate = accuracyResult.accuracy_score;
+                    document.qualityRate = accuracyResult.quality_score;
+                    document.matchingRate = accuracyResult.matching_score;
                 }
 
                 return document;
