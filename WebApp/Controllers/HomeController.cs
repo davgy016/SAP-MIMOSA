@@ -373,16 +373,9 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var mappingQuery = new List<MappingDocument> { document };
+                var mappingQuery = new List<MappingDocument> { document };                
 
-                // Serialize with proper casing
-                var jsonOptions = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                };
-
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery, jsonOptions), Encoding.UTF8, "application/json");
-
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
 
                 // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
@@ -395,7 +388,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent, jsonOptions);
+                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
 
                 if (accuracyResult != null)
                 {
