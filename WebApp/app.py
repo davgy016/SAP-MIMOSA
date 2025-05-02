@@ -8,7 +8,7 @@ import uvicorn
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
-from ValidationAndMapping.Models import MappingQuery, Mapping as MappingDocument
+from ValidationAndMapping.Models import MappingQuery, SearchQuery, Mapping as MappingDocument
 
 
 # Initialize OpenAI client
@@ -20,15 +20,15 @@ app = FastAPI()
 # JSON file path
 JSON_FILE = "Data/SAPMIMOSA.json"
 
+"""
 # Models
-
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
     llm_model: Optional[str] = Field(None, alias="llm_model")
     class Config:
         allow_population_by_field_name = True
 
-"""
+
 class MappingField(BaseModel):
     platform: str
     entityName: str
