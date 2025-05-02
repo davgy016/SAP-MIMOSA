@@ -18,9 +18,9 @@
     @if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
     {
         <div class="alert alert-info mb-3">
-            Accuracy: <strong>@(Model.accuracyRate.HasValue ? Model.accuracyRate.Value.ToString("P") : "N/A")</strong> <br />
-            Quality:  <strong>@(Model.qualityRate.HasValue ? Model.qualityRate.Value.ToString("P") : "N/A")</strong> <br />
-            Matching: <strong>@(Model.matchingRate.HasValue ? Model.matchingRate.Value.ToString("P") : "N/A")</strong>
+            Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)</strong> <br />
+            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)</strong> <br />
+            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)</strong>
         </div>
     }
     @if (!string.IsNullOrWhiteSpace(Model?.prompt))
@@ -66,7 +66,7 @@
                 <h5>Mappings</h5>
                 <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
             </div>
-            <div class="card-body" id="mappingsContainer">                
+            <div class="card-body" id="mappingsContainer">
 
                 @{
                     var mappingIndex = 0;
