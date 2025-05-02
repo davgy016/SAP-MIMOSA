@@ -29,7 +29,7 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
-                // Search by Entity Name or LLM (mapping table)
+                // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
                     var response = await _httpClient.GetStringAsync("workorders");
@@ -56,27 +56,44 @@ namespace SAP_MIMOSAapp.Controllers
                     model.FilteredCount = documents.Count;
                     model.SearchResults = documents;
                 }
-                //AI Assistant only handle Query if no EntityName/LLM search
+               
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM); // pass selected LLM                   
-                    var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                    if (aiResponse != null)
+                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM);
+                    //_logger.LogInformation("AI raw response: {AIResponse}", aiResponse);
+                    //Console.WriteLine("AI raw response: " + aiResponse);
+                    if (!string.IsNullOrWhiteSpace(aiResponse))
                     {
-                        parseResponse = await CheckAccuracy(parseResponse);
-                        SetMappingTempData(parseResponse);
-                        return RedirectToAction("Create", new { query = model.Query, llmType = model.SelectedLLM });
+                        try
+                        {
+                            var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            if (parseResponse != null)
+                            {
+                                //parseResponse = await CheckAccuracy(parseResponse);
+                                SetMappingTempData(parseResponse);
+                                return RedirectToAction("Create");
+                            }
+                            else
+                            {
+                                ViewBag.ErrorMessage = "AI did not return a valid mapping document.";
+                                return View(model);
+                            }
+                        }
+                        catch (System.Text.Json.JsonException ex)
+                        {
+                            _logger.LogError(ex, "Failed to deserialize AI mapping response");
+                            ViewBag.ErrorMessage = "AI returned an invalid mapping format.";
+                            return View(model);
+                        }
                     }
                     else
                     {
-                        ViewBag.ErrorMessage = "AI did not return a valid mapping.";
+                        ViewBag.ErrorMessage = "AI did not return a valid mapping (no response or invalid format).";
                         return View(model);
                     }
                 }
                 else
-                {
-                    // No search: show nothing
+                {                    
                     model.SearchResults = new List<MappingDocument>();
                     model.FilteredCount = 0;
                     model.TotalDocuments = 0;
@@ -120,7 +137,7 @@ namespace SAP_MIMOSAapp.Controllers
                 Console.WriteLine($"GetAIResponse called with query: {query}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query, llm_model = llmModel }; // pass selected LLM model
+                var request = new { query = query, llm_model = llmModel };
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
@@ -156,8 +173,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 try
                 {
-                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(responseString, jsonOptions);
-                    return aiResponse?.Response ?? "No response from AI";
+                    return responseString;
                 }
                 catch (Exception ex)
                 {
@@ -185,8 +201,7 @@ namespace SAP_MIMOSAapp.Controllers
                    model.LLMType= llmType;
                 }
                 Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
-            }
-            // If no AI mapping, model will be null and view will show empty form
+            }           
             return View(model);
         }
 
@@ -237,9 +252,8 @@ namespace SAP_MIMOSAapp.Controllers
 
                 // Get the created mapping with mapID from backend response
                 var createdDoc = JsonSerializer.Deserialize<MappingDocument>(responseText, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                // Redirect to Index (home page) with success message
-                TempData["SuccessMessage"] = "Mapping with #ID " + createdDoc.mapID + " created successfully!";
+               
+                TempData["SuccessMessage"] = $"Mapping with #ID {createdDoc?.mapID} created successfully!";
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
@@ -310,12 +324,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return View(updatedDocument);
                 }
 
-                //// Preserve color if not provided
-                //if (string.IsNullOrEmpty(updatedDocument.color))
-                //{
-                //    updatedDocument.color = documents[documentIndex].color;
-                //}
-
+               
                 // Ensure platform values are set correctly
                 if (updatedDocument.mappings != null)
                 {
@@ -342,7 +351,9 @@ namespace SAP_MIMOSAapp.Controllers
 
                 var updateResponse = await _httpClient.PutAsync("workorders", content);
                 updateResponse.EnsureSuccessStatusCode();
-
+                
+                TempData["SuccessMessage"] = $"Mapping with #ID { updatedDocument.mapID} updated successfully!";
+                
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
@@ -372,53 +383,51 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        // check accuracy of a mapping
-        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
-        {
-            try
-            {
-                var mappingQuery = new List<MappingDocument> { document };                
+        //// check accuracy of a mapping
+        //private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        //{
+        //    try
+        //    {
+        //        var mappingQuery = new List<MappingDocument> { document };                
 
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
+        //        var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
 
-                // Send the request to check accuracy
-                var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
+        //        // Send the request to check accuracy
+        //        var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-                    return document;
-                }
+        //        if (!response.IsSuccessStatusCode)
+        //        {
+        //            _logger.LogError($"Error checking accuracy: {response.StatusCode}");
+        //            return document;
+        //        }
 
-                // Parse the response
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
+        //        // Parse the response
+        //        var responseContent = await response.Content.ReadAsStringAsync();
+        //        var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
 
-                if (accuracyResult != null)
-                {
-                    // Format scores as percentages
-                    document.accuracyRate = accuracyResult.accuracy_score;
-                    document.qualityRate = accuracyResult.quality_score;
-                    document.matchingRate = accuracyResult.matching_score;
-                }
+        //        if (accuracyResult != null)
+        //        {                    
+        //            document.accuracyRate = accuracyResult.accuracy_score;
+        //            document.qualityRate = accuracyResult.quality_score;
+        //            document.matchingRate = accuracyResult.matching_score;
+        //        }
 
-                return document;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error checking accuracy");
-                return document;
-            }
-        }
+        //        return document;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error checking accuracy");
+        //        return document;
+        //    }
+        //}
 
         // Class to deserialize accuracy response
-        private class AccuracyResult
-        {
-            public float accuracy_score { get; set; }
-            public float quality_score { get; set; }
-            public float matching_score { get; set; }
-            public string status { get; set; }
-        }
+        //private class AccuracyResult
+        //{
+        //    public float accuracy_score { get; set; }
+        //    public float quality_score { get; set; }
+        //    public float matching_score { get; set; }            
+        //}
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)

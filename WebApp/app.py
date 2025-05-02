@@ -8,7 +8,7 @@ import uvicorn
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
-from ValidationAndMapping.Models import MappingQuery, Mapping as MappingDocument
+from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
 
 
 # Initialize OpenAI client
@@ -20,15 +20,15 @@ app = FastAPI()
 # JSON file path
 JSON_FILE = "Data/SAPMIMOSA.json"
 
+"""
 # Models
-
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
     llm_model: Optional[str] = Field(None, alias="llm_model")
     class Config:
         allow_population_by_field_name = True
 
-"""
+
 class MappingField(BaseModel):
     platform: str
     entityName: str
@@ -111,7 +111,30 @@ async def ask_openai(request: SearchQuery):
         
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
-        return {"response": result}
+
+        mapping_doc_dict = json.loads(result)
+        # This is a list of dicts
+        mappings = mapping_doc_dict["mappings"]  
+
+        # Convert list of dicts to list of MappingEntry objects
+        mapping_entries = [MappingEntry(**item) for item in mappings]
+
+        # Create a Mapping object with required fields
+        mapping_doc = MappingDocument(
+            LLMType=llm_model,
+            mappings=mapping_entries,
+            prompt=request.Query
+        )
+
+        # Call check_accuracy and set the scores on the Mapping object
+        mapping_query = MappingQuery(root=[mapping_doc])
+        accuracyResult = await check_accuracy(mapping_query)
+        mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
+        mapping_doc.qualityRate = accuracyResult["quality_score"]
+        mapping_doc.matchingRate = accuracyResult["matching_score"]
+
+        # Return the Mapping object directly!
+        return mapping_doc
 
     except Exception as e:
         print(f"Error in ask_openai: {str(e)}")
@@ -159,15 +182,15 @@ async def delete_workorder(map_id: str):
 @app.post("/check_accuracy")
 async def check_accuracy(output: MappingQuery):
     data = output.root 
-    accuracy_score = ScoreManager.scoreOutput(data)
-    quality_score = 0.75
-    matching_score = 0.80        
+    accuracy_score = float(ScoreManager.scoreOutput(data))
+    quality_score = float(0.75)
+    matching_score = float(0.80)        
     
     return {
-        "accuracy_score": float(accuracy_score),
-        "quality_score": float(quality_score),
-        "matching_score": float(matching_score),
-        "status": "success"
+        "accuracy_score": accuracy_score,
+        "quality_score": quality_score,
+        "matching_score": matching_score,
+        
     }
 
 
