@@ -1,4 +1,6 @@
 namespace SAP_MIMOSAapp.Models;
+
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 
@@ -17,12 +19,15 @@ public class MappingDocument
     public string? prompt { get; set; } = string.Empty;
 
     [JsonPropertyName("accuracyRate")]
+    [DisplayFormat(DataFormatString = "{0:P1}", ApplyFormatInEditMode = true)]
     public float? accuracyRate { get; set; }
 
     [JsonPropertyName("qualityRate")]
+    [DisplayFormat(DataFormatString = "{0:P1}", ApplyFormatInEditMode = true)]
     public float? qualityRate { get; set; }
 
     [JsonPropertyName("matchingRate")]
+    [DisplayFormat(DataFormatString = "{0:P1}", ApplyFormatInEditMode = true)]
     public float? matchingRate { get; set; }
 }
 
