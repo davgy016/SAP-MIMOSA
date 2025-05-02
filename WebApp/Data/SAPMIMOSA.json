@@ -2064,5 +2064,248 @@
             }
         ],
         "prompt": "generate asset mappings"
+    },
+    {
+        "mapID": "021",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Key field for Equipment Master",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Item",
+                    "fieldName": "ItemID",
+                    "description": "Unique identifier for an item/equipment in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Primary Key for identifying the item",
+                    "fieldLength": "Unbounded/String"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "022",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique identifier for equipment in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Primary identifier, typically mapped from SAP EQUNR",
+                    "fieldLength": "64"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "023",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for the Equipment table; used for asset tracking",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for the asset in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Serves as the primary identifier for the asset in MIMOSA's Asset entity",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "024",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentNumber",
+                    "description": "Unique identifier for a piece of equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Usually displayed as a numeric or alphanumeric string",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "The unique identifier assigned to an asset in MIMOSA",
+                    "dataType": "STRING",
+                    "notes": "Serves as the primary key for asset records",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "025",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentNumber",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for the equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier assigned to an asset",
+                    "dataType": "String",
+                    "notes": "Primary identifying attribute for an asset",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "026",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment in SAP.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for Equipment master record.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for the asset in the MIMOSA data model.",
+                    "dataType": "String",
+                    "notes": "Serves as the primary asset identity key.",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "027",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key in the Equipment master table",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier for asset (equipment)",
+                    "dataType": "String",
+                    "notes": "Represents the unique Asset instance",
+                    "fieldLength": "40"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "028",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master records",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier for asset",
+                    "dataType": "String",
+                    "notes": "Uniquely identifies an asset in the MIMOSA data model",
+                    "fieldLength": "18"
+                }
+            }
+        ],
+        "prompt": "generate one field"
+    },
+    {
+        "mapID": "029",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique equipment identification",
+                    "dataType": "String",
+                    "notes": "Primary equipment identifier in MIMOSA model",
+                    "fieldLength": "18"
+                }
+            }
+        ],
+        "prompt": ""
     }
 ]

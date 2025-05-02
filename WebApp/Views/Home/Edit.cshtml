@@ -30,11 +30,8 @@
                         <label asp-for="LLMType" class="form-label">LLM Type</label>
                         <select asp-for="LLMType" class="form-select">
                             <option value="">Select LLM Type</option>
-                            <option value="GPT-4">GPT-4</option>
-                            <option value="GPT-3.5">GPT-3.5</option>
-                            <option value="Claude">Claude</option>
-                            <option value="Gemini">Gemini</option>
-                            <option value="Other">Other</option>
+                            <option value="gpt-4.1">GPT-4.1</option>
+                            <option value="o4-mini">GPT-o4-mini</option>
                         </select>
                         <span asp-validation-for="LLMType" class="text-danger"></span>
                     </div>

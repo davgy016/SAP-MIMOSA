@@ -15,12 +15,18 @@
     }
 
     @* Show accuracy/quality/matching scores if present *@
-    @if (!string.IsNullOrEmpty(Model?.accuracyRate) || !string.IsNullOrEmpty(Model?.qualityRate) || !string.IsNullOrEmpty(Model?.matchingRate))
+    @if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
     {
         <div class="alert alert-info mb-3">
-            @if (!string.IsNullOrEmpty(Model?.accuracyRate)) { <strong>Accuracy:</strong> @Model.accuracyRate <br /> }
-            @if (!string.IsNullOrEmpty(Model?.qualityRate)) { <strong>Quality:</strong> @Model.qualityRate <br /> }
-            @if (!string.IsNullOrEmpty(Model?.matchingRate)) { <strong>Matching:</strong> @Model.matchingRate }
+            Accuracy: <strong>@(Model.accuracyRate.HasValue ? Model.accuracyRate.Value.ToString("P") : "N/A")</strong> <br />
+            Quality:  <strong>@(Model.qualityRate.HasValue ? Model.qualityRate.Value.ToString("P") : "N/A")</strong> <br />
+            Matching: <strong>@(Model.matchingRate.HasValue ? Model.matchingRate.Value.ToString("P") : "N/A")</strong>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model?.prompt))
+    {
+        <div class="alert alert-warning">
+            <strong>Prompt:</strong> @Model.prompt
         </div>
     }
 
@@ -60,13 +66,7 @@
                 <h5>Mappings</h5>
                 <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
             </div>
-            <div class="card-body" id="mappingsContainer">
-                @if (!string.IsNullOrWhiteSpace(Model?.prompt))
-                {
-                    <div class="alert alert-warning">
-                        <strong>Prompt:</strong> @Model.prompt
-                    </div>
-                }
+            <div class="card-body" id="mappingsContainer">                
 
                 @{
                     var mappingIndex = 0;
@@ -84,6 +84,9 @@
         </div>
 
         <input type="hidden" asp-for="prompt" />
+        <input type="hidden" asp-for="accuracyRate" />
+        <input type="hidden" asp-for="qualityRate" />
+        <input type="hidden" asp-for="matchingRate" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Create</button>
