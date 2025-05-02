@@ -1,4 +1,4 @@
-from pydantic import BaseModel, RootModel
+from pydantic import BaseModel, RootModel, Field
 from typing import List, Optional
 
 class SearchQuery(BaseModel):
@@ -19,10 +19,16 @@ class MappingEntry(BaseModel):
     mimosa: FieldMapping
 
 class Mapping(BaseModel):
-    mapID: str
+    mapID: Optional[str] = None
     LLMType: str
     mappings: List[MappingEntry]
     prompt: Optional[str] = None
+    accuracyRate: Optional[float]=None
+    qualityRate: Optional[float]=None
+    matchingRate: Optional[float]=None
+
+    class Config:
+        allow_population_by_field_name = True
 
 class MappingQuery(RootModel[List[Mapping]]):
     pass
