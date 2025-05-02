@@ -1,4 +1,4 @@
-﻿@model SAP_MIMOSAapp.Models.MappingDocument
+@model SAP_MIMOSAapp.Models.MappingDocument
 
 @{
     ViewData["Title"] = "Edit Mapping";
@@ -135,7 +135,10 @@
                 }
             </div>
         </div>
-
+        <input type="hidden" asp-for="prompt" />
+        <input type="hidden" asp-for="accuracyRate" />
+        <input type="hidden" asp-for="qualityRate" />
+        <input type="hidden" asp-for="matchingRate" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>
