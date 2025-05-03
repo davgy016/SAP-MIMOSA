@@ -70,6 +70,18 @@ def save_data(data, file_path):
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
+def store_raw_data_of_AI_responses(mapping_doc):	       
+    entry = mapping_doc.model_dump()
+    entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        data = load_data(rawDataStoragePath)           
+        data.append(entry)            
+        save_data(data, rawDataStoragePath)            
+    except Exception as file_exc:
+        print(f"Failed to write raw OpenAI response: {file_exc}")
+        import traceback
+        traceback.print_exc()
+
 # OpenAI endpoint
 @app.post("/ask_openai")
 async def ask_openai(request: SearchQuery):
@@ -138,6 +150,9 @@ async def ask_openai(request: SearchQuery):
         mapping_doc.qualityRate = accuracyResult["quality_score"]
         mapping_doc.matchingRate = accuracyResult["matching_score"] 
         
+        # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
+        store_raw_data_of_AI_responses(mapping_doc)
+
         # Return the Mapping object directly!
         return mapping_doc
 
