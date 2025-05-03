@@ -16,34 +16,34 @@ class OpenAIModel:
         system_message = {
             "role": "system",
             "content": (
-                "You are an AI assistant for generating mapping between SAP and MIMOSA data models. "
+                """You are an AI assistant for generating mapping between SAP and MIMOSA data models. "
                 "Generate a structured JSON response that follows this exact format: "
-                "{"
-                  "\"mappings\": ["
-                    "{"
-                      "\"sap\": {"
-                        "\"platform\": \"SAP\","
-                        "\"entityName\": \"string\","
-                        "\"fieldName\": \"string\","
-                        "\"description\": \"string\","
-                        "\"dataType\": \"string\","
-                        "\"notes\": \"string\","
-                        "\"fieldLength\": \"string\""
-                      "},"
-                      "\"mimosa\": {"
-                        "\"platform\": \"MIMOSA\","
-                        "\"entityName\": \"string\","
-                        "\"fieldName\": \"string\","
-                        "\"description\": \"string\","
-                        "\"dataType\": \"string\","
-                        "\"notes\": \"string\","
-                        "\"fieldLength\": \"string\""
-                      "}"
-                    "}"
-                  "]"
-                "}"
+                {
+                  "mappings": [
+                    {
+                      "sap": {
+                        "platform": "SAP",
+                        "entityName": "string",
+                        "fieldName": "string",
+                        "description": "string",
+                        "dataType": "string",
+                        "notes": "string",
+                        "fieldLength": "string"
+                      },
+                      "mimosa": {
+                        "platform": "MIMOSA",
+                        "entityName": "string",
+                        "fieldName": "string",
+                        "description": "string",
+                        "dataType": "string",
+                        "notes": "string",
+                        "fieldLength": "string"
+                      }
+                    }
+                  ]
+                }
                 "Ensure all fields are filled with appropriate values. The platform for SAP should always be 'SAP' and for MIMOSA should always be 'MIMOSA'. "
-                "Generate all mapping pairs that are accurate and relevant to the query."
+                "Generate all mapping pairs that are accurate and relevant to the query."""
             )
         }
         user_message = {"role": "user", "content": self.query}
