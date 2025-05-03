@@ -5,6 +5,7 @@ from openai import OpenAI
 import json
 import os
 import uvicorn
+from ai_models import OpenAIModel
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
@@ -22,35 +23,6 @@ storagePath = "Data/SAPMIMOSA.json"
 # JSON Raw-Data file path
 rawDataStoragePath = "Data/rawDataOfAIResponses.json"
 
-"""
-# Models
-class SearchQuery(BaseModel):
-    Query: str = Field(..., alias="query")
-    llm_model: Optional[str] = Field(None, alias="llm_model")
-    class Config:
-        allow_population_by_field_name = True
-
-
-class MappingField(BaseModel):
-    platform: str
-    entityName: str
-    fieldName: str
-    description: str
-    dataType: str
-    notes: str
-    fieldLength: str
-
-class MappingPair(BaseModel):
-    sap: MappingField
-    mimosa: MappingField
-
-class MappingDocument(BaseModel):
-    mapID: Optional[str] = None
-    LLMType: str
-    mappings: List[MappingPair]
-    prompt: Optional[str] = None
-    #color: Optional[str] = None
-"""
 # JSON file operations
 def load_data(file_path):
     if not os.path.exists(file_path):
@@ -83,48 +55,15 @@ def store_raw_data_of_AI_responses(mapping_doc):
         traceback.print_exc()
 
 # OpenAI endpoint
-@app.post("/ask_openai")
-async def ask_openai(request: SearchQuery):
+@app.post("/ask_AI")
+async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model 
         print(f"Received query: {request.Query}, LLM Model: {llm_model}")
-        
-        # Call OpenAI API
-        response = client.chat.completions.create(
-            model=llm_model,
-            messages=[
-                {"role": "system", "content": """You are an AI assistant for generating mapping between SAP and MIMOSA data models.
-                Generate a structured JSON response that follows this exact format:
-                {
-                  "mappings": [
-                    {
-                      "sap": {
-                        "platform": "SAP",
-                        "entityName": "string",
-                        "fieldName": "string",
-                        "description": "string",
-                        "dataType": "string",
-                        "notes": "string",
-                        "fieldLength": "string"
-                      },
-                      "mimosa": {
-                        "platform": "MIMOSA",
-                        "entityName": "string",
-                        "fieldName": "string",
-                        "description": "string",
-                        "dataType": "string",
-                        "notes": "string",
-                        "fieldLength": "string"
-                      }
-                    }
-                  ]
-                }
-                
-                Ensure all fields are filled with appropriate values. The platform for SAP should always be "SAP" and for MIMOSA should always be "MIMOSA".
-                Generate all mapping pairs that are accurate and relevant to the query."""},    
-                {"role": "user", "content": request.Query }
-            ]
-        )
+
+        #Call OpenAIModel and pass user query and selected LLM model
+        ai_model = OpenAIModel(request.Query, llm_model)
+        response = ai_model.chat()
         
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
