@@ -9,7 +9,7 @@ from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
 from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
-
+from datetime import datetime
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -17,8 +17,10 @@ client = OpenAI()
 # Initialize FastAPI app
 app = FastAPI()
 
-# JSON file path
-JSON_FILE = "Data/SAPMIMOSA.json"
+# JSON storage file path
+storagePath = "Data/SAPMIMOSA.json"
+# JSON Raw-Data file path
+rawDataStoragePath = "Data/rawDataOfAIResponses.json"
 
 """
 # Models
@@ -50,20 +52,35 @@ class MappingDocument(BaseModel):
     #color: Optional[str] = None
 """
 # JSON file operations
-def load_data():
-    if not os.path.exists(JSON_FILE):
-        os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
-        with open(JSON_FILE, "w", encoding="utf-8") as file:
+def load_data(file_path):
+    if not os.path.exists(file_path):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "w", encoding="utf-8") as file:
             default_data = []
             json.dump(default_data, file, ensure_ascii=False, indent=4)
         return default_data
-    with open(JSON_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+    with open(file_path, "r", encoding="utf-8") as file:
+        content = file.read().strip()
+        if not content:
+            return []
+        return json.loads(content)
 
-def save_data(data):
-    os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
-    with open(JSON_FILE, "w", encoding="utf-8") as file:
+def save_data(data, file_path):
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
+
+def store_raw_data_of_AI_responses(mapping_doc):	       
+    entry = mapping_doc.model_dump()
+    entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        data = load_data(rawDataStoragePath)           
+        data.append(entry)            
+        save_data(data, rawDataStoragePath)            
+    except Exception as file_exc:
+        print(f"Failed to write raw OpenAI response: {file_exc}")
+        import traceback
+        traceback.print_exc()
 
 # OpenAI endpoint
 @app.post("/ask_openai")
@@ -131,7 +148,10 @@ async def ask_openai(request: SearchQuery):
         accuracyResult = await check_accuracy(mapping_query)
         mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
         mapping_doc.qualityRate = accuracyResult["quality_score"]
-        mapping_doc.matchingRate = accuracyResult["matching_score"]
+        mapping_doc.matchingRate = accuracyResult["matching_score"] 
+        
+        # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
+        store_raw_data_of_AI_responses(mapping_doc)
 
         # Return the Mapping object directly!
         return mapping_doc
@@ -145,12 +165,11 @@ async def ask_openai(request: SearchQuery):
 # Work order endpoints
 @app.get("/workorders")
 async def get_workorders():
-    return load_data()
+    return load_data(storagePath)
 
 @app.post("/workorders")
 async def create_workorder(document: MappingDocument):
-    data = load_data()
-    # Generate a numeric mapID like '011' if not supplied
+    data = load_data(storagePath)    
     if not document.mapID:
         existing_ids = [
             int(doc["mapID"]) for doc in data
@@ -159,22 +178,22 @@ async def create_workorder(document: MappingDocument):
         next_id = max(existing_ids, default=0) + 1
         document.mapID = f"{next_id:03d}"
     data.append(document.dict(exclude_none=True))
-    save_data(data)
+    save_data(data, storagePath)
     return document
 
 @app.put("/workorders")
 async def update_workorders(documents: List[MappingDocument]):
-    save_data([doc.dict(exclude_none=True) for doc in documents])
+    save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
     return documents
 
 @app.delete("/workorders/{map_id}")
 async def delete_workorder(map_id: str):
-    data = load_data()
+    data = load_data(storagePath)
     original_len = len(data)
     data = [doc for doc in data if str(doc.get("mapID")) != str(map_id)]
     if len(data) == original_len:
         raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
-    save_data(data)
+    save_data(data, storagePath)
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
 
 
@@ -182,14 +201,14 @@ async def delete_workorder(map_id: str):
 @app.post("/check_accuracy")
 async def check_accuracy(output: MappingQuery):
     data = output.root 
-    accuracy_score = float(ScoreManager.scoreOutput(data))
-    quality_score = float(0.75)
-    matching_score = float(0.80)        
+    accuracy_score = float(ScoreManager.scoreOutput(data))*100
+    quality_score = float(0.75451) *100
+    matching_score = float(0.80561)*100
     
     return {
-        "accuracy_score": accuracy_score,
-        "quality_score": quality_score,
-        "matching_score": matching_score,
+        "accuracy_score": round(accuracy_score,2),
+        "quality_score": round(quality_score, 2),
+        "matching_score": round(matching_score,2)
         
     }
 

@@ -1,0 +1,33 @@
+[
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 71.69,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for the Equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier for the asset",
+                    "dataType": "STRING",
+                    "notes": "Serves as the unique asset identifier in MIMOSA",
+                    "fieldLength": "64"
+                }
+            }
+        ],
+        "timestamp": "2025-05-03 16:34:22"
+    }
+]
