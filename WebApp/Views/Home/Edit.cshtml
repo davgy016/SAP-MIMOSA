@@ -6,9 +6,9 @@
 @if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
 {
     <div class="alert alert-info mb-3">
-        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)</strong> <br />
-        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)</strong> <br />
-        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)</strong>
+        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
+        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
+        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
     </div>
 }
 @if (!string.IsNullOrWhiteSpace(Model?.prompt))

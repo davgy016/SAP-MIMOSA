@@ -23,11 +23,11 @@ class MappingEntry(BaseModel):
 class Mapping(BaseModel):
     mapID: Optional[str] = None
     LLMType: str
-    mappings: List[MappingEntry]
     prompt: Optional[str] = None
     accuracyRate: Optional[float]=None
     qualityRate: Optional[float]=None
     matchingRate: Optional[float]=None
+    mappings: List[MappingEntry]
 
     model_config = ConfigDict(validate_by_name=True)
 
