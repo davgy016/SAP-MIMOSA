@@ -155,7 +155,7 @@ namespace SAP_MIMOSAapp.Controllers
                 Console.WriteLine($"Sending request: {requestContent}");
 
                 // Send the request
-                var response = await _httpClient.PostAsync("ask_openai", jsonRequest);
+                var response = await _httpClient.PostAsync("ask_AI", jsonRequest);
 
                 // Log the response status
                 Console.WriteLine($"Response status: {response.StatusCode}");
@@ -429,41 +429,7 @@ namespace SAP_MIMOSAapp.Controllers
         //    public float matching_score { get; set; }            
         //}
 
-        [HttpPost("search")]
-        public async Task<IActionResult> SearchWithAI([FromBody] SearchRequest request)
-        {
-            if (string.IsNullOrEmpty(request.Query))
-            {
-                return BadRequest(new { response = "Query cannot be empty." });
-            }
-
-            var jsonRequest = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync("ask_openai", jsonRequest);
-            if (!response.IsSuccessStatusCode)
-            {
-                return StatusCode((int)response.StatusCode, new { response = "Error with AI search" });
-            }
-
-            var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-            return Json(new { response = aiResponse?.Response ?? "No response from AI" });
-        }
-
-
-        /**
-         * aiResponse and SearchRequest classes are defines structure of the request/response for SearchWithAI & GetAIResponse.
-         * Response or request formats can be expanded easier, e.g add new fields or new data type etc 
-         * Also can add validation rules
-         */
-        public class AIResponse
-        {
-            public string? Response { get; set; }
-        }
-
-        public class SearchRequest
-        {
-            public string? Query { get; set; }
-        }
+      
     }
 }
 
