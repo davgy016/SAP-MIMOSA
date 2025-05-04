@@ -1,6 +1,7 @@
 import pytest
 
 from ValidationAndMapping.Accuracy import DescriptionSimilarity, FieldLength, Accuracy
+from ValidationAndMapping.Accuracy.MimosaChecker import MimosaChecker
 from ValidationAndMapping.Models import FieldMapping, MappingEntry, Mapping
 from ValidationAndMapping.ScoreManager import ScoreManager
 
@@ -61,3 +62,10 @@ def test_scoreManager_scoreOutput(sample_mapping):
     score = sm.scoreOutput(sample_mapping)
     print("Score manager output", score)
     assert score == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
+
+def test_mimosaChecker(sample_mapping):
+    mc = MimosaChecker()
+    print(sample_mapping[0].mappings[0].mimosa)
+    print(sample_mapping[0].mappings[0])
+    mc.checkField(sample_mapping[0].mappings[0].mimosa)
+

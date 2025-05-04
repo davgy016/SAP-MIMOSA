@@ -5,6 +5,7 @@ from .AssociationMatching import AssociationMatching
 from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
+from .MimosaChecker import MimosaChecker
 
 from ..Models import Mapping
 
