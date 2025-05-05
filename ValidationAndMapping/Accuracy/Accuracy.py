@@ -33,5 +33,7 @@ class Accuracy:
         fl = FieldLength()
         fl_score = fl.score(mapping)
 
-        total_score = (ds_score+dt_score+fl_score)/3
+        assoc_score = AssociationMatching.score(mapping)
+
+        total_score = (ds_score+dt_score+fl_score+assoc_score)/4
         return total_score
