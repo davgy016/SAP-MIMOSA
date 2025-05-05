@@ -5,6 +5,7 @@ from .AssociationMatching import AssociationMatching
 from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
+from .MimosaChecker import MimosaChecker
 
 from ..Models import Mapping
 
@@ -24,4 +25,13 @@ class Accuracy:
         ds = DescriptionSimilarity()
         ds_score = ds.score(mapping)
 
-        return ds_score
+        # then data type
+        dt = DataType()
+        dt_score = dt.score(mapping)
+
+        # then field length
+        fl = FieldLength()
+        fl_score = fl.score(mapping)
+
+        total_score = (ds_score+dt_score+fl_score)/3
+        return total_score

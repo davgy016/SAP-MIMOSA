@@ -1,5 +1,11 @@
 from pydantic import BaseModel, RootModel, Field, ConfigDict
 from typing import List, Optional
+from enum import Enum
+
+class FieldState(Enum):
+    CORRECT = "correct"
+    INCORRECT = "incorrect"
+    NARF = "not a real field"
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
@@ -15,6 +21,13 @@ class FieldMapping(BaseModel):
     dataType: str
     notes: str
     fieldLength: str
+
+class FieldCheck(BaseModel):
+    entityName: FieldState
+    fieldName: FieldState
+    description: FieldState
+    dataType: FieldState
+    fieldLength: FieldState
 
 class MappingEntry(BaseModel):
     sap: FieldMapping
