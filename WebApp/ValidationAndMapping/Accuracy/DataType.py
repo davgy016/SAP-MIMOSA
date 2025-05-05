@@ -1,6 +1,6 @@
 # This DataType engine compares the data type of mapped fields to compare similarity.
 import re
-from Models import Mapping
+from ..Models import Mapping
 
 ALIASES = {
     "INT":       "INTEGER",
