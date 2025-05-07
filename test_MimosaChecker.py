@@ -21,7 +21,7 @@ def sample_mapping():
     mimosa_field = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
-        fieldName="WorkOrder.WorkOrderID",
+        fieldName="Model",
         description="Work Order Number",
         dataType="CHAR(12)",
         notes="Primary identifier for the work order in SAP PM",

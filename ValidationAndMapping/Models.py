@@ -6,6 +6,7 @@ class FieldState(Enum):
     CORRECT = "correct"
     INCORRECT = "incorrect"
     NARF = "not a real field"
+    UNCHECKED = "has not been checked yet"
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
@@ -23,11 +24,11 @@ class FieldMapping(BaseModel):
     fieldLength: str
 
 class FieldCheck(BaseModel):
-    entityName: FieldState
-    fieldName: FieldState
-    description: FieldState
-    dataType: FieldState
-    fieldLength: FieldState
+    entityName: FieldState = FieldState.UNCHECKED
+    fieldName: FieldState = FieldState.UNCHECKED
+    description: FieldState = FieldState.UNCHECKED
+    dataType: FieldState = FieldState.UNCHECKED
+    fieldLength: FieldState = FieldState.UNCHECKED
 
 class MappingEntry(BaseModel):
     sap: FieldMapping
