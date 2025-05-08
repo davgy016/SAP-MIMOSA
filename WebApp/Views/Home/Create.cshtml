@@ -71,7 +71,7 @@
                     {
                         foreach (var mapping in Model.mappings)
                         {
-                            // Render all existing mappings when the page loads, 
+                            // Render all existing mappings when the page loads,
                             // such as when editing or after a failed form submission.
                             @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
                             mappingIndex++;
@@ -101,83 +101,87 @@
     </script>
 
     <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
-                const mappingsContainer = document.getElementById('mappingsContainer');
-                const template = document.getElementById('mappingPairTemplate').textContent;
+        document.addEventListener('DOMContentLoaded', function() {
+            let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
+            const mappingsContainer = document.getElementById('mappingsContainer');
+            const template = document.getElementById('mappingPairTemplate').textContent;
 
-                // Add mapping button click handler
-                document.getElementById('addMapping').addEventListener('click', function() {
-                    addMappingPair();
-                });
+            // Add mapping button click handler
+            document.getElementById('addMapping').addEventListener('click', function() {
+                addMappingPair();
+            });
 
-                // CSV import
-                document.getElementById('importCsvBtn').addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const fileInput = document.getElementById('csvFileInput');
-                    if (!fileInput.files.length) {
-                        alert('Please select a CSV file.');
+            // CSV import
+            document.getElementById('importCsvBtn').addEventListener('click', function(event) {
+                event.preventDefault();
+                const fileInput = document.getElementById('csvFileInput');
+                if (!fileInput.files.length) {
+                    alert('Please select a CSV file.');
+                    return;
+                }
+                const formData = new FormData();
+                formData.append('csvFile', fileInput.files[0]);
+                fetch('/Home/ImportCsv', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to import CSV.');
+                    return response.json();
+                })
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        alert('Invalid data returned from server.');
                         return;
                     }
-                    const formData = new FormData();
-                    formData.append('csvFile', fileInput.files[0]);
-                    fetch('/Home/ImportCsv', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Failed to import CSV.');
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (!Array.isArray(data)) {
-                            alert('Invalid data returned from server.');
-                            return;
-                        }
-                        // Remove existing mappings
-                        mappingsContainer.innerHTML = '';
-                        mappingIndex = 0;
-                        // Add each mapping from CSV
-                        data.forEach(function(mapping) {
-                            addMappingPair(mapping);
-                        });
-                    })
-                    .catch(error => {
-                        alert('Error importing CSV: ' + error.message);
+                    // Remove existing mappings
+                    mappingsContainer.innerHTML = '';
+                    mappingIndex = 0;
+                    // Add each mapping from CSV
+                    data.forEach(function(mapping) {
+                        addMappingPair(mapping);
                     });
+                })
+                .catch(error => {
+                    alert('Error importing CSV: ' + error.message);
                 });
-
-                // Function to add a new mapping pair
-                function addMappingPair(mappingData) {
-                    let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
-                    const mappingElement = document.createElement('div');
-                    mappingElement.innerHTML = newMapping;
-                    mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
-                        mappingElement.remove();
-                    });
-                    // If mappingData is provided, prefill the fields
-                    if (mappingData) {
-                        const sapFields = ["entityName", "fieldName", "dataType", "description"];
-                        const mimosaFields = ["entityName", "fieldName", "dataType", "description"];
-                        let allFilled = true;
-                        sapFields.forEach(field => {
-                            const input = mappingElement.querySelector(`[name$=\".sap.${field}\"]`);
-                            input.value = mappingData.sap?.[field] || '';
-                            if (!input.value.trim()) allFilled = false;
-                        });
-                        mimosaFields.forEach(field => {
-                            const input = mappingElement.querySelector(`[name$=\".mimosa.${field}\"]`);
-                            input.value = mappingData.mimosa?.[field] || '';
-                            if (!input.value.trim()) allFilled = false;
-                        });
-                        if (!allFilled) {
-                            alert("All SAP and MIMOSA fields must be filled.");
-                            return;
-                        }
-                    }
-                    mappingsContainer.appendChild(mappingElement);
-                    mappingIndex++;
-                }
             });
+
+            // Function to add a new mapping pair
+            function addMappingPair(mappingData) {
+                let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
+                const mappingElement = document.createElement('div');
+                mappingElement.innerHTML = newMapping;
+                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
+                    mappingElement.remove();
+                });
+                // If mappingData is provided, prefill the fields
+                if (mappingData) {
+                    const sapFields = ["entityName", "fieldName", "dataType", "description"];
+                    const mimosaFields = ["entityName", "fieldName", "dataType", "description"];
+
+                    // Prefill fields
+                    sapFields.forEach(field => {
+                        const input = mappingElement.querySelector(`[name$=\".sap.${field}\"]`);
+                        input.value = mappingData.sap?.[field] || '';
+                    });
+                    mimosaFields.forEach(field => {
+                        const input = mappingElement.querySelector(`[name$=\".mimosa.${field}\"]`);
+                        input.value = mappingData.mimosa?.[field] || '';
+                    });
+
+                    // require  SAP or MIMOSA fields to be filled
+                    const allSapFilled = sapFields.every(field => (mappingData.sap?.[field] || '').trim() !== '');
+                    const allMimosaFilled = mimosaFields.every(field => (mappingData.mimosa?.[field] || '').trim() !== '');
+
+                    if (!allSapFilled && !allMimosaFilled) {
+                        // Skip adding this mapping
+                        return;
+                    }
+                }
+                mappingsContainer.appendChild(mappingElement);
+                mappingIndex++;
+            }
+        });
     </script>
 }
