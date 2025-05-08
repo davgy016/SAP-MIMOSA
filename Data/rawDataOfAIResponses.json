@@ -1,0 +1,126 @@
+[
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 51.19,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for an equipment record",
+                    "dataType": "CHAR",
+                    "notes": "Primary key in SAP Equipment table",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique identifier for equipment in MIMOSA data model",
+                    "dataType": "String",
+                    "notes": "Primary key for Equipment entity",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-07 19:22:44"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 40.83,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - Unique identifier for equipment record",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master in SAP",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier assigned to each asset",
+                    "dataType": "String",
+                    "notes": "Unique asset identifier mapped from SAP Equipment Number",
+                    "fieldLength": "18"
+                }
+            }
+        ],
+        "timestamp": "2025-05-07 19:50:41"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 28.91,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique Equipment Number",
+                    "dataType": "CHAR",
+                    "notes": "Used as primary identifier for equipment in SAP PM (Plant Maintenance)",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PhysicalAsset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique equipment identifier",
+                    "dataType": "String",
+                    "notes": "Serves as unique asset key in MIMOSA O&M models",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-08 13:25:08"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 22.77,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique, persistent identity for an asset",
+                    "dataType": "String",
+                    "notes": "Serves as the asset's primary identifier within MIMOSA",
+                    "fieldLength": "40"
+                }
+            }
+        ],
+        "timestamp": "2025-05-08 14:05:10"
+    }
+]

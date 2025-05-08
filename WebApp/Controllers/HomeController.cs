@@ -29,6 +29,9 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
+                // Use ViewModel method to set LLMTypes with selected value
+                model.SetLLMTypes(model.SelectedLLM);
+
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
@@ -430,6 +433,52 @@ namespace SAP_MIMOSAapp.Controllers
         //}
 
       
+        [HttpPost]
+        public async Task<IActionResult> ImportCsv()
+        {
+            try
+            {
+                var file = Request.Form.Files["csvFile"];
+                if (file == null || file.Length == 0)
+                    return BadRequest("No file uploaded.");
+
+                var mappings = new List<MappingPair>();
+
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+                {
+                    var records = csv.GetRecords<MappingPairCsvRow>().ToList();
+                    foreach (var row in records)
+                    {
+                        var pair = new MappingPair
+                        {
+                            sap = new MappingField
+                            {
+                                entityName = row.SAP_EntityName,
+                                fieldName = row.SAP_FieldName,
+                                dataType = row.SAP_DataType,
+                                description = row.SAP_Description
+                            },
+                            mimosa = new MappingField
+                            {
+                                entityName = row.MIMOSA_EntityName,
+                                fieldName = row.MIMOSA_FieldName,
+                                dataType = row.MIMOSA_DataType,
+                                description = row.MIMOSA_Description
+                            }
+                        };
+                        mappings.Add(pair);
+                    }
+                }
+                return Json(mappings);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to import CSV: {ex.Message}");
+            }
+        }
+
+
     }
 }
 

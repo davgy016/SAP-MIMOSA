@@ -47,14 +47,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="LLMType" class="form-label">LLM Type</label>
-                        <select asp-for="LLMType" class="form-select">
-                            <option value="">Select LLM Type</option>
-                            <option value="gpt-4.1">GPT-4.1</option>
-                            <option value="o4-mini">GPT-o4-mini</option>
-                            <option value="Claude">Claude</option>
-                            <option value="Gemini">Gemini</option>
-                            <option value="Other">Other</option>
-                        </select>
+                        @Html.DropDownListFor(model => model.LLMType, SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs, new { @class = "form-select" })
                         <span asp-validation-for="LLMType" class="text-danger"></span>
                     </div>
                 </div>
@@ -64,7 +57,11 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Mappings</h5>
-                <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="file" id="csvFileInput" accept=".csv" class="form-control form-control-sm" style="width: auto; display: inline-block;" />
+                    <button type="button" class="btn btn-sm btn-secondary" id="importCsvBtn">Import CSV</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
+                </div>
             </div>
             <div class="card-body" id="mappingsContainer">
 
@@ -74,6 +71,8 @@
                     {
                         foreach (var mapping in Model.mappings)
                         {
+                            // Render all existing mappings when the page loads, 
+                            // such as when editing or after a failed form submission.
                             @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
                             mappingIndex++;
                         }
@@ -94,44 +93,91 @@
     </form>
 </div>
 
-<!-- Template for mapping pair -->
-<script type="text/template" id="mappingPairTemplate">
-    @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
-</script>
-
 @section Scripts {
+
+    <!-- Template for mapping pair for JS to clone and insert blank mapping rows dynamically -->
+    <script type="text/template" id="mappingPairTemplate">
+        @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
+    </script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
-            const mappingsContainer = document.getElementById('mappingsContainer');
-            const template = document.getElementById('mappingPairTemplate').textContent;
+            document.addEventListener('DOMContentLoaded', function() {
+                let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
+                const mappingsContainer = document.getElementById('mappingsContainer');
+                const template = document.getElementById('mappingPairTemplate').textContent;
 
-            // Add mapping button click handler
-            document.getElementById('addMapping').addEventListener('click', function() {
-                addMappingPair();
-            });
-
-            // Function to add a new mapping pair
-            function addMappingPair() {
-
-                // Create a new mapping pair from template (replace all [-1] with mappingIndex)
-                let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
-
-                // Create a container for the new mapping
-                const mappingElement = document.createElement('div');
-                mappingElement.innerHTML = newMapping;
-                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
-                    mappingElement.remove();
-
-
+                // Add mapping button click handler
+                document.getElementById('addMapping').addEventListener('click', function() {
+                    addMappingPair();
                 });
 
-                // Add the new mapping to the container
-                mappingsContainer.appendChild(mappingElement);
+                // CSV import
+                document.getElementById('importCsvBtn').addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const fileInput = document.getElementById('csvFileInput');
+                    if (!fileInput.files.length) {
+                        alert('Please select a CSV file.');
+                        return;
+                    }
+                    const formData = new FormData();
+                    formData.append('csvFile', fileInput.files[0]);
+                    fetch('/Home/ImportCsv', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to import CSV.');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!Array.isArray(data)) {
+                            alert('Invalid data returned from server.');
+                            return;
+                        }
+                        // Remove existing mappings
+                        mappingsContainer.innerHTML = '';
+                        mappingIndex = 0;
+                        // Add each mapping from CSV
+                        data.forEach(function(mapping) {
+                            addMappingPair(mapping);
+                        });
+                    })
+                    .catch(error => {
+                        alert('Error importing CSV: ' + error.message);
+                    });
+                });
 
-                // Increment the index for the next mapping
-                mappingIndex++;
-            }
-        });
+                // Function to add a new mapping pair
+                function addMappingPair(mappingData) {
+                    let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
+                    const mappingElement = document.createElement('div');
+                    mappingElement.innerHTML = newMapping;
+                    mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
+                        mappingElement.remove();
+                    });
+                    // If mappingData is provided, prefill the fields
+                    if (mappingData) {
+                        const sapFields = ["entityName", "fieldName", "dataType", "description"];
+                        const mimosaFields = ["entityName", "fieldName", "dataType", "description"];
+                        let allFilled = true;
+                        sapFields.forEach(field => {
+                            const input = mappingElement.querySelector(`[name$=\".sap.${field}\"]`);
+                            input.value = mappingData.sap?.[field] || '';
+                            if (!input.value.trim()) allFilled = false;
+                        });
+                        mimosaFields.forEach(field => {
+                            const input = mappingElement.querySelector(`[name$=\".mimosa.${field}\"]`);
+                            input.value = mappingData.mimosa?.[field] || '';
+                            if (!input.value.trim()) allFilled = false;
+                        });
+                        if (!allFilled) {
+                            alert("All SAP and MIMOSA fields must be filled.");
+                            return;
+                        }
+                    }
+                    mappingsContainer.appendChild(mappingElement);
+                    mappingIndex++;
+                }
+            });
     </script>
 }

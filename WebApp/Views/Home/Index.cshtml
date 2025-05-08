@@ -65,11 +65,7 @@
                                 <div class="d-flex mb-3 gap-2">
                                     <button type="submit" class="btn btn-primary">Ask AI</button>
                                     <div>
-                                        <select asp-for="SelectedLLM" class="form-select">
-                                            <option value="">Select LLM</option>
-                                            <option value="gpt-4.1">GPT-4.1</option>
-                                            <option value="o4-mini">GPT-o4-mini</option>
-                                        </select>
+                                        @Html.DropDownListFor(model => model.SelectedLLM, Model.LLMTypes, new { @class = "form-select" })
                                         <div id="llmInputError" class="invalid-feedback" style="display:none;"></div>
                                     </div>
                                 </div>
