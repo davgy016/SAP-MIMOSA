@@ -41,11 +41,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="LLMType" class="form-label">LLM Type</label>
-                        <select asp-for="LLMType" class="form-select">
-                            <option value="">Select LLM Type</option>
-                            <option value="gpt-4.1">GPT-4.1</option>
-                            <option value="o4-mini">GPT-o4-mini</option>
-                        </select>
+                        @Html.DropDownListFor(model => model.LLMType, SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs, "Select LLM Type", new { @class = "form-select" })
                         <span asp-validation-for="LLMType" class="text-danger"></span>
                     </div>
                 </div>
