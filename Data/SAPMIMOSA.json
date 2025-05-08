@@ -1,0 +1,579 @@
+[
+    {
+        "mapID": "001",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 51.19,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for an equipment record",
+                    "dataType": "CHAR",
+                    "notes": "Primary key in SAP Equipment table",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentID",
+                    "description": "Unique identifier for equipment in MIMOSA data model",
+                    "dataType": "String",
+                    "notes": "Primary key for Equipment entity",
+                    "fieldLength": "50"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "002",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 40.83,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - Unique identifier for equipment record",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master in SAP",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier assigned to each asset",
+                    "dataType": "String",
+                    "notes": "Unique asset identifier mapped from SAP Equipment Number",
+                    "fieldLength": "18"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "003",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "OrderDate",
+                    "description": "Date when order was placed",
+                    "dataType": "DATE",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Date",
+                    "description": "Order placement date",
+                    "dataType": "date",
+                    "notes": "d",
+                    "fieldLength": "f"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "TotalAmount",
+                    "description": "Total order amount",
+                    "dataType": "DECIMAL",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Amount",
+                    "description": "Total order value",
+                    "dataType": "decimal",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Product",
+                    "fieldName": "Material",
+                    "description": "Material code",
+                    "dataType": "CHAR",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetCode",
+                    "description": "Asset material code",
+                    "dataType": "string",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "004",
+        "LLMType": "o4-mini",
+        "prompt": "",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "OrderDate",
+                    "description": "Date when order was placed",
+                    "dataType": "DATE",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Date",
+                    "description": "Order placement date",
+                    "dataType": "date",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "TotalAmount",
+                    "description": "Total order amount",
+                    "dataType": "DECIMAL",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Amount",
+                    "description": "Total order value",
+                    "dataType": "decimal",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Product",
+                    "fieldName": "Material",
+                    "description": "Material code",
+                    "dataType": "CHAR",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetCode",
+                    "description": "Asset material code",
+                    "dataType": "string",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ggk",
+                    "fieldName": "k",
+                    "description": "k",
+                    "dataType": "k",
+                    "notes": "k",
+                    "fieldLength": "k"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "k",
+                    "fieldName": "k",
+                    "description": "k",
+                    "dataType": "k",
+                    "notes": "k",
+                    "fieldLength": "k"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "005",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "006",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "007",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "008",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "009",
+        "LLMType": "Other",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "010",
+        "LLMType": "gpt-4.1",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "011",
+        "LLMType": "gpt-o4-mini",
+        "prompt": "",
+        "mappings": []
+    },
+    {
+        "mapID": "012",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer123",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "013",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 28.91,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique Equipment Number",
+                    "dataType": "CHAR",
+                    "notes": "Used as primary identifier for equipment in SAP PM (Plant Maintenance)",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PhysicalAsset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique equipment identifier",
+                    "dataType": "String",
+                    "notes": "Serves as unique asset key in MIMOSA O&M models",
+                    "fieldLength": "50"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "014",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "fgfd",
+                    "fieldLength": "gfdg"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "gfdg",
+                    "fieldLength": "gfdg"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "OrderDate",
+                    "description": "Date when order was placed",
+                    "dataType": "DATE",
+                    "notes": "gfdg",
+                    "fieldLength": "gfdg"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Date",
+                    "description": "Order placement date",
+                    "dataType": "date",
+                    "notes": "gfdg",
+                    "fieldLength": "gfdgfd"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Order",
+                    "fieldName": "TotalAmount",
+                    "description": "Total order amount",
+                    "dataType": "DECIMAL",
+                    "notes": "g",
+                    "fieldLength": "gfdgf"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Order",
+                    "fieldName": "Amount",
+                    "description": "Total order value",
+                    "dataType": "decimal",
+                    "notes": "g",
+                    "fieldLength": "g"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Product",
+                    "fieldName": "Material",
+                    "description": "Material code",
+                    "dataType": "CHAR",
+                    "notes": "g",
+                    "fieldLength": "g"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetCode",
+                    "description": "Asset material code",
+                    "dataType": "string",
+                    "notes": "g",
+                    "fieldLength": "g"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "015",
+        "LLMType": "gpt-o4-mini",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "e",
+                    "fieldLength": "e"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "e",
+                    "fieldLength": "e"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "016",
+        "LLMType": "Other",
+        "mappings": []
+    },
+    {
+        "mapID": "017",
+        "LLMType": "gpt-o4-mini",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer88",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "018",
+        "LLMType": "gpt-4.1",
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Customer0000000000000",
+                    "fieldName": "ID",
+                    "description": "Customer identifier",
+                    "dataType": "INT",
+                    "notes": "d",
+                    "fieldLength": "d"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Customer",
+                    "fieldName": "CustID",
+                    "description": "Unique customer ID",
+                    "dataType": "integer",
+                    "notes": "d",
+                    "fieldLength": "d"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "019",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one field",
+        "accuracyRate": 22.77,
+        "qualityRate": 75.45,
+        "matchingRate": 80.56,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment7867",
+                    "fieldName": "EQUNR",
+                    "description": "Unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique, persistent identity for an asset",
+                    "dataType": "String",
+                    "notes": "Serves as the asset's primary identifier within MIMOSA",
+                    "fieldLength": "40"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "020",
+        "LLMType": "Create Manually",
+        "mappings": []
+    }
+]
