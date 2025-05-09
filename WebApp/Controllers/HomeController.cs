@@ -197,7 +197,7 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = GetMappingTempData();
             if (model != null)
             {
-                ViewBag.AIMappingLoaded = true;
+               
                 if (query != null)
                     model.prompt = query;
                 if (llmType!= null)
@@ -206,10 +206,7 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
             }
-            else
-            {
-                ViewBag.AIMappingLoaded = false;
-            }
+           
             return View(model);
         }
 
@@ -436,6 +433,52 @@ namespace SAP_MIMOSAapp.Controllers
         //    public float quality_score { get; set; }
         //    public float matching_score { get; set; }            
         //}
+
+        // --- AJAX endpoint for AI Assistant in Create view ---
+        [HttpPost]
+        public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
+        {
+            if (string.IsNullOrWhiteSpace(req?.prompt) || string.IsNullOrWhiteSpace(req?.llmType))
+                return Json(new { success = false, message = "Prompt and LLM Type are required." });
+            try
+            {
+                var aiResponse = await GetAIResponse(req.prompt, req.llmType);
+                if (!string.IsNullOrWhiteSpace(aiResponse))
+                {
+                    try
+                    {
+                        var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (parseResponse != null)
+                        {
+                            SetMappingTempData(parseResponse);
+                            return Json(new { success = true, mapping = parseResponse });
+                        }
+                        else
+                        {
+                            return Json(new { success = false, message = "AI did not return a valid mapping document." });
+                        }
+                    }
+                    catch (System.Text.Json.JsonException)
+                    {
+                        return Json(new { success = false, message = "AI returned an invalid mapping format." });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "AI did not return a valid mapping (no response or invalid format)." });
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { success = false, message = $"Error communicating with AI: {ex.Message}" });
+            }
+        }
+
+        public class AskAIRequest
+        {
+            public string prompt { get; set; }
+            public string llmType { get; set; }
+        }
 
       
         [HttpPost]

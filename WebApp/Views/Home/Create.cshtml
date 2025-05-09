@@ -14,15 +14,18 @@
         </div>
     }
 
-    @* Show accuracy/quality/matching scores if present *@
     @if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
+
     {
-        <div class="alert alert-info mb-3">
+
+        @* Show accuracy/quality/matching scores if present *@
+        <div class="alert alert-info mb-3" id="metricsAlert">
             Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
             Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
             Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
         </div>
     }
+
     @if (!string.IsNullOrWhiteSpace(Model?.prompt))
     {
         <div class="alert alert-warning">
@@ -41,15 +44,19 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="mapID" class="form-label">Map ID</label>
-                        <input asp-for="mapID" class="form-control form-text text-muted" readonly placeholder="Map ID will be auto-generated" value="@(string.IsNullOrEmpty(Model?.mapID) ? ViewBag.NextMapId : Model.mapID)" />
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <input type="text" id="aiPrompt" class="form-control" placeholder="Ask a question about SAP-MIMOSA mapping..." style="max-width: 300px;" />
+                        <select id="aiLLMType" class="form-select" style="max-width: 200px;">
+                            @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-sm btn-primary" id="askAiBtn">Ask AI</button>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="LLMType" class="form-label">LLM Type</label>
-                        @Html.DropDownListFor(model => model.LLMType, SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs, new { @class = "form-select" })
-                        <span asp-validation-for="LLMType" class="text-danger"></span>
-                    </div>
+                    <div id="aiResponseArea" class="mb-2"></div>
+
+                    <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
                 </div>
             </div>
         </div>
@@ -86,6 +93,7 @@
         </div>
 
         <input type="hidden" asp-for="prompt" />
+        <input type="hidden" asp-for="LLMType" />
         <input type="hidden" asp-for="accuracyRate" />
         <input type="hidden" asp-for="qualityRate" />
         <input type="hidden" asp-for="matchingRate" />
@@ -105,6 +113,45 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- AI Assistant logic ---
+            const aiPrompt = document.getElementById('aiPrompt');
+            const aiLLMType = document.getElementById('aiLLMType');
+            const askAiBtn = document.getElementById('askAiBtn');
+            const aiResponseArea = document.getElementById('aiResponseArea');
+            
+
+            askAiBtn?.addEventListener('click', async () => {
+                aiResponseArea.innerHTML = '';
+                const prompt = aiPrompt.value.trim();
+                const llmType = aiLLMType.value;
+                if (!prompt) {
+                    aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
+                    return;
+                }
+                aiResponseArea.innerHTML = '<div class="text-info">Asking AI...</div>';
+                try {
+                    const resp = await fetch('/Home/AskAI', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ prompt, llmType })
+                    });
+                    const data = await resp.json();
+                    if (data.success && data.mapping) {
+                        aiResponseArea.innerHTML = '<div class="alert alert-info">AI mapping loaded. Redirecting...</div>';
+                        // Reload page to get MappingDocument from TempData (server-rendered)
+                        setTimeout(() => { window.location.reload(); }, 700);
+                    } else {
+                        aiResponseArea.innerHTML = '<div class="alert alert-danger">' + (data.message || 'AI did not return a valid mapping.') + '</div>';
+                    }
+                } catch (e) {
+                    aiResponseArea.innerHTML = '<div class="alert alert-danger">Error communicating with AI: ' + e + '</div>';
+                }
+            });
+          
+
+            // --- Existing mapping logic below ---
             // Utility: Attach remove event to a mapping pair
             const attachRemoveHandler = el => {
                 el.querySelector('.remove-mapping')?.addEventListener('click', () => {
