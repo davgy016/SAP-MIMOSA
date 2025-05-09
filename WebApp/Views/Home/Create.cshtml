@@ -57,9 +57,9 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Mappings</h5>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2">                  
                     <input type="file" id="csvFileInput" accept=".csv" class="form-control form-control-sm" style="width: auto; display: inline-block;" />
-                    <button type="button" class="btn btn-sm btn-secondary" id="importCsvBtn">Import CSV</button>
+                    <button type="button" class="btn btn-sm btn-secondary" id="importCsvBtn">Import CSV</button>                    
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
                 </div>
             </div>
@@ -101,18 +101,37 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach remove handler to all mapping pairs rendered on page load (AI or failed validation)
+            document.querySelectorAll('.mapping-pair .remove-mapping').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    btn.closest('.mapping-pair').remove();
+                    renumberMappings();
+                });
+            });
+
+            function renumberMappings() {
+                const mappingPairs = document.querySelectorAll('.mapping-pair');
+                mappingPairs.forEach((pair, idx) => {
+                    pair.querySelectorAll('input, textarea').forEach(field => {
+                        // Replace all occurrences of mappings[<any number>] with mappings[idx] in the name attribute
+                        field.name = field.name.replace(/mappings\[\d+\]/g, `mappings[${idx}]`);
+                    });
+                });
+            }
+
             let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
             const mappingsContainer = document.getElementById('mappingsContainer');
             const template = document.getElementById('mappingPairTemplate').textContent;
 
             // Add mapping button click handler
-            document.getElementById('addMapping').addEventListener('click', function() {
+            document.getElementById('addMapping').addEventListener('click', function () {
                 addMappingPair();
+                renumberMappings();
             });
 
             // CSV import
-            document.getElementById('importCsvBtn').addEventListener('click', function(event) {
+            document.getElementById('importCsvBtn')?.addEventListener('click', function (event) {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
                 if (!fileInput.files.length) {
@@ -125,35 +144,39 @@
                     method: 'POST',
                     body: formData
                 })
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to import CSV.');
-                    return response.json();
-                })
-                .then(data => {
-                    if (!Array.isArray(data)) {
-                        alert('Invalid data returned from server.');
-                        return;
-                    }
-                    // Remove existing mappings
-                    mappingsContainer.innerHTML = '';
-                    mappingIndex = 0;
-                    // Add each mapping from CSV
-                    data.forEach(function(mapping) {
-                        addMappingPair(mapping);
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to import CSV.');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!Array.isArray(data)) {
+                            alert('Invalid data returned from server.');
+                            return;
+                        }
+                        // Remove existing mappings
+                        mappingsContainer.innerHTML = '';
+                        mappingIndex = 0;
+                        // Add each mapping from CSV
+                        data.forEach(function (mapping) {
+                            addMappingPair(mapping);
+                        });
+                        renumberMappings();
+                    })
+                    .catch(error => {
+                        alert('Error importing CSV: ' + error.message);
                     });
-                })
-                .catch(error => {
-                    alert('Error importing CSV: ' + error.message);
-                });
             });
 
             // Function to add a new mapping pair
             function addMappingPair(mappingData) {
-                let newMapping = template.replace(/\[-1\]/g, `[${mappingIndex}]`);
+                let newMapping = template
+                    .replace(/\[@Model\.Item1\]/g, `[${mappingIndex}]`)
+                    .replace(/\[-1\]/g, `[${mappingIndex}]`);
                 const mappingElement = document.createElement('div');
                 mappingElement.innerHTML = newMapping;
-                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
+                mappingElement.querySelector('.remove-mapping').addEventListener('click', function () {
                     mappingElement.remove();
+                    renumberMappings();
                 });
                 // If mappingData is provided, prefill the fields
                 if (mappingData) {
