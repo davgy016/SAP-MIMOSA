@@ -197,6 +197,7 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = GetMappingTempData();
             if (model != null)
             {
+                ViewBag.AIMappingLoaded = true;
                 if (query != null)
                     model.prompt = query;
                 if (llmType!= null)
@@ -204,7 +205,11 @@ namespace SAP_MIMOSAapp.Controllers
                    model.LLMType= llmType;
                 }
                 Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
-            }           
+            }
+            else
+            {
+                ViewBag.AIMappingLoaded = false;
+            }
             return View(model);
         }
 
@@ -443,10 +448,17 @@ namespace SAP_MIMOSAapp.Controllers
                     return BadRequest("No file uploaded.");
 
                 var mappings = new List<MappingPair>();
+                var config = new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
+                {
+                    // Ignores missing fields and header validation errors in csv
+                    MissingFieldFound = null, 
+                    HeaderValidated = null    
+                };
 
                 using (var reader = new StreamReader(file.OpenReadStream()))
-                using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
-                {
+                using (var csv = new CsvHelper.CsvReader(reader, config))
+                {          
+
                     var records = csv.GetRecords<MappingPairCsvRow>().ToList();
                     foreach (var row in records)
                     {
@@ -454,20 +466,24 @@ namespace SAP_MIMOSAapp.Controllers
                         {
                             sap = new MappingField
                             {
-                                entityName = row.SAP_EntityName,
-                                fieldName = row.SAP_FieldName,
-                                dataType = row.SAP_DataType,
-                                description = row.SAP_Description
+                                entityName = row.SAP_EntityName ?? "",
+                                fieldName = row.SAP_FieldName ?? "",
+                                dataType = row.SAP_DataType ?? "",
+                                description = row.SAP_Description ?? ""
                             },
                             mimosa = new MappingField
                             {
-                                entityName = row.MIMOSA_EntityName,
-                                fieldName = row.MIMOSA_FieldName,
-                                dataType = row.MIMOSA_DataType,
-                                description = row.MIMOSA_Description
+                                entityName = row.MIMOSA_EntityName ?? "",
+                                fieldName = row.MIMOSA_FieldName ?? "",
+                                dataType = row.MIMOSA_DataType ?? "",
+                                description = row.MIMOSA_Description ?? ""
                             }
                         };
-                        mappings.Add(pair);
+                        // Only add if at least one side is filled
+                        if (!string.IsNullOrWhiteSpace(pair.sap.entityName) || !string.IsNullOrWhiteSpace(pair.mimosa.entityName))
+                        {
+                            mappings.Add(pair);
+                        }
                     }
                 }
                 return Json(mappings);
