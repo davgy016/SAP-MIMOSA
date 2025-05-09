@@ -197,6 +197,7 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = GetMappingTempData();
             if (model != null)
             {
+                ViewBag.AIMappingLoaded = true;
                 if (query != null)
                     model.prompt = query;
                 if (llmType!= null)
@@ -204,7 +205,11 @@ namespace SAP_MIMOSAapp.Controllers
                    model.LLMType= llmType;
                 }
                 Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
-            }           
+            }
+            else
+            {
+                ViewBag.AIMappingLoaded = false;
+            }
             return View(model);
         }
 
