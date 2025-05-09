@@ -66,7 +66,7 @@
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
                 </div>
             </div>
-            <div class="card-body" id="mappingsContainer">
+            <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
 
                 @{
                     var mappingIndex = 0;
@@ -104,106 +104,72 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Attach remove handler to all mapping pairs rendered on page load (AI or failed validation)
-            document.querySelectorAll('.mapping-pair .remove-mapping').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    btn.closest('.mapping-pair').remove();
+        document.addEventListener('DOMContentLoaded', () => {
+            // Utility: Attach remove event to a mapping pair
+            const attachRemoveHandler = el => {
+                el.querySelector('.remove-mapping')?.addEventListener('click', () => {
+                    el.remove();
                     renumberMappings();
                 });
-            });
+            };
 
-            function renumberMappings() {
-                const mappingPairs = document.querySelectorAll('.mapping-pair');
-                mappingPairs.forEach((pair, idx) => {
+            // Renumber mapping input names for proper model binding
+            const renumberMappings = () => {
+                document.querySelectorAll('.mapping-pair').forEach((pair, idx) => {
                     pair.querySelectorAll('input, textarea').forEach(field => {
-                        // Replace all occurrences of mappings[<any number>] with mappings[idx] in the name attribute
                         field.name = field.name.replace(/mappings\[\d+\]/g, `mappings[${idx}]`);
                     });
                 });
-            }
+            };
 
             let mappingIndex = @(Model?.mappings != null ? Model.mappings.Count : 0);
             const mappingsContainer = document.getElementById('mappingsContainer');
             const template = document.getElementById('mappingPairTemplate').textContent;
 
-            // Add mapping button click handler
-            document.getElementById('addMapping').addEventListener('click', function () {
+            // Attach remove handler to all mapping pairs rendered on page load
+            document.querySelectorAll('.mapping-pair').forEach(attachRemoveHandler);
+
+            // Add mapping button
+            document.getElementById('addMapping').addEventListener('click', () => {
                 addMappingPair();
                 renumberMappings();
             });
 
-            // CSV import
-            document.getElementById('importCsvBtn')?.addEventListener('click', function (event) {
+            // CSV import button
+            document.getElementById('importCsvBtn')?.addEventListener('click', event => {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
-                if (!fileInput.files.length) {
-                    alert('Please select a CSV file.');
-                    return;
-                }
+                if (!fileInput.files.length) return alert('Please select a CSV file.');
                 const formData = new FormData();
                 formData.append('csvFile', fileInput.files[0]);
-                fetch('/Home/ImportCsv', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Failed to import CSV.');
-                        return response.json();
-                    })
+                fetch('/Home/ImportCsv', { method: 'POST', body: formData })
+                    .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
                     .then(data => {
-                        if (!Array.isArray(data)) {
-                            alert('Invalid data returned from server.');
-                            return;
-                        }
-                        // Remove existing mappings
+                        if (!Array.isArray(data)) return alert('Invalid data returned from server.');
                         mappingsContainer.innerHTML = '';
                         mappingIndex = 0;
-                        // Add each mapping from CSV
-                        data.forEach(function (mapping) {
-                            addMappingPair(mapping);
-                        });
+                        data.forEach(mapping => addMappingPair(mapping));
                         renumberMappings();
                     })
-                    .catch(error => {
-                        alert('Error importing CSV: ' + error.message);
-                    });
+                    .catch(error => alert('Error importing CSV: ' + error));
             });
 
-            // Function to add a new mapping pair
+            // Add a new mapping pair (optionally prefilled)
             function addMappingPair(mappingData) {
-                let newMapping = template
-                    .replace(/\[@Model\.Item1\]/g, `[${mappingIndex}]`)
-                    .replace(/\[-1\]/g, `[${mappingIndex}]`);
+                const newMapping = template.replace(/\[@Model\.Item1\]|\[-1\]/g, `[${mappingIndex}]`);
                 const mappingElement = document.createElement('div');
                 mappingElement.innerHTML = newMapping;
-                mappingElement.querySelector('.remove-mapping').addEventListener('click', function () {
-                    mappingElement.remove();
-                    renumberMappings();
-                });
-                // If mappingData is provided, prefill the fields
+                attachRemoveHandler(mappingElement);
                 if (mappingData) {
-                    const sapFields = ["entityName", "fieldName", "dataType", "description"];
-                    const mimosaFields = ["entityName", "fieldName", "dataType", "description"];
-
-                    // Prefill fields
-                    sapFields.forEach(field => {
-                        const input = mappingElement.querySelector(`[name$=\".sap.${field}\"]`);
-                        input.value = mappingData.sap?.[field] || '';
+                    ["sap", "mimosa"].forEach(type => {
+                        ["entityName", "fieldName", "dataType", "description"].forEach(field => {
+                            const input = mappingElement.querySelector(`[name$=\".${type}.${field}\"]`);
+                            if (input) input.value = mappingData[type]?.[field] || '';
+                        });
                     });
-                    mimosaFields.forEach(field => {
-                        const input = mappingElement.querySelector(`[name$=\".mimosa.${field}\"]`);
-                        input.value = mappingData.mimosa?.[field] || '';
-                    });
-
-                    // require  SAP or MIMOSA fields to be filled
-                    const allSapFilled = sapFields.every(field => (mappingData.sap?.[field] || '').trim() !== '');
-                    const allMimosaFilled = mimosaFields.every(field => (mappingData.mimosa?.[field] || '').trim() !== '');
-
-                    if (!allSapFilled && !allMimosaFilled) {
-                        // Skip adding this mapping
-                        return;
-                    }
+                    const allSapFilled = ["entityName", "fieldName", "dataType", "description"].every(f => (mappingData.sap?.[f] || '').trim() !== '');
+                    const allMimosaFilled = ["entityName", "fieldName", "dataType", "description"].every(f => (mappingData.mimosa?.[f] || '').trim() !== '');
+                    if (!allSapFilled && !allMimosaFilled) return;
                 }
                 mappingsContainer.appendChild(mappingElement);
                 mappingIndex++;
