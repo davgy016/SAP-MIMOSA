@@ -59,7 +59,7 @@ namespace SAP_MIMOSAapp.Controllers
                     model.FilteredCount = documents.Count;
                     model.SearchResults = documents;
                 }
-               
+
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
                     var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM);
@@ -96,7 +96,7 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
                 else
-                {                    
+                {
                     model.SearchResults = new List<MappingDocument>();
                     model.FilteredCount = 0;
                     model.TotalDocuments = 0;
@@ -110,7 +110,7 @@ namespace SAP_MIMOSAapp.Controllers
 
             return View(model);
         }
-               
+
 
         // Store MappingDocument in TempData
         private void SetMappingTempData(MappingDocument doc)
@@ -197,19 +197,16 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = GetMappingTempData();
             if (model != null)
             {
-                ViewBag.AIMappingLoaded = true;
+
                 if (query != null)
                     model.prompt = query;
-                if (llmType!= null)
+                if (llmType != null)
                 {
-                   model.LLMType= llmType;
+                    model.LLMType = llmType;
                 }
                 Console.WriteLine($"AI Mapping: {JsonSerializer.Serialize(model)}");
             }
-            else
-            {
-                ViewBag.AIMappingLoaded = false;
-            }
+
             return View(model);
         }
 
@@ -220,7 +217,7 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 return View(newDocument);
             }
-            
+
             try
             {
                 // mapID is a string for backend validation
@@ -260,7 +257,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 // Get the created mapping with mapID from backend response
                 var createdDoc = JsonSerializer.Deserialize<MappingDocument>(responseText, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-               
+
                 TempData["SuccessMessage"] = $"Mapping with #ID {createdDoc?.mapID} created successfully!";
                 return RedirectToAction("Index");
             }
@@ -332,7 +329,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return View(updatedDocument);
                 }
 
-               
+
                 // Ensure platform values are set correctly
                 if (updatedDocument.mappings != null)
                 {
@@ -359,9 +356,9 @@ namespace SAP_MIMOSAapp.Controllers
 
                 var updateResponse = await _httpClient.PutAsync("workorders", content);
                 updateResponse.EnsureSuccessStatusCode();
-                
-                TempData["SuccessMessage"] = $"Mapping with #ID { updatedDocument.mapID} updated successfully!";
-                
+
+                TempData["SuccessMessage"] = $"Mapping with #ID {updatedDocument.mapID} updated successfully!";
+
                 return RedirectToAction("Index");
             }
             catch (System.Exception ex)
@@ -382,7 +379,7 @@ namespace SAP_MIMOSAapp.Controllers
                     var error = await deleteResponse.Content.ReadAsStringAsync();
                     return Json(new { success = false, message = $"Error deleting record: {error}" });
                 }
-               
+
                 return Json(new { success = true, message = "Mapping deleted successfully!" });
             }
             catch (System.Exception ex)
@@ -437,7 +434,53 @@ namespace SAP_MIMOSAapp.Controllers
         //    public float matching_score { get; set; }            
         //}
 
-      
+        // --- AJAX endpoint for AI Assistant in Create view ---
+        [HttpPost]
+        public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
+        {
+            if (string.IsNullOrWhiteSpace(req?.prompt) || string.IsNullOrWhiteSpace(req?.llmType))
+                return Json(new { success = false, message = "Prompt and LLM Type are required." });
+            try
+            {
+                var aiResponse = await GetAIResponse(req.prompt, req.llmType);
+                if (!string.IsNullOrWhiteSpace(aiResponse))
+                {
+                    try
+                    {
+                        var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (parseResponse != null)
+                        {
+                            SetMappingTempData(parseResponse);
+                            return Json(new { success = true, redirectUrl = Url.Action("Create") });
+                        }
+                        else
+                        {
+                            return Json(new { success = false, message = "AI did not return a valid mapping document." });
+                        }
+                    }
+                    catch (System.Text.Json.JsonException)
+                    {
+                        return Json(new { success = false, message = "AI returned an invalid mapping format." });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "AI did not return a valid mapping (no response or invalid format)." });
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { success = false, message = $"Error communicating with AI: {ex.Message}" });
+            }
+        }
+
+        public class AskAIRequest
+        {
+            public string prompt { get; set; }
+            public string llmType { get; set; }
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> ImportCsv()
         {
@@ -451,13 +494,13 @@ namespace SAP_MIMOSAapp.Controllers
                 var config = new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
                 {
                     // Ignores missing fields and header validation errors in csv
-                    MissingFieldFound = null, 
-                    HeaderValidated = null    
+                    MissingFieldFound = null,
+                    HeaderValidated = null
                 };
 
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvHelper.CsvReader(reader, config))
-                {          
+                {
 
                     var records = csv.GetRecords<MappingPairCsvRow>().ToList();
                     foreach (var row in records)
@@ -486,7 +529,10 @@ namespace SAP_MIMOSAapp.Controllers
                         }
                     }
                 }
-                return Json(mappings);
+                // Store new MappingDocument with only mappings, reset all other fields
+                var model = new MappingDocument { mappings = mappings };
+                SetMappingTempData(model); // Use your helper to store to TempData
+                return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
             {
