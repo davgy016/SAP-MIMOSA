@@ -14,24 +14,16 @@
         </div>
     }
 
-    @if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
+    @* Metrics alert is always present but hidden if no metrics *@
+    <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
+        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
+        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
+        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+    </div>
 
-    {
-
-        @* Show accuracy/quality/matching scores if present *@
-        <div class="alert alert-info mb-3" id="metricsAlert">
-            Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
-            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
-        </div>
-    }
-
-    @if (!string.IsNullOrWhiteSpace(Model?.prompt))
-    {
-        <div class="alert alert-warning">
-            <strong>Prompt:</strong> @Model.prompt
-        </div>
-    }
+    <div class="alert alert-warning" id="promptAlert" style="display:@(!string.IsNullOrWhiteSpace(Model?.prompt) ? "block" : "none")">
+        <strong>Prompt:</strong> @Model?.prompt
+    </div>
 
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
@@ -45,8 +37,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="d-flex align-items-center gap-2 mb-2">
-                        <input type="text" id="aiPrompt" class="form-control" placeholder="Ask a question about SAP-MIMOSA mapping..." style="max-width: 300px;" />
-                        <select id="aiLLMType" class="form-select" style="max-width: 200px;">
+                        <input asp-for="prompt" type="text" id="aiPrompt" class="form-control" placeholder="Ask a question about SAP-MIMOSA mapping..." style="max-width: 300px;" />
+                        <select asp-for="LLMType" id="aiLLMType" class="form-select" style="max-width: 200px;">
                             @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
                             {
                                 <option value="@item.Value">@item.Text</option>
@@ -55,7 +47,6 @@
                         <button type="button" class="btn btn-sm btn-primary" id="askAiBtn">Ask AI</button>
                     </div>
                     <div id="aiResponseArea" class="mb-2"></div>
-
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
                 </div>
             </div>
@@ -139,9 +130,39 @@
                     });
                     const data = await resp.json();
                     if (data.success && data.mapping) {
-                        aiResponseArea.innerHTML = '<div class="alert alert-info">AI mapping loaded. Redirecting...</div>';
-                        // Reload page to get MappingDocument from TempData (server-rendered)
-                        setTimeout(() => { window.location.reload(); }, 700);
+                        aiResponseArea.innerHTML = '<div class="alert alert-info">AI mapping loaded.</div>';
+                        // Clear current mappings and repopulate with AI mapping
+                        mappingsContainer.innerHTML = '';
+                        mappingIndex = 0;
+                        if (Array.isArray(data.mapping.mappings)) {
+                            data.mapping.mappings.forEach(mp => addMappingPair(mp));
+                        }
+                        renumberMappings();
+                        // Update prompt, LLMType, and metrics hidden fields
+                        document.querySelector('input[name="prompt"]').value = data.mapping.prompt || '';
+                        document.querySelector('input[name="LLMType"]').value = data.mapping.LLMType || '';
+                        document.querySelector('input[name="accuracyRate"]').value = data.mapping.accuracyRate ?? '';
+                        document.querySelector('input[name="qualityRate"]').value = data.mapping.qualityRate ?? '';
+                        document.querySelector('input[name="matchingRate"]').value = data.mapping.matchingRate ?? '';
+                        // Optionally update metrics display if present
+                        const metricsAlert = document.getElementById('metricsAlert');
+                        if (metricsAlert) {
+                            const hasMetrics = data.mapping.accuracyRate != null || data.mapping.qualityRate != null || data.mapping.matchingRate != null;
+                            metricsAlert.innerHTML = `Accuracy: <strong>${data.mapping.accuracyRate ?? ''}%</strong> <br />
+                                Quality: <strong>${data.mapping.qualityRate ?? ''}%</strong> <br />
+                                Matching: <strong>${data.mapping.matchingRate ?? ''}%</strong>`;
+                            metricsAlert.style.display = hasMetrics ? 'block' : 'none';
+                        }
+                        // Dynamically update prompt alert
+                        const promptAlert = document.getElementById('promptAlert');
+                        if (promptAlert) {
+                            if (data.mapping.prompt && data.mapping.prompt.trim() !== "") {
+                                promptAlert.innerHTML = `<strong>Prompt:</strong> ${data.mapping.prompt}`;
+                                promptAlert.style.display = "block";
+                            } else {
+                                promptAlert.style.display = "none";
+                            }
+                        }
                     } else {
                         aiResponseArea.innerHTML = '<div class="alert alert-danger">' + (data.message || 'AI did not return a valid mapping.') + '</div>';
                     }
@@ -209,9 +230,16 @@
                 attachRemoveHandler(mappingElement);
                 if (mappingData) {
                     ["sap", "mimosa"].forEach(type => {
-                        ["entityName", "fieldName", "dataType", "description"].forEach(field => {
+                        ["entityName", "fieldName", "dataType", "description", "fieldLength", "notes", "platform"].forEach(field => {
+                            // Handle both inputs and textareas
                             const input = mappingElement.querySelector(`[name$=\".${type}.${field}\"]`);
-                            if (input) input.value = mappingData[type]?.[field] || '';
+                            if (input && mappingData[type] && mappingData[type][field] !== undefined) {
+                                if (input.tagName.toLowerCase() === 'textarea') {
+                                    input.textContent = mappingData[type][field];
+                                } else {
+                                    input.value = mappingData[type][field];
+                                }
+                            }
                         });
                     });
                     const allSapFilled = ["entityName", "fieldName", "dataType", "description"].every(f => (mappingData.sap?.[f] || '').trim() !== '');

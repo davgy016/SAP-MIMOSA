@@ -450,7 +450,7 @@ namespace SAP_MIMOSAapp.Controllers
                         var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         if (parseResponse != null)
                         {
-                            SetMappingTempData(parseResponse);
+                            //SetMappingTempData(parseResponse);
                             return Json(new { success = true, mapping = parseResponse });
                         }
                         else
