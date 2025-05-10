@@ -46,7 +46,6 @@
                         </select>
                         <button type="button" class="btn btn-sm btn-primary" id="askAiBtn">Ask AI</button>
                     </div>
-                    <div id="aiResponseArea" class="mb-2"></div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
                 </div>
             </div>
@@ -66,6 +65,7 @@
             </div>
             <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
 
+                <div id="aiResponseArea" class="mb-2"></div>
                 @{
                     var mappingIndex = 0;
                     if (Model?.mappings != null && Model.mappings.Count > 0)
@@ -83,11 +83,11 @@
             </div>
         </div>
 
-        <input type="hidden" asp-for="prompt" />
-        <input type="hidden" asp-for="LLMType" />
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        @* <input type="hidden" asp-for="prompt" /> *@
+        @* <input type="hidden" asp-for="LLMType" /> *@
+        @* <input type="hidden" asp-for="accuracyRate" /> *@
+        @* <input type="hidden" asp-for="qualityRate" /> *@
+        @* <input type="hidden" asp-for="matchingRate" /> *@
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Create</button>
@@ -119,7 +119,7 @@
                     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
                     return;
                 }
-                aiResponseArea.innerHTML = '<div class="text-info">Asking AI...</div>';
+                aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
                 try {
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
@@ -129,42 +129,12 @@
                         body: JSON.stringify({ prompt, llmType })
                     });
                     const data = await resp.json();
-                    if (data.success && data.mapping) {
-                        aiResponseArea.innerHTML = '<div class="alert alert-info">AI mapping loaded.</div>';
-                        // Clear current mappings and repopulate with AI mapping
-                        mappingsContainer.innerHTML = '';
-                        mappingIndex = 0;
-                        if (Array.isArray(data.mapping.mappings)) {
-                            data.mapping.mappings.forEach(mp => addMappingPair(mp));
-                        }
-                        renumberMappings();
-                        // Update prompt, LLMType, and metrics hidden fields
-                        document.querySelector('input[name="prompt"]').value = data.mapping.prompt || '';
-                        document.querySelector('input[name="LLMType"]').value = data.mapping.LLMType || '';
-                        document.querySelector('input[name="accuracyRate"]').value = data.mapping.accuracyRate ?? '';
-                        document.querySelector('input[name="qualityRate"]').value = data.mapping.qualityRate ?? '';
-                        document.querySelector('input[name="matchingRate"]').value = data.mapping.matchingRate ?? '';
-                        // Optionally update metrics display if present
-                        const metricsAlert = document.getElementById('metricsAlert');
-                        if (metricsAlert) {
-                            const hasMetrics = data.mapping.accuracyRate != null || data.mapping.qualityRate != null || data.mapping.matchingRate != null;
-                            metricsAlert.innerHTML = `Accuracy: <strong>${data.mapping.accuracyRate ?? ''}%</strong> <br />
-                                Quality: <strong>${data.mapping.qualityRate ?? ''}%</strong> <br />
-                                Matching: <strong>${data.mapping.matchingRate ?? ''}%</strong>`;
-                            metricsAlert.style.display = hasMetrics ? 'block' : 'none';
-                        }
-                        // Dynamically update prompt alert
-                        const promptAlert = document.getElementById('promptAlert');
-                        if (promptAlert) {
-                            if (data.mapping.prompt && data.mapping.prompt.trim() !== "") {
-                                promptAlert.innerHTML = `<strong>Prompt:</strong> ${data.mapping.prompt}`;
-                                promptAlert.style.display = "block";
-                            } else {
-                                promptAlert.style.display = "none";
-                            }
-                        }
+                    if (data.success && data.redirectUrl) {
+                        window.location.href = data.redirectUrl;
+                    } else if (data.message) {
+                        aiResponseArea.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
                     } else {
-                        aiResponseArea.innerHTML = '<div class="alert alert-danger">' + (data.message || 'AI did not return a valid mapping.') + '</div>';
+                        aiResponseArea.innerHTML = '<div class="alert alert-danger">AI did not return a valid mapping.</div>';
                     }
                 } catch (e) {
                     aiResponseArea.innerHTML = '<div class="alert alert-danger">Error communicating with AI: ' + e + '</div>';
@@ -213,11 +183,11 @@
                 fetch('/Home/ImportCsv', { method: 'POST', body: formData })
                     .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
                     .then(data => {
-                        if (!Array.isArray(data)) return alert('Invalid data returned from server.');
-                        mappingsContainer.innerHTML = '';
-                        mappingIndex = 0;
-                        data.forEach(mapping => addMappingPair(mapping));
-                        renumberMappings();
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            alert('Invalid response from server.');
+                        }
                     })
                     .catch(error => alert('Error importing CSV: ' + error));
             });
