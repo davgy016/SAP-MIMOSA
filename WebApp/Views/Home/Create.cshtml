@@ -47,7 +47,7 @@
                         <button type="button" class="btn  btn-primary" id="askAiBtn">Ask AI</button>
                         <div class="d-flex align-items-center gap-2 ms-auto">
                             <div class="input-group input-group-sm" style="width: auto;">
-                                <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">                                
+                                <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">
                                 <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary d-flex align-items-center gap-1 mb-0">
                                     <i class="bi bi-upload"></i> <span>Choose CSV</span>
                                 </label>
@@ -55,7 +55,12 @@
 
                             <button type="button" class="btn btn-success d-flex align-items-center gap-1" id="importCsvBtn">Import</button>
                         </div>
-                    </div>                    
+                    </div>
+                    <div>
+                        <label class="small text-muted">
+                            <input type="checkbox" name="checkBx" id="checkBx" /> Use Existing Mapping
+                        </label>
+                    </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
                 </div>
             </div>
@@ -109,6 +114,16 @@
     </script>
 
     <script>
+
+        // Change placeholder text based on check box
+        const mappingCheckBx = document.getElementById('checkBx');
+        const aiPrompt = document.getElementById('aiPrompt');
+
+        mappingCheckBx.addEventListener('change', () => {
+            aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter for initial mapping";
+        });
+
+        // Display file name of imported file
         const fileInput = document.getElementById('csvFileInput');
         const labelSpan = document.getElementById('csvLabel');
 
@@ -124,7 +139,7 @@
             const aiPrompt = document.getElementById('aiPrompt');
             const aiLLMType = document.getElementById('aiLLMType');
             const askAiBtn = document.getElementById('askAiBtn');
-            const aiResponseArea = document.getElementById('aiResponseArea');
+            const aiResponseArea = document.getElementById('aiResponseArea');            
 
 
             askAiBtn?.addEventListener('click', async () => {
@@ -134,9 +149,9 @@
                 if (!prompt) {
                     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
                     return;
-                }
+                }                
                 aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
-                try {
+                try {                  
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
                         headers: {
