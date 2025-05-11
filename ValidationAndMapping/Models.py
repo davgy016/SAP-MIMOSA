@@ -33,6 +33,8 @@ class FieldCheck(BaseModel):
 class MappingEntry(BaseModel):
     sap: FieldMapping
     mimosa: FieldMapping
+    class Config:
+        extra = "ignore"
 
 class Mapping(BaseModel):
     mapID: Optional[str] = None
