@@ -59,18 +59,23 @@ def store_raw_data_of_AI_responses(mapping_doc):
 async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model 
-        print(f"Received query: {request.Query}, LLM Model: {llm_model}")
+        print("Received MappingsPPPPPP: ", request.mappings)
 
         #Call OpenAIModel and pass user query and selected LLM model
-        ai_model = OpenAIModel(request.Query, llm_model)
+        ai_model = OpenAIModel(request.Query, llm_model, request.mappings)
         response = ai_model.chat()
         
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
 
         mapping_doc_dict = json.loads(result)
-        # This is a list of dicts
-        mappings = mapping_doc_dict["mappings"]  
+        #print("AI returned:", mapping_doc_dict)        
+        if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
+            mappings = mapping_doc_dict["mappings"]
+        elif isinstance(mapping_doc_dict, list):
+            mappings = mapping_doc_dict
+        else:
+            raise ValueError(f"AI response is not a dict with a 'mappings' key or a list. Got: {mapping_doc_dict}")
 
         # Convert list of dicts to list of MappingEntry objects
         mapping_entries = [MappingEntry(**item) for item in mappings]

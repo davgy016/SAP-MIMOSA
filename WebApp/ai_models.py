@@ -1,21 +1,40 @@
 import os
 from openai import OpenAI as OpenAIClient
+from ValidationAndMapping.Models import  MappingEntry
+import json
+from typing import List
 
 
 class OpenAIModel:
-    def __init__(self, query: str, llm_model: str):
+    def __init__(self, query: str, llm_model: str, mappings: List[MappingEntry]):
         self.query = query
         self.llm_model = llm_model
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.mappings = mappings
+        self.api_key = os.getenv("OPENAI_API_KEY")       
 
     def chat(self):
         if not self.api_key:
             raise ValueError("OpenAI API key not found. Set the OPENAI_API_KEY environment variable.")
         client = OpenAIClient(api_key=self.api_key)
-        
-        system_message = {
-            "role": "system",
-            "content": (
+
+        if self.mappings and len(self.mappings) > 0:   
+            # Python FastAPI backend can't serialize model objects of Pydantic model directly in a response, it causes Json error  
+            # Convert Pydantic models to dicts before serializing
+            # Convert MappingEntry objects to dicts first
+            mappings_dict = [m.model_dump() for m in self.mappings]
+            mappings_json = json.dumps(mappings_dict, ensure_ascii=False, indent=2)
+            system_message_content = (
+                "You are an AI assistant for improving existing mappings between SAP and MIMOSA data models. "
+                "Below are the current mapping pairs in JSON format:\n"
+                f"{mappings_json}\n"
+                "Review these mappings. Improve their accuracy, completeness, and clarity. "
+                "If any mapping is incorrect, incomplete, or ambiguous, fix it. "
+                "Return the improved mappings in the same JSON format. "
+                "Do NOT remove any fields. Only update or clarify as needed. "
+                "The platform for SAP should always be 'SAP' and for MIMOSA should always be 'MIMOSA'."
+            )
+        else:
+            system_message_content = (
                 """You are an AI assistant for generating mapping between SAP and MIMOSA data models. "
                 "Generate a structured JSON response that follows this exact format: "
                 {
@@ -44,7 +63,11 @@ class OpenAIModel:
                 }
                 "Ensure all fields are filled with appropriate values. The platform for SAP should always be 'SAP' and for MIMOSA should always be 'MIMOSA'. "
                 "Generate all mapping pairs that are accurate and relevant to the query."""
-            )
+            )           
+
+        system_message = {
+            "role": "system",
+            "content": system_message_content            
         }
         user_message = {"role": "user", "content": self.query}
         response = client.chat.completions.create(

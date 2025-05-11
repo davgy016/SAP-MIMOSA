@@ -6,10 +6,12 @@ class FieldState(Enum):
     CORRECT = "correct"
     INCORRECT = "incorrect"
     NARF = "not a real field"
+    UNCHECKED = "has not been checked yet"
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
     llm_model: Optional[str] = Field(None, alias="llm_model")
+    mappings:  Optional[List["MappingEntry"]]
     model_config = ConfigDict(validate_by_name=True)
 
 
@@ -23,15 +25,17 @@ class FieldMapping(BaseModel):
     fieldLength: str
 
 class FieldCheck(BaseModel):
-    entityName: FieldState
-    fieldName: FieldState
-    description: FieldState
-    dataType: FieldState
-    fieldLength: FieldState
+    entityName: FieldState = FieldState.UNCHECKED
+    fieldName: FieldState = FieldState.UNCHECKED
+    description: FieldState = FieldState.UNCHECKED
+    dataType: FieldState = FieldState.UNCHECKED
+    fieldLength: FieldState = FieldState.UNCHECKED
 
 class MappingEntry(BaseModel):
     sap: FieldMapping
     mimosa: FieldMapping
+    class Config:
+        extra = "ignore"
 
 class Mapping(BaseModel):
     mapID: Optional[str] = None
