@@ -21,9 +21,9 @@ def sample_mapping():
     mimosa_field = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
-        fieldName="Model",
-        description="Work Order Number",
-        dataType="CHAR(12)",
+        fieldName="PartNumber",
+        description="Manufacturer's Part Number",
+        dataType="cct:TextType",
         notes="Primary identifier for the work order in SAP PM",
         fieldLength="15"
     )
@@ -40,5 +40,7 @@ def sample_mapping():
 
 def test_mimosaChecker(sample_mapping):
     mc = MimosaChecker()
-    mc.checkField(sample_mapping[0].mappings[0].mimosa)
+    fieldCheck = mc.checkField(sample_mapping[0].mappings[0].mimosa)
+    print("EnityName",fieldCheck.entityName,"FieldName",fieldCheck.fieldName,"Description",fieldCheck.description,"DataType",fieldCheck.dataType,"FieldLength",fieldCheck.fieldLength)
+
 

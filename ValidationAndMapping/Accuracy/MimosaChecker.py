@@ -26,47 +26,42 @@ import os
 
 class MimosaChecker:
     def checkField(self, field: FieldMapping) -> FieldCheck:
+        self.counter = 0
         fieldCheck = FieldCheck()
-        foundElement = None
         if self._getRoot() == False:
             return fieldCheck
-        
+
         # look for entity name 
         fieldCheck.entityName = FieldState.NARF
         for entity in self.root:
             if field.entityName == entity.get("name"):
                 fieldCheck.entityName = FieldState.CORRECT
-                # if found 
-                for element in self._find_all_recursive(entity, f"{self.xsd_namespace}element"):
-                    #   parse all elements of type iterating through parent types
-                    #   check if field name is in elements
-                    if field.fieldName in element.get("name"):
-                        fieldCheck.fieldName = FieldState.CORRECT
-                            # if fieldName found
-                        # check description 
-                        # check data type
-                        # check fieldLength
-                        foundElement = element
-                        break
-
-                # if not field name found look for one in the whole thing
-                if fieldCheck.fieldName == FieldState.UNCHECKED:
+                # if found look for field names
+                foundField = self._findWithName(self.root,field.fieldName)[0]
+                print("foundField",foundField)
+                print(self.counter)
+                if foundField == None:
                     fieldCheck.fieldName = FieldState.NARF
-                    for element in self._find_all_recursive(self.root, f"{self.xsd_namespace}element"):
-                        if field.fieldName in element.get("name"):
-                            fieldCheck.fieldName = FieldState.INCORRECT
-                            foundElement = element
-                            break
+                    fieldCheck.dataType = FieldState.NARF
+                    fieldCheck.description = FieldState.NARF
+                    fieldCheck.fieldLength = FieldState.NARF
+                else:
+                    fieldCheck.fieldName = FieldState.CORRECT
 
-        #if field was found check types
-        if foundElement is not None:
-            print(foundElement.tag)
+                    #check the data type
+                    if self._checkDataType(foundField,field.dataType):
+                        fieldCheck.dataType = FieldState.CORRECT
+                    else:
+                        fieldCheck.dataType = FieldState.INCORRECT
 
-        #if no field found dataType, description and fieldLength can't be checked
-        else:
-            fieldCheck.dataType = FieldState.NARF
-            fieldCheck.description = FieldState.NARF
-            fieldCheck.fieldLength = FieldState.NARF
+                    #there are no restrictions on field length so will always be correct
+                    fieldCheck.fieldLength = FieldState.CORRECT
+
+                    #check field description
+                    if self._checkDescription(foundField, field.description):
+                        fieldCheck.description = FieldState.CORRECT
+                    else:
+                        fieldCheck.description = FieldState.INCORRECT
 
 
         return fieldCheck
@@ -89,7 +84,8 @@ class MimosaChecker:
             return False
     
 
-    def _find_all_recursive(self, element, tag):
+    def _findAllRecursive(self, element, tag):
+        #DEPRECEATED
         """
         Recursively finds all elements with the specified tag within the given element
         and its descendants.
@@ -107,3 +103,68 @@ class MimosaChecker:
                 results.append(child)
             results.extend(self._find_all_recursive(child, tag))
         return results
+    
+    def _findChild(self, entity, path):
+        #DEPRECEATED
+        """
+        Finds the root child element following the path specified in dot format
+
+        Args:
+            element: The root element to start the search from.
+            path: The tag name to search for.
+
+        Returns:
+            A single element that matches the tag or null.
+        """
+        result = None
+        pathElements = []
+
+        pathElements = path.split(".")
+
+        #step 1 find all elements
+        #step 2 find base elements 
+        #step 3 repeat step 1 and 2 until base is found
+        print(pathElements)
+
+        for e in pathElements:
+            print(e)
+            print(self._find_with_name(self.root,e))
+
+        return result
+    
+    def _findWithName(self, root, name):
+        self.counter += 1
+        foundField = []
+        for child in root:
+            # if child.tag.replace(self.xsd_namespace,"") == "element":
+            #     print("ElementTag",child.tag.replace(self.xsd_namespace,""),"Name",child.get("name"))
+            if child.get("name") == name:
+                foundField.append(child)
+            foundField.extend(self._findWithName(child, name))
+        return foundField
+    
+    def _findAnnotation(self, element, name):
+        for child in element:
+            if child.tag == self.xsd_namespace + "annotation":
+                try:
+                    if element.get("name") == name:
+                        return child[0].text
+                except TypeError:
+                    pass
+            else:
+                text = self._findAnnotation(child, name)
+                if text is not None:
+                    return text
+        return None
+
+    
+    def _checkDataType(self, element, expected):
+        if element.get("type") == expected:
+            return True
+        else:
+            return False
+        
+    def _checkDescription(self, element, expected):
+        if self._findAnnotation(self.root,element.get("name")) == expected:
+            return True
+        return False
