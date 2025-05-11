@@ -96,9 +96,9 @@
 
         @* <input type="hidden" asp-for="prompt" /> *@
         @* <input type="hidden" asp-for="LLMType" /> *@
-        @* <input type="hidden" asp-for="accuracyRate" /> *@
-        @* <input type="hidden" asp-for="qualityRate" /> *@
-        @* <input type="hidden" asp-for="matchingRate" /> *@
+        <input type="hidden" asp-for="accuracyRate" />
+        <input type="hidden" asp-for="qualityRate" />
+        <input type="hidden" asp-for="matchingRate" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Create</button>
@@ -115,7 +115,7 @@
 
     <script>
 
-        // Change placeholder text based on check box
+        // Check box changes placeholder text of 'Prompt' input
         const mappingCheckBx = document.getElementById('checkBx');
         const aiPrompt = document.getElementById('aiPrompt');
 
@@ -123,41 +123,68 @@
             aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter for initial mapping";
         });
 
-        // Display file name of imported file
-        const fileInput = document.getElementById('csvFileInput');
-        const labelSpan = document.getElementById('csvLabel');
 
-        fileInput.addEventListener('change', function () {
-            if (this.files.length > 0) {
-                labelSpan.textContent = this.files[0].name;
-            } else {
-                labelSpan.textContent = "Choose CSV";
-            }
-        });
+        // --- AI Assistant logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- AI Assistant logic ---
             const aiPrompt = document.getElementById('aiPrompt');
             const aiLLMType = document.getElementById('aiLLMType');
             const askAiBtn = document.getElementById('askAiBtn');
-            const aiResponseArea = document.getElementById('aiResponseArea');            
+            const aiResponseArea = document.getElementById('aiResponseArea');
 
-
+            // Ask AI button
             askAiBtn?.addEventListener('click', async () => {
                 aiResponseArea.innerHTML = '';
                 const prompt = aiPrompt.value.trim();
                 const llmType = aiLLMType.value;
+                const useExisting = document.getElementById('checkBx').checked;
+
                 if (!prompt) {
                     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
                     return;
-                }                
+                }
+
+                const requestBody = { prompt, llmType };
+
+                // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request 
+                if (useExisting) {
+                    const mappings = [];
+                    document.querySelectorAll('.mapping-pair').forEach(pair => {
+                        const mapping = {
+                            sap: {
+                                // Operator '*' means contains, finding elements whose names might include some prefix/suffix, not just exact matching
+                                platform: pair.querySelector('[name*="sap.platform"]').value,
+                                entityName: pair.querySelector('[name*="sap.entityName"]').value,
+                                fieldName: pair.querySelector('[name*="sap.fieldName"]').value,
+                                description: pair.querySelector('[name*="sap.description"]').value,
+                                dataType: pair.querySelector('[name*="sap.dataType"]').value,
+                                notes: pair.querySelector('[name*="sap.notes"]').value,
+                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value
+                            },
+                            mimosa: {
+                                platform: pair.querySelector('[name*="mimosa.platform"]').value,
+                                entityName: pair.querySelector('[name*="mimosa.entityName"]').value,
+                                fieldName: pair.querySelector('[name*="mimosa.fieldName"]').value,
+                                description: pair.querySelector('[name*="mimosa.description"]').value,
+                                dataType: pair.querySelector('[name*="mimosa.dataType"]').value,
+                                notes: pair.querySelector('[name*="mimosa.notes"]').value,
+                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value
+                            }
+                        };
+                        mappings.push(mapping);
+                    });
+
+                    requestBody.mappings = mappings;
+                }
+
+                // Send request to AI
                 aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
-                try {                  
+                try {
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ prompt, llmType })
+                        body: JSON.stringify( requestBody )
                     });
                     const data = await resp.json();
                     if (data.success && data.redirectUrl) {
@@ -173,8 +200,8 @@
             });
 
 
-            // --- Existing mapping logic below ---
-            // Utility: Attach remove event to a mapping pair
+            // --- Existing mapping  logic ---
+            // Attach remove event to a mapping pair
             const attachRemoveHandler = el => {
                 el.querySelector('.remove-mapping')?.addEventListener('click', () => {
                     el.remove();
@@ -182,7 +209,7 @@
                 });
             };
 
-            // Renumber mapping input names for proper model binding
+            // Renumber mapping input names for proper model binding. e.g. use this method to update indexes when update imported mapping pairs
             const renumberMappings = () => {
                 document.querySelectorAll('.mapping-pair').forEach((pair, idx) => {
                     pair.querySelectorAll('input, textarea').forEach(field => {
@@ -195,35 +222,16 @@
             const mappingsContainer = document.getElementById('mappingsContainer');
             const template = document.getElementById('mappingPairTemplate').textContent;
 
-            // Attach remove handler to all mapping pairs rendered on page load
+            // Attach remove handler to all mapping pairs 
             document.querySelectorAll('.mapping-pair').forEach(attachRemoveHandler);
 
-            // Add mapping button
+            // Add new mapping pair button
             document.getElementById('addMapping').addEventListener('click', () => {
                 addMappingPair();
                 renumberMappings();
             });
-
-            // CSV import button
-            document.getElementById('importCsvBtn')?.addEventListener('click', event => {
-                event.preventDefault();
-                const fileInput = document.getElementById('csvFileInput');
-                if (!fileInput.files.length) return alert('Please select a CSV file.');
-                const formData = new FormData();
-                formData.append('csvFile', fileInput.files[0]);
-                fetch('/Home/ImportCsv', { method: 'POST', body: formData })
-                    .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
-                    .then(data => {
-                        if (data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
-                        } else {
-                            alert('Invalid response from server.');
-                        }
-                    })
-                    .catch(error => alert('Error importing CSV: ' + error));
-            });
-
-            // Add a new mapping pair (optionally prefilled)
+           
+            // Add a new mapping pair
             function addMappingPair(mappingData) {
                 const newMapping = template.replace(/\[@Model\.Item1\]|\[-1\]/g, `[${mappingIndex}]`);
                 const mappingElement = document.createElement('div');
@@ -250,6 +258,37 @@
                 mappingsContainer.appendChild(mappingElement);
                 mappingIndex++;
             }
+
+             // --- CSV Import logic ---
+            document.getElementById('importCsvBtn')?.addEventListener('click', event => {
+                event.preventDefault();
+                const fileInput = document.getElementById('csvFileInput');
+                if (!fileInput.files.length) return alert('Please select a CSV file.');
+                const formData = new FormData();
+                formData.append('csvFile', fileInput.files[0]);
+                fetch('/Home/ImportCsv', { method: 'POST', body: formData })
+                    .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
+                    .then(data => {
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            alert('Invalid response from server.');
+                        }
+                    })
+                    .catch(error => alert('Error importing CSV: ' + error));
+            });
+
+            // Display file name of imported file
+            const fileInput = document.getElementById('csvFileInput');
+            const labelSpan = document.getElementById('csvLabel');
+
+            fileInput.addEventListener('change', function () {
+                if (this.files.length > 0) {
+                    labelSpan.textContent = this.files[0].name;
+                } else {
+                    labelSpan.textContent = "Choose CSV";
+                }
+            });
         });
     </script>
 }

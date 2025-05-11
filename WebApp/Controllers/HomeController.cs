@@ -62,7 +62,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 else if (!string.IsNullOrEmpty(model.Query))
                 {
-                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM);
+                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM, null);
                     //_logger.LogInformation("AI raw response: {AIResponse}", aiResponse);
                     //Console.WriteLine("AI raw response: " + aiResponse);
                     if (!string.IsNullOrWhiteSpace(aiResponse))
@@ -133,14 +133,14 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         //AI Search Method
-        private async Task<string> GetAIResponse(string query, string llmModel)
+        private async Task<string> GetAIResponse(string query, string llmModel, List<MappingPair>? mappings)
         {
             try
             {
                 Console.WriteLine($"GetAIResponse called with query: {query}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query, llm_model = llmModel };
+                var request = new { query = query, llm_model = llmModel, mappings = mappings ?? new List<MappingPair>() };
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
@@ -442,7 +442,15 @@ namespace SAP_MIMOSAapp.Controllers
                 return Json(new { success = false, message = "Prompt and LLM Type are required." });
             try
             {
-                var aiResponse = await GetAIResponse(req.prompt, req.llmType);
+                if (req.mappings != null && req.mappings.Any())
+                {
+                    Console.WriteLine("mappings passed");
+                }
+                else
+                {
+                    Console.WriteLine("no mappings passed");
+                }
+                var aiResponse = await GetAIResponse(req.prompt, req.llmType, req.mappings);
                 if (!string.IsNullOrWhiteSpace(aiResponse))
                 {
                     try
@@ -460,6 +468,8 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                     catch (System.Text.Json.JsonException)
                     {
+                        Console.WriteLine($"Raw AI response: {aiResponse}");
+                       
                         return Json(new { success = false, message = "AI returned an invalid mapping format." });
                     }
                 }
@@ -478,6 +488,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             public string prompt { get; set; }
             public string llmType { get; set; }
+            public List <MappingPair>? mappings { get; set; }
         }
 
 
