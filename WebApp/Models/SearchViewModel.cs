@@ -13,7 +13,7 @@ public class SearchViewModel
         {
             new SelectListItem { Value = "", Text = "Select LLM" },
             new SelectListItem { Value = "gpt-4.1", Text = "GPT-4.1" },
-            new SelectListItem { Value = "gpt-o4-mini", Text = "GPT-o4-mini" }
+            new SelectListItem { Value = "o4-mini", Text = "o4-mini" }
         };
 
         public SearchViewModel()

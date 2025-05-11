@@ -11,6 +11,7 @@ class FieldState(Enum):
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
     llm_model: Optional[str] = Field(None, alias="llm_model")
+    mappings:  Optional[List["MappingEntry"]]
     model_config = ConfigDict(validate_by_name=True)
 
 
@@ -33,6 +34,8 @@ class FieldCheck(BaseModel):
 class MappingEntry(BaseModel):
     sap: FieldMapping
     mimosa: FieldMapping
+    class Config:
+        extra = "ignore"
 
 class Mapping(BaseModel):
     mapID: Optional[str] = None
