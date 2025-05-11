@@ -1,22 +1,15 @@
 # This engine class calculates the accuracy of the mappings generated using a series of criteria to generate a score.
 
 #import criteria
-<<<<<<< HEAD:WebApp/ValidationAndMapping/Accuracy/Accuracy.py
-from WebApp.ValidationAndMapping.Accuracy.AssociationMatching  import AssociationMatching
-from WebApp.ValidationAndMapping.Accuracy.DataType              import DataType
-from WebApp.ValidationAndMapping.Accuracy.DescriptionSimilarity import DescriptionSimilarity
-from WebApp.ValidationAndMapping.Accuracy.FieldLength           import FieldLength
-from WebApp.ValidationAndMapping.Models                        import Mapping
-=======
-from .AssociationMatching import AssociationMatching
+# from .AssociationMatching import AssociationMatching
 from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 from .MimosaChecker import MimosaChecker
+from .SapValidator import SapValidator
 
 from ..Models import Mapping
 
->>>>>>> main:ValidationAndMapping/Accuracy/Accuracy.py
 
 class Accuracy:
     def calculateAccuracy(self, mapping:  Mapping) -> float:
@@ -39,20 +32,7 @@ class Accuracy:
         # 4) Entity‐level association (0–1)
         assoc_score = AssociationMatching.score(mapping)
 
-<<<<<<< HEAD:WebApp/ValidationAndMapping/Accuracy/Accuracy.py
+        sapdoc_score = SapValidator.score(mapping)   
+
         # Simple unweighted average:
-        return (dt_score + desc_score + fl_score + assoc_score) / 4.0
-=======
-        # then data type
-        dt = DataType()
-        dt_score = dt.score(mapping)
-
-        # then field length
-        fl = FieldLength()
-        fl_score = fl.score(mapping)
-
-        assoc_score = AssociationMatching.score(mapping)
-
-        total_score = (ds_score+dt_score+fl_score+assoc_score)/4
-        return total_score
->>>>>>> main:ValidationAndMapping/Accuracy/Accuracy.py
+        return (dt_score + desc_score + fl_score + assoc_score + sapdoc_score) / 5.0
