@@ -523,14 +523,16 @@ namespace SAP_MIMOSAapp.Controllers
                                 entityName = row.SAP_EntityName ?? "",
                                 fieldName = row.SAP_FieldName ?? "",
                                 dataType = row.SAP_DataType ?? "",
-                                description = row.SAP_Description ?? ""
+                                description = row.SAP_Description ?? "",
+                                fieldLength = row.SAP_FieldLength ?? ""
                             },
                             mimosa = new MappingField
                             {
                                 entityName = row.MIMOSA_EntityName ?? "",
                                 fieldName = row.MIMOSA_FieldName ?? "",
                                 dataType = row.MIMOSA_DataType ?? "",
-                                description = row.MIMOSA_Description ?? ""
+                                description = row.MIMOSA_Description ?? "",
+                                fieldLength = row.MIMOSA_FieldLength ?? ""
                             }
                         };
                         // Only add if at least one side is filled
