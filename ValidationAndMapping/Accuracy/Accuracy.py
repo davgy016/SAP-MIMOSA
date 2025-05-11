@@ -6,7 +6,8 @@ from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 from .MimosaChecker import MimosaChecker
-from .SAPChecker                import SAPChecker
+from .InfoOmitted import InfoOmitted
+from .SAPChecker import SAPChecker
 
 from ..Models import Mapping, FieldState
 
@@ -18,7 +19,8 @@ class Accuracy:
         self.length_scorer      = FieldLength()
         self.type_scorer        = DataType()
         self.sap_checker        = SAPChecker()
-
+        self.omitted_scorer     = InfoOmitted()
+    
     def calculateAccuracy(self, mapping: Mapping) -> float:
         """
         Returns a float in [0..1] by averaging:
@@ -31,6 +33,7 @@ class Accuracy:
         desc_score  = self.description_scorer.score(mapping)
         len_score   = self.length_scorer.score(mapping)
         type_score  = self.type_scorer.score(mapping)
+        omitted_score = self.omitted_scorer.score(mapping)
 
         # SAP schema checks: get a FieldCheck per entry
         field_checks = [ self.sap_checker.checkField(entry.sap)
@@ -47,4 +50,4 @@ class Accuracy:
         sap_score = correct / total_checks if total_checks else 0.0
 
         # average all components
-        return (desc_score + len_score + type_score + sap_score) / 4.0
+        return (desc_score + len_score + type_score + sap_score + omitted_score) / 5.0
