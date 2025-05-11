@@ -14,16 +14,7 @@
         </div>
     }
 
-    @* Metrics alert is always present but hidden if no metrics *@
-    <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
-        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
-        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
-    </div>
-
-    <div class="alert alert-warning" id="promptAlert" style="display:@(!string.IsNullOrWhiteSpace(Model?.prompt) ? "block" : "none")">
-        <strong>Prompt:</strong> @Model?.prompt
-    </div>
+    
 
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
@@ -58,14 +49,23 @@
                     </div>
                     <div>
                         <label class="small text-muted">
-                            <input type="checkbox" name="checkBx" id="checkBx" /> Use Existing Mapping
+                            <input type="checkbox" name="checkBx" id="checkBx" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "") /> Use Existing Mapping
                         </label>
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
+                    <div id="aiResponseArea" class="mb-2"></div>
                 </div>
             </div>
         </div>
-
+        @* Metrics alert is always present but hidden if no metrics *@
+        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
+            <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
+            Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
+                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong></span> <br />
+            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
+            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+        </div>
+        
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Mapping Pairs</h5>
@@ -74,13 +74,12 @@
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
                 </div>
             </div>
-            <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
 
-                <div id="aiResponseArea" class="mb-2"></div>
-                @{
-                    var mappingIndex = 0;
-                    if (Model?.mappings != null && Model.mappings.Count > 0)
-                    {
+            @if (Model?.mappings != null && Model.mappings.Count > 0)
+            {
+                <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
+                    @{
+                        var mappingIndex = 0;
                         foreach (var mapping in Model.mappings)
                         {
                             // Render all existing mappings when the page loads,
@@ -89,9 +88,8 @@
                             mappingIndex++;
                         }
                     }
-                }
-
-            </div>
+                </div>
+            }
         </div>
 
         @* <input type="hidden" asp-for="prompt" /> *@
@@ -145,7 +143,7 @@
 
                 const requestBody = { prompt, llmType };
 
-                // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request 
+                // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request
                 if (useExisting) {
                     const mappings = [];
                     document.querySelectorAll('.mapping-pair').forEach(pair => {
@@ -222,7 +220,7 @@
             const mappingsContainer = document.getElementById('mappingsContainer');
             const template = document.getElementById('mappingPairTemplate').textContent;
 
-            // Attach remove handler to all mapping pairs 
+            // Attach remove handler to all mapping pairs
             document.querySelectorAll('.mapping-pair').forEach(attachRemoveHandler);
 
             // Add new mapping pair button
@@ -230,7 +228,7 @@
                 addMappingPair();
                 renumberMappings();
             });
-           
+
             // Add a new mapping pair
             function addMappingPair(mappingData) {
                 const newMapping = template.replace(/\[@Model\.Item1\]|\[-1\]/g, `[${mappingIndex}]`);
