@@ -23,10 +23,9 @@ class Accuracy:
         self.omitted_scorer     = InfoOmitted()
         self.mimosa_checker     = MimosaChecker()
     
-    def calculateAccuracy(self, mapping: MappingEntry) -> float:
-
+    def calculateAccuracy(self, mapping: MappingEntry) -> dict:
         """
-        Returns a float in [0..1] by averaging:
+        Returns a dict in [0..1] by averaging:
          • description similarity
          • field-length similarity
          • data-type equality

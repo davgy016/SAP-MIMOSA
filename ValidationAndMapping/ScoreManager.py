@@ -53,5 +53,4 @@ class ScoreManager:
             output["InfoOmitted"] += accuracy_scorer.calculateAccuracy(map)["InfoOmitted"]/len(mapping.mappings)
             output["MimosaSimilarity"] += accuracy_scorer.calculateAccuracy(map)["MimosaSimilarity"]/len(mapping.mappings)
         
-        print(output)
         return output
