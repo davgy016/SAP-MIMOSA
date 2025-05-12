@@ -52,11 +52,6 @@ class Accuracy:
         )
         sap_score = correct / total_checks if total_checks else 0.0
 
-        desc_score  = self.description_scorer.score(mapping)
-        len_score   = self.length_scorer.score(mapping)
-        type_score  = self.type_scorer.score(mapping)
-        omitted_score = self.omitted_scorer.score(mapping)
-
         # MIMOSA schema checks: get a FieldCheck per entry
         mimoosa_field_checks = [ self.mimosa_checker.checkField(entry.mimosa)
                          for entry in mapping.mappings ]
