@@ -15,7 +15,7 @@ from typing import List
 class ScoreManager:
 
     @staticmethod
-    def scoreOutput(mappings: List[Mapping]) -> float:
+    def scoreOutput(mappings: Mapping) -> float:
         """
         This method processes the list of Mapping objects and returns a score.
         
@@ -32,9 +32,23 @@ class ScoreManager:
 
         # Numbers to store the aggregate of each type of score
         accuracy_score = 0
+        map_scores = []
+
+        output = {}
 
         # Iterate over all of the mappings
         for map in mappings:
-            accuracy_score = accuracy_scorer.calculateAccuracy(map)
+            map_scores.append(accuracy_scorer.calculateAccuracy(map))
+        print(map_scores)
+
+        for score in map_scores:
+            output["Accuracy"] += score["Accuracy"]/len(map_scores)
+            output["DescriptionSimilarity"] += score["DescriptionSimilarity"]/len(map_scores)
+            output["FieldLength"] += score["FieldLength"]/len(map_scores)
+            output["DataType"] += score["DataType"]/len(map_scores)
+            output["SAPSimilarity"] += score["SAPSimilarity"]/len(map_scores)
+            output["InfoOmitted"] += score["InfoOmitted"]/len(map_scores)
+            output["MimosaSimilarity"] += score["MimosaSimilarity"]/len(map_scores)
         
-        return accuracy_score
+        print(output)
+        return output

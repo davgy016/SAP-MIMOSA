@@ -36,32 +36,32 @@ def sample_mapping():
         mappings=[mapping_entry]
     )
 
-    return [mapping]
+    return mapping
 
 
 def test_descriptionSimilarity(sample_mapping):
     sim = DescriptionSimilarity()
-    score = sim.score(mapping=sample_mapping[0])
+    score = sim.score(mapping=sample_mapping)
     print("Description Similarity score:", score)
     assert score == pytest.approx(0.9, abs=0.2), "Descriptions are not similar enough"
 
 def test_fieldLength(sample_mapping):
     fl = FieldLength()
-    score = fl.score(mapping=sample_mapping[0])
+    score = fl.score(mapping=sample_mapping)
     print("Field Length score:", score)
     assert score == pytest.approx(0.9, abs=0.2), "Field Lengths are not similar enough"
 
 def test_accuracy(sample_mapping):
     acc = Accuracy()
-    score = acc.calculateAccuracy(mapping=sample_mapping[0])
+    score = acc.calculateAccuracy(mapping=sample_mapping)
     print("Accuracy Score:",score)
-    assert score == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
+    assert score["Accuracy"] == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
 
 def test_scoreManager_scoreOutput(sample_mapping):
     sm = ScoreManager()
     score = sm.scoreOutput(sample_mapping)
     print("Score manager output", score)
-    assert score == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
+    assert score["Accuracy"] == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
 
 
 
