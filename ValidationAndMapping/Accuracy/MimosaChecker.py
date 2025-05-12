@@ -37,7 +37,11 @@ class MimosaChecker:
             if field.entityName == entity.get("name"):
                 fieldCheck.entityName = FieldState.CORRECT
                 # if found look for field names
-                foundField = self._findWithName(self.root,field.fieldName)[0]
+                try:
+                    foundField = self._findWithName(self.root,field.fieldName)[0]
+                except IndexError as e:
+                    print("Couldn't find a field",e)
+                    foundField = None
                 print("foundField",foundField)
                 print(self.counter)
                 if foundField == None:
@@ -82,55 +86,6 @@ class MimosaChecker:
         except ET.ParseError as e:
             print(f"Not able to parse mimosa schema: {e}")
             return False
-    
-
-    def _findAllRecursive(self, element, tag):
-        #DEPRECEATED
-        """
-        Recursively finds all elements with the specified tag within the given element
-        and its descendants.
-
-        Args:
-            element: The root element to start the search from.
-            tag: The tag name to search for.
-
-        Returns:
-            A list of elements matching the tag.
-        """
-        results = []
-        for child in element:
-            if child.tag == tag:
-                results.append(child)
-            results.extend(self._find_all_recursive(child, tag))
-        return results
-    
-    def _findChild(self, entity, path):
-        #DEPRECEATED
-        """
-        Finds the root child element following the path specified in dot format
-
-        Args:
-            element: The root element to start the search from.
-            path: The tag name to search for.
-
-        Returns:
-            A single element that matches the tag or null.
-        """
-        result = None
-        pathElements = []
-
-        pathElements = path.split(".")
-
-        #step 1 find all elements
-        #step 2 find base elements 
-        #step 3 repeat step 1 and 2 until base is found
-        print(pathElements)
-
-        for e in pathElements:
-            print(e)
-            print(self._find_with_name(self.root,e))
-
-        return result
     
     def _findWithName(self, root, name):
         self.counter += 1
