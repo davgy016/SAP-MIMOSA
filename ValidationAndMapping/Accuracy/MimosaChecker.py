@@ -37,7 +37,11 @@ class MimosaChecker:
             if field.entityName == entity.get("name"):
                 fieldCheck.entityName = FieldState.CORRECT
                 # if found look for field names
-                foundField = self._findWithName(self.root,field.fieldName)[0]
+                try:
+                    foundField = self._findWithName(self.root,field.fieldName)[0]
+                except IndexError as e:
+                    print("Couldn't find a field",e)
+                    foundField = None
                 print("foundField",foundField)
                 print(self.counter)
                 if foundField == None:
