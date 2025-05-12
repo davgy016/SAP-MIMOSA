@@ -7,9 +7,10 @@ ALIASES = {
     "SMALLINT":  "INTEGER",
     "DEC":       "DECIMAL",
     "NUM":       "NUMERIC",
-    "CHAR":      "CHAR",
-    "VARCHAR":   "VARCHAR",
-    "TEXT":      "VARCHAR",
+    "CHAR":      "STRING",
+    "VARCHAR":   "STRING",
+    "TEXT":      "STRING",
+    "STRING":    "STRING",
     "DATE":      "DATE",
     "DATETIME":  "DATETIME",
     "TIMESTAMP": "DATETIME",
@@ -27,8 +28,8 @@ class DataType:
         mappings: list of MappingEntry objects or dicts with 'sap'/'mimosa' fields.
         Returns the fraction of fields whose normalized types match exactly.
         """
-        entry = mapping
+        entry = mapping       
         sap_dt = normalize(entry.sap.dataType)
-        mimosa_dt = normalize(entry.mimosa.dataType)
-
-        return float(sap_dt == mimosa_dt)
+        mimosa_dt = normalize(entry.mimosa.dataType)        
+        
+        return float(sap_dt == mimosa_dt)            
