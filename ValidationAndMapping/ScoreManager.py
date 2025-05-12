@@ -31,7 +31,6 @@ class ScoreManager:
         accuracy_scorer = Accuracy()
 
         # Numbers to store the aggregate of each type of score
-        accuracy_score = 0
 
         output = {}
         output["Accuracy"] = 0  
