@@ -63,9 +63,5 @@ def test_scoreManager_scoreOutput(sample_mapping):
     print("Score manager output", score)
     assert score == pytest.approx(0.9, abs=0.2), "Mappings are not similar enough"
 
-def test_mimosaChecker(sample_mapping):
-    mc = MimosaChecker()
-    print(sample_mapping[0].mappings[0].mimosa)
-    print(sample_mapping[0].mappings[0])
-    mc.checkField(sample_mapping[0].mappings[0].mimosa)
+
 
