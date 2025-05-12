@@ -58,12 +58,16 @@
             </div>
         </div>
         @* Metrics alert is always present but hidden if no metrics *@
-        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
+        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null) ? "block" : "none")">
             <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
-            Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
+            Overall Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
                 <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong></span> <br />
-            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+            Description Similarity: <strong>@Html.DisplayFor(m => m.descriptionSimilarity)%</strong> <br />
+            MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.mimosaSimilarity)%</strong><br />
+            SAP Similiraty: <strong>@Html.DisplayFor(m => m.sapSimilarity)%</strong><br />
+            Data type similarity: <strong>@Html.DisplayFor(m => m.dataType)%</strong><br />
+            Missing fields rate: <strong>@Html.DisplayFor(m => m.infoOmitted)%</strong><br />
+            Field length similarity: <strong>@Html.DisplayFor(m => m.fieldLength)%</strong><br />
         </div>
         
         <div class="card mb-4">
@@ -95,8 +99,12 @@
         @* <input type="hidden" asp-for="prompt" /> *@
         @* <input type="hidden" asp-for="LLMType" /> *@
         <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        <input type="hidden" asp-for="descriptionSimilarity" />
+        <input type="hidden" asp-for="mimosaSimilarity" />
+        <input type="hidden" asp-for="sapSimilarity" />
+        <input type="hidden" asp-for="dataType" />
+        <input type="hidden" asp-for="fieldLength" />
+        <input type="hidden" asp-for="infoOmitted" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Create</button>

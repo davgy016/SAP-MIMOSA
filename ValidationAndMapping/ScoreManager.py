@@ -37,8 +37,7 @@ class ScoreManager:
         output["DataType"] = 0
         output["DescriptionSimilarity"] = 0
         output["FieldLength"] = 0
-        output["SAPSimilarity"] = 0
-        output["DataType"] = 0
+        output["SAPSimilarity"] = 0       
         output["InfoOmitted"] = 0
         output["MimosaSimilarity"] = 0
 

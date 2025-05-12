@@ -122,5 +122,170 @@
             }
         ],
         "timestamp": "2025-05-08 14:05:10"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate two field",
+        "accuracyRate": 32.09,
+        "descriptionSimilarity": 62.83,
+        "mimosaSimilarity": 20.0,
+        "sapSimilarity": 60.0,
+        "dataType": 0.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 29.69,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment in SAP.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for an asset",
+                    "dataType": "String",
+                    "notes": "Serves as the primary key for asset in MIMOSA.",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQKTU",
+                    "description": "Equipment Short Description",
+                    "dataType": "CHAR",
+                    "notes": "Short text used to describe the equipment.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetName",
+                    "description": "Short description or name of the asset",
+                    "dataType": "String",
+                    "notes": "Commonly used field for quick identification.",
+                    "fieldLength": "128"
+                }
+            }
+        ],
+        "timestamp": "2025-05-12 17:10:42"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate two fields",
+        "accuracyRate": 28.64,
+        "descriptionSimilarity": 44.36,
+        "mimosaSimilarity": 10.0,
+        "sapSimilarity": 60.0,
+        "dataType": 0.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 37.5,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment in SAP",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master record",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for an asset in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Serves as a global unique asset reference",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Functional Location",
+                    "fieldName": "TPLNR",
+                    "description": "Functional Location - hierarchical location structure for technical objects",
+                    "dataType": "CHAR",
+                    "notes": "Used to structure and manage plant assets by location",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Location",
+                    "fieldName": "LocationIdentifier",
+                    "description": "Identifier for a physical or logical location in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Unique location reference; supports hierarchical structures",
+                    "fieldLength": "64"
+                }
+            }
+        ],
+        "timestamp": "2025-05-12 18:11:32"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate two fields",
+        "accuracyRate": 28.36,
+        "descriptionSimilarity": 52.64,
+        "mimosaSimilarity": 0.0,
+        "sapSimilarity": 60.0,
+        "dataType": 0.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 37.5,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier for equipment",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment records in SAP",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PhysicalAsset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for a physical asset in MIMOSA",
+                    "dataType": "String",
+                    "notes": "Serves as primary identifier for the asset",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Functional Location",
+                    "fieldName": "TPLNR",
+                    "description": "Functional Location - structured address of an asset",
+                    "dataType": "CHAR",
+                    "notes": "Identifies the functional location within the plant",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "FunctionalLocation",
+                    "fieldName": "LocationIdentifier",
+                    "description": "Hierarchical identifier for a functional location",
+                    "dataType": "String",
+                    "notes": "Derived from organization's facility structure",
+                    "fieldLength": "64"
+                }
+            }
+        ],
+        "timestamp": "2025-05-12 18:23:47"
     }
 ]
