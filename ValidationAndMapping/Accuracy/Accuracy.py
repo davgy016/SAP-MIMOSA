@@ -10,7 +10,7 @@ from .InfoOmitted import InfoOmitted
 from .SAPChecker import SAPChecker
 from .MimosaChecker import MimosaChecker
 
-from ..Models import Mapping, FieldState
+from ..Models import MappingEntry, FieldState
 
 
 class Accuracy:
@@ -23,7 +23,7 @@ class Accuracy:
         self.omitted_scorer     = InfoOmitted()
         self.mimosa_checker     = MimosaChecker()
     
-    def calculateAccuracy(self, mapping: Mapping) -> float:
+    def calculateAccuracy(self, mapping: MappingEntry) -> float:
 
         """
         Returns a float in [0..1] by averaging:

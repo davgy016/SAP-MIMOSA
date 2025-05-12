@@ -1,6 +1,6 @@
 # The InfoOmitted engine checks if there is any important content missing from the output.
 
-from ..Models import Mapping, MappingEntry
+from ..Models import MappingEntry
 
 class InfoOmitted:
     """
@@ -9,12 +9,12 @@ class InfoOmitted:
     Scores as: (# entries with all info) / (total entries).
     """
     @staticmethod
-    def score(mapping: Mapping) -> float:
-        total = len(mapping.mappings)
+    def score(mapping: MappingEntry) -> float:
+        total = len(mapping)
         if total == 0:
             return 0.0
         good = 0
-        for entry in mapping.mappings:
+        for entry in mapping:
             sap = entry.sap
             # ensure none of these are empty or whitespace
             if all([
