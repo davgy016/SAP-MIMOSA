@@ -10,11 +10,7 @@ from .InfoOmitted import InfoOmitted
 from .SAPChecker import SAPChecker
 from .MimosaChecker import MimosaChecker
 
-<<<<<<< HEAD
-from ..Models import Mapping, FieldState, FieldState
-=======
 from ..Models import MappingEntry, FieldState
->>>>>>> main
 
 
 class Accuracy:
