@@ -8,8 +8,8 @@ import uvicorn
 from WebApp.ai_models import OpenAIModel
 from typing import List, Optional
 from uuid import uuid4
-from ValidationAndMapping.ScoreManager import ScoreManager
-from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
+from WebApp.ValidationAndMapping.ScoreManager import ScoreManager
+from WebApp.ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
 from datetime import datetime
 
 # Initialize OpenAI client

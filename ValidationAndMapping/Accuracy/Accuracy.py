@@ -1,39 +1,53 @@
 # This engine class calculates the accuracy of the mappings generated using a series of criteria to generate a score.
 
 #import criteria
-from .AssociationMatching import AssociationMatching
+
 from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 from .MimosaChecker import MimosaChecker
+from .InfoOmitted import InfoOmitted
+from .SAPChecker import SAPChecker
 
-from ..Models import Mapping
+from ..Models import Mapping, FieldState
 
 
 class Accuracy:
-    def calculateAccuracy(self, mapping:  Mapping) -> float:
-        """ 
-            Calcualte accruacy takes a single mapping and outputs an accuracy score
-        
-            Args:
-                mapping (Mapping): A Mapping object to score.
-            
-            Returns:
-                float: The computed score as a float.
+    def __init__(self):
+        # instantiate once, reuse across calls
+        self.description_scorer = DescriptionSimilarity()
+        self.length_scorer      = FieldLength()
+        self.type_scorer        = DataType()
+        self.sap_checker        = SAPChecker()
+        self.omitted_scorer     = InfoOmitted()
+    
+    def calculateAccuracy(self, mapping: Mapping) -> float:
         """
-        # Run the mapping through description similarity
-        ds = DescriptionSimilarity()
-        ds_score = ds.score(mapping)
+        Returns a float in [0..1] by averaging:
+         • description similarity
+         • field-length similarity
+         • data-type equality
+         • SAP-schema validation score
+        """
 
-        # then data type
-        dt = DataType()
-        dt_score = dt.score(mapping)
+        desc_score  = self.description_scorer.score(mapping)
+        len_score   = self.length_scorer.score(mapping)
+        type_score  = self.type_scorer.score(mapping)
+        omitted_score = self.omitted_scorer.score(mapping)
 
-        # then field length
-        fl = FieldLength()
-        fl_score = fl.score(mapping)
+        # SAP schema checks: get a FieldCheck per entry
+        field_checks = [ self.sap_checker.checkField(entry.sap)
+                         for entry in mapping.mappings ]
 
-        assoc_score = AssociationMatching.score(mapping)
+        # flatten to a single 0..1: 1 point per CORRECT, 0 otherwise
+        total_checks = len(field_checks) * 5
+        correct = sum(
+            1
+            for fc in field_checks
+            for state in fc.model_dump().values()
+            if state == FieldState.CORRECT
+        )
+        sap_score = correct / total_checks if total_checks else 0.0
 
-        total_score = (ds_score+dt_score+fl_score+assoc_score)/4
-        return total_score
+        # average all components
+        return (desc_score + len_score + type_score + sap_score + omitted_score) / 5.0
