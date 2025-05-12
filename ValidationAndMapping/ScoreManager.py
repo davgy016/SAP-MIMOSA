@@ -15,7 +15,7 @@ from typing import List
 class ScoreManager:
 
     @staticmethod
-    def scoreOutput(mappings: List[Mapping]) -> float:
+    def scoreOutput(mapping: Mapping) -> float:
         """
         This method processes the list of Mapping objects and returns a score.
         
@@ -25,16 +25,31 @@ class ScoreManager:
         Returns:
             str: The computed score as a string.
         """
-        print("Received mappings for scoring:", mappings[0].mappings)
+        print("Received mappings for scoring:", mapping.mappings)
         
         # Create accuracy and quality objects to score each mapping
         accuracy_scorer = Accuracy()
 
         # Numbers to store the aggregate of each type of score
-        accuracy_score = 0
+
+        output = {}
+        output["Accuracy"] = 0  
+        output["DataType"] = 0
+        output["DescriptionSimilarity"] = 0
+        output["FieldLength"] = 0
+        output["SAPSimilarity"] = 0
+        output["DataType"] = 0
+        output["InfoOmitted"] = 0
+        output["MimosaSimilarity"] = 0
 
         # Iterate over all of the mappings
-        for map in mappings:
-            accuracy_score = accuracy_scorer.calculateAccuracy(map)
+        for map in mapping.mappings:
+            output["Accuracy"] += accuracy_scorer.calculateAccuracy(map)["Accuracy"]/len(mapping.mappings)
+            output["DescriptionSimilarity"] += accuracy_scorer.calculateAccuracy(map)["DescriptionSimilarity"]/len(mapping.mappings)
+            output["FieldLength"] += accuracy_scorer.calculateAccuracy(map)["FieldLength"]/len(mapping.mappings)
+            output["DataType"] += accuracy_scorer.calculateAccuracy(map)["DataType"]/len(mapping.mappings)
+            output["SAPSimilarity"] += accuracy_scorer.calculateAccuracy(map)["SAPSimilarity"]/len(mapping.mappings)
+            output["InfoOmitted"] += accuracy_scorer.calculateAccuracy(map)["InfoOmitted"]/len(mapping.mappings)
+            output["MimosaSimilarity"] += accuracy_scorer.calculateAccuracy(map)["MimosaSimilarity"]/len(mapping.mappings)
         
-        return accuracy_score
+        return output

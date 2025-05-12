@@ -1,12 +1,12 @@
 # FieldLength checks the length of each field mapped to see if the data contained to likely to be comparable. 
 # The closer they are in length the more likely it is they contain the same data. 
 
-from ..Models import Mapping
+from ..Models import MappingEntry
 
 class FieldLength:
-    def score(self, mapping: Mapping) -> float:
+    def score(self, mapping: MappingEntry) -> float:
         # get the values for sap and mimos
-        entry = mapping.mappings[0]
+        entry = mapping
         sap_fieldLength_str = entry.sap.fieldLength
         mimosa_fieldLength_str = entry.mimosa.fieldLength
        

@@ -1,6 +1,6 @@
 # This DataType engine compares the data type of mapped fields to compare similarity.
 import re
-from ..Models import Mapping
+from ..Models import MappingEntry
 
 ALIASES = {
     "INT":       "INTEGER",
@@ -22,12 +22,12 @@ def normalize(dt: str) -> str:
 
 class DataType:
     @staticmethod
-    def score(mapping: Mapping) -> float:
+    def score(mapping: MappingEntry) -> float:
         """
         mappings: list of MappingEntry objects or dicts with 'sap'/'mimosa' fields.
         Returns the fraction of fields whose normalized types match exactly.
         """
-        entry = mapping.mappings[0]
+        entry = mapping
         sap_dt = normalize(entry.sap.dataType)
         mimosa_dt = normalize(entry.mimosa.dataType)
 

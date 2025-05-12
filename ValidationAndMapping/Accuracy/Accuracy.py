@@ -10,7 +10,11 @@ from .InfoOmitted import InfoOmitted
 from .SAPChecker import SAPChecker
 from .MimosaChecker import MimosaChecker
 
+<<<<<<< HEAD
 from ..Models import Mapping, FieldState, FieldState
+=======
+from ..Models import MappingEntry, FieldState
+>>>>>>> main
 
 
 class Accuracy:
@@ -23,10 +27,9 @@ class Accuracy:
         self.omitted_scorer     = InfoOmitted()
         self.mimosa_checker     = MimosaChecker()
     
-    def calculateAccuracy(self, mapping: Mapping) -> float:
-
+    def calculateAccuracy(self, mapping: MappingEntry) -> dict:
         """
-        Returns a float in [0..1] by averaging:
+        Returns a dict in [0..1] by averaging:
          • description similarity
          • field-length similarity
          • data-type equality
@@ -39,34 +42,26 @@ class Accuracy:
         omitted_score = self.omitted_scorer.score(mapping)
 
         # SAP schema checks: get a FieldCheck per entry
-        sap_field_checks = [ self.sap_checker.checkField(entry.sap)
-                         for entry in mapping.mappings ]
+        sap_field_checks = self.sap_checker.checkField(mapping.sap)
 
         # flatten to a single 0..1: 1 point per CORRECT, 0 otherwise
-        total_checks = len(sap_field_checks) * 5
+        total_checks = 5
         correct = sum(
             1
             for fc in sap_field_checks
-            for state in fc.model_dump().values()
+            for state in fc
             if state == FieldState.CORRECT
         )
         sap_score = correct / total_checks if total_checks else 0.0
 
-        desc_score  = self.description_scorer.score(mapping)
-        len_score   = self.length_scorer.score(mapping)
-        type_score  = self.type_scorer.score(mapping)
-        omitted_score = self.omitted_scorer.score(mapping)
-
         # MIMOSA schema checks: get a FieldCheck per entry
-        mimoosa_field_checks = [ self.mimosa_checker.checkField(entry.mimosa)
-                         for entry in mapping.mappings ]
+        mimoosa_field_checks = self.mimosa_checker.checkField(mapping.mimosa)
 
         # flatten to a single 0..1: 1 point per CORRECT, 0 otherwise
-        total_checks = len(mimoosa_field_checks) * 5
         correct = sum(
             1
             for fc in mimoosa_field_checks
-            for state in fc.model_dump().values()
+            for state in fc
             if state == FieldState.CORRECT
         )
         mimosa_score = correct / total_checks if total_checks else 0.0
@@ -80,6 +75,6 @@ class Accuracy:
         output["DataType"] = type_score
         output["SAPSimilarity"] = sap_score
         output["InfoOmitted"] = omitted_score
-        output["MimosaScore"] = mimosa_score
+        output["MimosaSimilarity"] = mimosa_score
 
         return output
