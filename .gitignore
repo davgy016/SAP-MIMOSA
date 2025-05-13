@@ -366,3 +366,5 @@ MigrationBackup/
 FodyWeavers.xsd
 SAP-MIMOSAapp/.env
 sap
+
+venv
