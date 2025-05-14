@@ -21,8 +21,8 @@ class FieldMapping(BaseModel):
     fieldName: str
     description: str
     dataType: str
-    notes: str
-    fieldLength: str
+    notes: Optional[str] = ""
+    fieldLength: Optional[str] = ""
 
 class FieldCheck(BaseModel):
     entityName: FieldState = FieldState.UNCHECKED

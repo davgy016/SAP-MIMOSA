@@ -20,6 +20,7 @@ namespace SAP_MIMOSAapp.Controllers
             //Avoid creating new HttpClient instances for each request
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://127.0.0.1:8000/");
+            _httpClient.Timeout = TimeSpan.FromMinutes(5); 
             _logger = logger;
         }
 
@@ -536,7 +537,8 @@ namespace SAP_MIMOSAapp.Controllers
                                 fieldName = row.SAP_FieldName ?? "",
                                 dataType = row.SAP_DataType ?? "",
                                 description = row.SAP_Description ?? "",
-                                fieldLength = row.SAP_FieldLength ?? ""
+                                fieldLength = row.SAP_FieldLength ?? "",
+                                notes = row.SAP_Notes ?? ""
                             },
                             mimosa = new MappingField
                             {
