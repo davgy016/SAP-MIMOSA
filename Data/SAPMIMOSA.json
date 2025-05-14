@@ -575,5 +575,824 @@
         "mapID": "020",
         "LLMType": "Create Manually",
         "mappings": []
+    },
+    {
+        "mapID": "021",
+        "LLMType": "gpt-4.1",
+        "prompt": "improve mapping",
+        "accuracyRate": 31.71,
+        "descriptionSimilarity": 55.74,
+        "mimosaSimilarity": 42.27,
+        "sapSimilarity": 5.0,
+        "dataType": 77.27,
+        "infoOmitted": 10.0,
+        "fieldLength": 0.0,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Order Number",
+                    "description": "Unique identifier for a work order in SAP.",
+                    "dataType": "CHAR",
+                    "notes": "Map to IDInInfoSource in MIMOSA; this is the unique identifier if SAP is the system of record.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "IDInInfoSource",
+                    "description": "Unique identifier for WorkOrder from the originating InfoSource (SAP).",
+                    "dataType": "String",
+                    "notes": "Primary key for exchanged work orders."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Order Type",
+                    "description": "Order category (e.g., PM01 for corrective maintenance).",
+                    "dataType": "CHAR",
+                    "notes": "Should be mapped to a reference data entry in MIMOSA WorkManagementType.ShortName, matching the type code or mapped category.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkManagementType",
+                    "fieldName": "ShortName",
+                    "description": "Standardized work order type (e.g., Corrective Maintenance).",
+                    "dataType": "String",
+                    "notes": "Map SAP order types to established MIMOSA WorkManagementType reference data."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Entered by",
+                    "description": "SAP User ID of the person who created the order.",
+                    "dataType": "CHAR",
+                    "notes": "Map to Agent entity where Agent.IDInInfoSource matches this SAP user ID. Map into /Creator/IDInInfoSource and /Creator/FullName if possible.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "IDInInfoSource, FullName",
+                    "description": "The person who created the WorkOrder.",
+                    "dataType": "String",
+                    "notes": "Assign creator agent to work order using both ID and, if available, full name."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Created on, Time created",
+                    "description": "Date and time the order was created.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Map both date and time.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "Created",
+                    "description": "Timestamp when the work order was created.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Last changed by",
+                    "description": "SAP User ID of the person who last changed the order.",
+                    "dataType": "CHAR",
+                    "notes": "Map to Agent entity as per 'Entered by', but as last editor.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "IDInInfoSource, FullName",
+                    "description": "The person who last edited the WorkOrder.",
+                    "dataType": "String",
+                    "notes": "Assign last editor agent fields; FullName if available."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Change date for Order Number, Changed at",
+                    "description": "Date/time of last change to order.",
+                    "dataType": "DATE/TIME",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "LastEdited",
+                    "description": "Date/time the WorkOrder was last changed.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "PM Order: Reference Date, Time of Reference Date",
+                    "description": "Reference start date/time for work execution.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Often 'Basic start' in SAP BAPI structure, to WorkOrder.StartBefore in MIMOSA.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "StartBefore",
+                    "description": "Start work before this date/time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFKO (WorkOrderHeader)",
+                    "fieldName": "Basic finish date",
+                    "description": "Planned basic finish date for an order (Production).",
+                    "dataType": "DATE",
+                    "notes": "SAP BAPI has 'Basic end', should be mapped to WorkOrder.EndBefore in MIMOSA.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "EndBefore",
+                    "description": "Finish work before this date/time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK (OrderMaster)",
+                    "fieldName": "Description",
+                    "description": "Short text description for the order.",
+                    "dataType": "CHAR",
+                    "notes": "Should map to WorkOrder.FullName for a descriptive name.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "FullName",
+                    "description": "Short, descriptive name of the work order.",
+                    "dataType": "String",
+                    "notes": "For user-friendly work order title."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "LongTextDescription",
+                    "fieldName": "Text Line",
+                    "description": "Multi-line long description for the work order.",
+                    "dataType": "TEXT",
+                    "fieldLength": "variable"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "Description",
+                    "description": "Detailed description of the work order.",
+                    "dataType": "Text"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Priority",
+                    "description": "Priority for work order (1-4 in SAP standard).",
+                    "dataType": "CHAR",
+                    "notes": "Should map to PriorityLevelType (reference item) in MIMOSA. Map SAP values to correct reference values.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "PriorityLevelType",
+                    "description": "Standardized value for work order priority.",
+                    "dataType": "String",
+                    "notes": "Use mapped reference data for priorities."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Equipment Number",
+                    "description": "Identifier for the equipment being maintained.",
+                    "dataType": "CHAR",
+                    "notes": "Maps to Asset. Use Asset.IDInInfoSource to match Equipment Number, plus Asset.ShortName.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "IDInInfoSource, ShortName",
+                    "description": "Asset associated with the work order.",
+                    "dataType": "String",
+                    "notes": "Link to Asset entity instance using Equipment Number."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "CRHD (WorkCenterHeader)",
+                    "fieldName": "Work Center",
+                    "description": "Unique ID for SAP Work Centre.",
+                    "dataType": "CHAR",
+                    "notes": "Can be mapped to MIMOSA Segment or Organization, or to a CustomProperty of WorkOrder/WorkStep as 'WorkCenter'. Not always required to exchange. Consider model extension/custom property.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder or WorkStep (CustomProperty or Segment)",
+                    "fieldName": "WorkCenter (CustomPropertyName/Value) or /Segment/ShortName",
+                    "description": "Identifies the work center responsible.",
+                    "dataType": "String",
+                    "notes": "Recommended: use CustomProperty if no standard equivalent."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "CRHD (WorkCenterHeader)",
+                    "fieldName": "Plant",
+                    "description": "Plant associated with the Work Center.",
+                    "dataType": "CHAR",
+                    "notes": "Should map to Site, Segment or Organization structure in MIMOSA. Often corresponds to /Segment/RegistrationSite/ShortName.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Site",
+                    "fieldName": "/Segment/RegistrationSite/ShortName",
+                    "description": "Plant/site where the work center is located.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ILOA (FunctionLocation)",
+                    "fieldName": "Maintenance Plant",
+                    "description": "Plant ID where maintenance is performed.",
+                    "dataType": "CHAR",
+                    "notes": "Map to MIMOSA Site entity where Site.ShortName equals Maintenance Plant.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Site",
+                    "fieldName": "ShortName",
+                    "description": "Short name/code for the site.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ILOA (FunctionLocation)",
+                    "fieldName": "Location of maintenance object",
+                    "description": "Specific location within the plant for maintenance object.",
+                    "dataType": "CHAR",
+                    "notes": "May map to Segment entity for sub-location or physical unit, i.e., Segment.ShortName.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Segment",
+                    "fieldName": "ShortName",
+                    "description": "Short name of segment/location.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "IFLOS (FunctionalLocationLabel)",
+                    "fieldName": "Functional Location Label",
+                    "description": "Text label for the functional location.",
+                    "dataType": "CHAR",
+                    "notes": "Represents the label for a Functional Location (Segment). Always reference Segment.FullName in MIMOSA.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Segment",
+                    "fieldName": "FullName",
+                    "description": "The full, descriptive name of the segment (functional location).",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "JEST ",
+                    "fieldName": "System Individual status of an object (short form) - Table TJ02T?",
+                    "description": "Short code for system-derived status.",
+                    "dataType": "CHAR",
+                    "notes": "Should be mapped to WorkStatusType.ShortName in MIMOSA. Status changes create new WorkStatus records referencing correct WorkStatusType.",
+                    "fieldLength": "5"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStatus",
+                    "fieldName": "ShortName",
+                    "description": "Short name for work status.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "JEST",
+                    "fieldName": "User Individual status of an object (short form) - Table TJ30T?",
+                    "description": "Short code for user-derived status.",
+                    "dataType": "CHAR",
+                    "notes": "Maps to WorkStatusType.FullName in MIMOSA (the long status description).",
+                    "fieldLength": "5"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStatus",
+                    "fieldName": "FullName",
+                    "description": "Full name of work status.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Planner Group for Customer Service and Plant Maintenance",
+                    "description": "Maintenance planner group code.",
+                    "dataType": "CHAR",
+                    "notes": "Reference an Agent entity for the planner group; add AgentRoleType for 'Planner Group'.",
+                    "fieldLength": "3"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "ShortName (Role: PlannerGroup)",
+                    "description": "Agent representing the planner group.",
+                    "dataType": "String",
+                    "notes": "Link agent role for planner group as appropriate, with AgentRoleType."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "T024(PlannerGroup)",
+                    "fieldName": "Name of Maintenance Planner Group",
+                    "description": "Full name of planner group.",
+                    "dataType": "CHAR",
+                    "notes": "Map to Agent.FullName.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "FullName (Role: PlannerGroup)",
+                    "description": "Full human-readable name of the planner group (Agent).",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Maintenance Activity Type",
+                    "description": "Activity type 'e.g. preventive/corrective'.",
+                    "dataType": "CHAR",
+                    "notes": "Map to more specialized WorkManagementType.ShortName, especially for WorkSteps.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkManagementType",
+                    "fieldName": "ShortName",
+                    "description": "Name/Type of maintenance activity in standard taxonomy.",
+                    "dataType": "String",
+                    "notes": "Typically used for steps, link via WorkStep.WorkManagementType."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "T353I_T(MaintenanceActivtyType)",
+                    "fieldName": "Description of maintenance activity type",
+                    "description": "Human-readable activity type description.",
+                    "dataType": "CHAR",
+                    "notes": "Map to WorkManagementType.FullName for WorkSteps.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkManagementType",
+                    "fieldName": "FullName",
+                    "description": "Fully qualified name for maintenance activity type.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Syst. Condition",
+                    "description": "System/equipment health or availability indicator.",
+                    "dataType": "CHAR",
+                    "notes": "Map to HealthAssessment.HealthLevelPrecise referencing HealthLevelType.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "HealthAssessment",
+                    "fieldName": "HealthLevelPrecise (HealthLevelType ref)",
+                    "description": "Assessment of health/condition of the asset.",
+                    "dataType": "String",
+                    "notes": "Should reference mapped HealthLevelType."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "T357M_T(MachineOperatingCondition)",
+                    "fieldName": "Text on Operating Condition",
+                    "description": "Descriptive text for machine/system condition.",
+                    "dataType": "CHAR",
+                    "notes": "Not mapped directly, but see HealthAssessment.HealthLevelType (reference value).",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "HealthAssessment",
+                    "fieldName": "HealthLevelType",
+                    "description": "Categorical level of health/condition.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Revision for Plant Maintenance and Customer Service",
+                    "description": "Revision grouping work order for common execution window.",
+                    "dataType": "CHAR",
+                    "notes": "Map to parent work order in WorkOrderHierarchy or PresentLifeCycleStatus.ShortName.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PresentLifeCycleStatus",
+                    "fieldName": "ShortName",
+                    "description": "Short name for the revision grouping or status.",
+                    "dataType": "String",
+                    "notes": "May indicate a grouped status or parent order."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "T352R(MaintenanceRevision)",
+                    "fieldName": "Revision Description",
+                    "description": "Long description for maintenance revision.",
+                    "dataType": "CHAR",
+                    "notes": "Map to PresentLifeCycleStatus.FullName.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PresentLifeCycleStatus",
+                    "fieldName": "FullName",
+                    "description": "Full description of life cycle status or revision.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ILOA (FunctionLocation)",
+                    "fieldName": "ABC Indicator for technical object",
+                    "description": "Criticality (A/B/C) indicator of technical object.",
+                    "dataType": "CHAR",
+                    "notes": "Should map to Segment.Criticality and/or reference CriticalityScaleType if available.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Segment",
+                    "fieldName": "Criticality (ScaleType)",
+                    "description": "Criticality indicator for the segment.",
+                    "dataType": "String",
+                    "notes": "ScaleType reference, e.g., 'A','B','C' with explanations."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "T370C (ABCIndicator)",
+                    "fieldName": "Text for ABC Indicator for Technical Objects",
+                    "description": "Descriptive text for ABC indicator.",
+                    "dataType": "CHAR",
+                    "notes": "Maps to explanation for Segment.Criticality or as a property.",
+                    "fieldLength": "20"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Segment",
+                    "fieldName": "CriticalityDescription",
+                    "description": "Explanatory text for the criticality rating.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "IHPA(Partner)",
+                    "fieldName": "Partner",
+                    "description": "Business partner involved in the maintenance order.",
+                    "dataType": "CHAR",
+                    "notes": "Map to Agent/AgentRoleWithWork for partner roles on work order; Agent.ShortName.",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "ShortName (Role: Partner)",
+                    "description": "Short identifier for the partner agent.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "ADRP",
+                    "fieldName": "Full Name of Person",
+                    "description": "Full name of the person (from address data).",
+                    "dataType": "CHAR",
+                    "notes": "Use to populate Agent.FullName in MIMOSA.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Agent",
+                    "fieldName": "FullName",
+                    "description": "Agent's complete human-readable name.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFIH (MaintenanceOrderHeader)",
+                    "fieldName": "Notification No",
+                    "description": "Reference to originating Maintenance Notification.",
+                    "dataType": "CHAR",
+                    "notes": "Map to RequestForWork entity in MIMOSA where applicable.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "RequestForWork",
+                    "fieldName": "IDInInfoSource",
+                    "description": "Unique notification/request id.",
+                    "dataType": "String",
+                    "notes": "Link notifications to originating requests for work."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVC(OrderOperation)",
+                    "fieldName": "Operation/Activity Number",
+                    "description": "Unique identifier for the operation/activity (work step).",
+                    "dataType": "NUMC/CHAR",
+                    "notes": "Operations in Maintenance Orders are WorkSteps in MIMOSA; map as WorkStep.IDInInfoSource.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "IDInInfoSource",
+                    "description": "Unique identifier for the step within a work order.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVC(OrderOperation)",
+                    "fieldName": "Control Key",
+                    "description": "Indicates type of operation (manual, external, scheduling params, etc.).",
+                    "dataType": "CHAR",
+                    "notes": "May map to WorkTaskType.ShortName reference or WorkStep.WorkManagementType.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkTaskType",
+                    "fieldName": "ShortName",
+                    "description": "Type for broad operation category.",
+                    "dataType": "String",
+                    "notes": "Add reference mapping as needed."
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVC(OrderOperation)",
+                    "fieldName": "Standard text key (See Table 435 for Values)",
+                    "description": "Reference to standard operation text.",
+                    "dataType": "CHAR",
+                    "notes": "If required, could map as a custom property or reference document.",
+                    "fieldLength": "7"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "DocumentationRef (or CustomProperty)",
+                    "description": "Reference to standardized task documentation.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVC(OrderOperation)",
+                    "fieldName": "Operation short text",
+                    "description": "Short description of the operation.",
+                    "dataType": "CHAR",
+                    "notes": "Map to WorkStep.ShortName.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "ShortName",
+                    "description": "Short descriptive name for a work step.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Normal duration of activity",
+                    "description": "Planned time duration for operation.",
+                    "dataType": "DEC",
+                    "notes": "Maps to WorkStep.PlannedDuration.",
+                    "fieldLength": "6.2"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "PlannedDuration",
+                    "description": "Planned duration for the step.",
+                    "dataType": "Duration"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Normal duration/unit",
+                    "description": "Unit of time for duration (e.g., h = hours).",
+                    "dataType": "CHAR",
+                    "notes": "Map to WorkStep.PlannedDurationUnit or WorkStep.Measure.UnitOfMeasure.",
+                    "fieldLength": "3"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "PlannedDurationUnit",
+                    "description": "Unit for planned duration.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Constraint on the basic start date for the activity",
+                    "description": "Earliest possible start date/time for the operation.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Map to WorkStep.StartBefore.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "StartBefore",
+                    "description": "Operation must start before this time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Constraint on the finish date of activity",
+                    "description": "Latest allowed finish for the operation.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Map to WorkStep.EndBefore.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "EndBefore",
+                    "description": "Operation must complete before this time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Earliest scheduled start (date and time)",
+                    "description": "Earliest scheduled start time per SAP scheduling.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Map to WorkStep.StartAfter.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "StartAfter",
+                    "description": "Operation cannot start before this time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVV(OperationValues)",
+                    "fieldName": "Values/Activity Number; Earliest scheduled finish (date and time)",
+                    "description": "Earliest scheduled finish time per SAP scheduling.",
+                    "dataType": "DATE/TIME",
+                    "notes": "Map to WorkStep.EndAfter.",
+                    "fieldLength": "8/6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "EndAfter",
+                    "description": "Operation cannot finish before this time.",
+                    "dataType": "DateTime"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVU(OperationUserFields)",
+                    "fieldName": "Fields/Activity Number; Key word ID for user-defined fields",
+                    "description": "User-defined keyword for the operation.",
+                    "dataType": "CHAR",
+                    "notes": "Map to WorkStep.CustomProperty (Name/Value).",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "CustomProperty",
+                    "description": "User-defined property for the step.",
+                    "dataType": "String"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AFVU(OperationUserFields)",
+                    "fieldName": "Fields/Activity Number; User field with 20 characters",
+                    "description": "User-defined field value for the operation.",
+                    "dataType": "CHAR",
+                    "notes": "Map to WorkStep.CustomProperty (Name/Value).",
+                    "fieldLength": "20"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkStep",
+                    "fieldName": "CustomProperty",
+                    "description": "User-defined property value for the step.",
+                    "dataType": "String"
+                }
+            }
+        ]
     }
 ]

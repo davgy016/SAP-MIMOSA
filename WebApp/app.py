@@ -54,12 +54,26 @@ def store_raw_data_of_AI_responses(mapping_doc):
         import traceback
         traceback.print_exc()
 
+import re
+
+# Helper to extract JSON from LLM response
+def extract_json_from_response(response_text):
+    # Try to extract JSON from a markdown code block
+    match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
+    if match:
+        return match.group(1)
+    # Fallback: try to find the first JSON-looking structure
+    match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
+    if match:
+        return match.group(1)
+    raise ValueError("No JSON found in AI response")
+
 # OpenAI endpoint
 @app.post("/ask_AI")
 async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model 
-        print("Received MappingsPPPPPP: ", request.mappings)
+        #print("Received MappingsPPPPPP: ", request.mappings)
 
         #Call OpenAIModel and pass user query and selected LLM model
         ai_model = OpenAIModel(request.Query, llm_model, request.mappings)
@@ -68,7 +82,9 @@ async def ask_AI(request: SearchQuery):
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
 
-        mapping_doc_dict = json.loads(result)
+        # Extract JSON from LLM response
+        json_str = extract_json_from_response(result)
+        mapping_doc_dict = json.loads(json_str)
         #print("AI returned:", mapping_doc_dict)        
         if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
             mappings = mapping_doc_dict["mappings"]
@@ -91,9 +107,13 @@ async def ask_AI(request: SearchQuery):
         mapping_query = MappingQuery(root=[mapping_doc])
         accuracyResult = await check_accuracy(mapping_query)
         mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
-        mapping_doc.qualityRate = accuracyResult["quality_score"]
-        mapping_doc.matchingRate = accuracyResult["matching_score"] 
-        
+        mapping_doc.descriptionSimilarity = accuracyResult["description_similarity"]
+        mapping_doc.mimosaSimilarity = accuracyResult["mimosa_similarity"] 
+        mapping_doc.sapSimilarity = accuracyResult["sap_similarity"] 
+        mapping_doc.dataType = accuracyResult["data_type"] 
+        mapping_doc.infoOmitted = accuracyResult["info_omitted"] 
+        mapping_doc.fieldLength = accuracyResult["field_length"] 
+        #print("data_similarity  ", accuracyResult["data_type"] )
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
         store_raw_data_of_AI_responses(mapping_doc)
 
@@ -145,15 +165,23 @@ async def delete_workorder(map_id: str):
 @app.post("/check_accuracy")
 async def check_accuracy(output: MappingQuery):
     data = output.root 
-    accuracy_score = float(ScoreManager.scoreOutput(data))*100
-    quality_score = float(0.75451) *100
-    matching_score = float(0.80561)*100
-    
+    output2 = ScoreManager.scoreOutput(data[0])
+    accuracy_score = float(output2["Accuracy"])*100
+    description_similarity = float(output2["DescriptionSimilarity"]) *100
+    mimosa_similarity = float(output2["MimosaSimilarity"])*100
+    sap_similarity = float(output2["SAPSimilarity"])*100
+    data_type= float(output2["DataType"])*100
+    info_omitted = float(output2["InfoOmitted"])*100
+    field_length = float(output2["FieldLength"])*100    
+
     return {
         "accuracy_score": round(accuracy_score,2),
-        "quality_score": round(quality_score, 2),
-        "matching_score": round(matching_score,2)
-        
+        "description_similarity": round(description_similarity,2),
+        "mimosa_similarity": round(mimosa_similarity,2),
+        "sap_similarity": round(sap_similarity,2),
+        "data_type": round(data_type,2),
+        "info_omitted": round(info_omitted,2),
+        "field_length": round(field_length,2)
     }
 
 def start():

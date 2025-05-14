@@ -21,8 +21,8 @@ class FieldMapping(BaseModel):
     fieldName: str
     description: str
     dataType: str
-    notes: str
-    fieldLength: str
+    notes: Optional[str] = ""
+    fieldLength: Optional[str] = ""
 
 class FieldCheck(BaseModel):
     entityName: FieldState = FieldState.UNCHECKED
@@ -42,8 +42,12 @@ class Mapping(BaseModel):
     LLMType: str
     prompt: Optional[str] = None
     accuracyRate: Optional[float]=None
-    qualityRate: Optional[float]=None
-    matchingRate: Optional[float]=None
+    descriptionSimilarity: Optional[float]=None
+    mimosaSimilarity: Optional[float]=None
+    sapSimilarity: Optional[float]=None
+    dataType: Optional[float]=None
+    infoOmitted: Optional[float]=None
+    fieldLength: Optional[float]=None
     mappings: List[MappingEntry]
 
     model_config = ConfigDict(validate_by_name=True)

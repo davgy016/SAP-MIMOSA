@@ -20,6 +20,7 @@ namespace SAP_MIMOSAapp.Controllers
             //Avoid creating new HttpClient instances for each request
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://127.0.0.1:8000/");
+            _httpClient.Timeout = TimeSpan.FromMinutes(5); 
             _logger = logger;
         }
 
@@ -73,7 +74,7 @@ namespace SAP_MIMOSAapp.Controllers
                             if (parseResponse != null)
                             {
                                 //parseResponse = await CheckAccuracy(parseResponse);
-                                SetMappingTempData(parseResponse);
+                                SaveMappingTempFile(parseResponse);
                                 return RedirectToAction("Create");
                             }
                             else
@@ -113,18 +114,25 @@ namespace SAP_MIMOSAapp.Controllers
 
 
         // Store MappingDocument in TempData
-        private void SetMappingTempData(MappingDocument doc)
+        // Save MappingDocument to temp file
+        private void SaveMappingTempFile(MappingDocument doc)
         {
-            TempData["AIMapping"] = JsonSerializer.Serialize(doc);
+            var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
+            System.IO.File.WriteAllText(tempPath, JsonSerializer.Serialize(doc));
         }
 
         // Retrieve MappingDocument from TempData
-        private MappingDocument? GetMappingTempData()
+        // Load MappingDocument from temp file (and delete after reading)
+        private MappingDocument? LoadMappingTempFile()
         {
-            if (TempData["AIMapping"] == null) return null;
+            var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
+            if (!System.IO.File.Exists(tempPath)) return null;
             try
             {
-                return JsonSerializer.Deserialize<MappingDocument>((string)TempData["AIMapping"]!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var json = System.IO.File.ReadAllText(tempPath);
+                var doc = JsonSerializer.Deserialize<MappingDocument>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                System.IO.File.Delete(tempPath);
+                return doc;
             }
             catch
             {
@@ -194,7 +202,12 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpGet]
         public IActionResult Create(string? query = null, string? llmType = null)
         {
-            MappingDocument? model = GetMappingTempData();
+            // Try to load from temp file (imported CSV), then fall back to TempData
+            MappingDocument? model = LoadMappingTempFile();
+            if (model == null)
+            {
+                model = LoadMappingTempFile();
+            }
             if (model != null)
             {
 
@@ -458,7 +471,7 @@ namespace SAP_MIMOSAapp.Controllers
                         var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         if (parseResponse != null)
                         {
-                            SetMappingTempData(parseResponse);
+                            SaveMappingTempFile(parseResponse);
                             return Json(new { success = true, redirectUrl = Url.Action("Create") });
                         }
                         else
@@ -506,13 +519,13 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     // Ignores missing fields and header validation errors in csv
                     MissingFieldFound = null,
-                    HeaderValidated = null
+                    HeaderValidated = null,
+                    PrepareHeaderForMatch = args => args.Header?.Trim()
                 };
 
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvHelper.CsvReader(reader, config))
                 {
-
                     var records = csv.GetRecords<MappingPairCsvRow>().ToList();
                     foreach (var row in records)
                     {
@@ -524,7 +537,8 @@ namespace SAP_MIMOSAapp.Controllers
                                 fieldName = row.SAP_FieldName ?? "",
                                 dataType = row.SAP_DataType ?? "",
                                 description = row.SAP_Description ?? "",
-                                fieldLength = row.SAP_FieldLength ?? ""
+                                fieldLength = row.SAP_FieldLength ?? "",
+                                notes = row.SAP_Notes ?? ""
                             },
                             mimosa = new MappingField
                             {
@@ -544,7 +558,7 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
-                SetMappingTempData(model); // Use your helper to store to TempData
+                SaveMappingTempFile(model); // Save to temp file instead of TempData
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
