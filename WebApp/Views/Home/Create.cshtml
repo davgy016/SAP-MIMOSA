@@ -163,8 +163,8 @@
                                 fieldName: pair.querySelector('[name*="sap.fieldName"]').value,
                                 description: pair.querySelector('[name*="sap.description"]').value,
                                 dataType: pair.querySelector('[name*="sap.dataType"]').value,
-                                notes: pair.querySelector('[name*="sap.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value
+                                notes: pair.querySelector('[name*="sap.notes"]').value || "",
+                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value || ""
                             },
                             mimosa: {
                                 platform: pair.querySelector('[name*="mimosa.platform"]').value,
@@ -172,8 +172,8 @@
                                 fieldName: pair.querySelector('[name*="mimosa.fieldName"]').value,
                                 description: pair.querySelector('[name*="mimosa.description"]').value,
                                 dataType: pair.querySelector('[name*="mimosa.dataType"]').value,
-                                notes: pair.querySelector('[name*="mimosa.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value
+                                notes: pair.querySelector('[name*="mimosa.notes"]').value || "",
+                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value || ""
                             }
                         };
                         mappings.push(mapping);

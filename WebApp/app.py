@@ -54,12 +54,26 @@ def store_raw_data_of_AI_responses(mapping_doc):
         import traceback
         traceback.print_exc()
 
+import re
+
+# Helper to extract JSON from LLM response
+def extract_json_from_response(response_text):
+    # Try to extract JSON from a markdown code block
+    match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
+    if match:
+        return match.group(1)
+    # Fallback: try to find the first JSON-looking structure
+    match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
+    if match:
+        return match.group(1)
+    raise ValueError("No JSON found in AI response")
+
 # OpenAI endpoint
 @app.post("/ask_AI")
 async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model 
-        print("Received MappingsPPPPPP: ", request.mappings)
+        #print("Received MappingsPPPPPP: ", request.mappings)
 
         #Call OpenAIModel and pass user query and selected LLM model
         ai_model = OpenAIModel(request.Query, llm_model, request.mappings)
@@ -68,7 +82,9 @@ async def ask_AI(request: SearchQuery):
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
 
-        mapping_doc_dict = json.loads(result)
+        # Extract JSON from LLM response
+        json_str = extract_json_from_response(result)
+        mapping_doc_dict = json.loads(json_str)
         #print("AI returned:", mapping_doc_dict)        
         if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
             mappings = mapping_doc_dict["mappings"]
