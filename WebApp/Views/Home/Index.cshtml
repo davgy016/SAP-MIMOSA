@@ -52,34 +52,6 @@
                                 }
                             </form>
                         </div>
-
-                        <!-- AI Assistant Search -->
-                        <div class="col-md-6">
-                            <form id="aiSearchForm" method="post" asp-action="Index" asp-controller="Home">
-                                <div class="mb-3">
-                                    <label for="queryInput" class="form-label">AI Assistant</label>
-                                    <input type="text" id="queryInput" name="Query" class="form-control"
-                                           placeholder="Ask a question about SAP-MIMOSA mapping..." value="@(Model.Query ?? "")" />
-                                    <div id="aiInputError" class="invalid-feedback" style="display:none;"></div>
-                                </div>
-                                <div class="d-flex mb-3 gap-2">
-                                    <button type="submit" class="btn btn-primary">Ask AI</button>
-                                    <div>
-                                        @Html.DropDownListFor(model => model.SelectedLLM, Model.LLMTypes, new { @class = "form-select" })
-                                        <div id="llmInputError" class="invalid-feedback" style="display:none;"></div>
-                                    </div>
-                                </div>
-                            </form>
-                            <div id="aiResponse">
-                                @if (!string.IsNullOrEmpty(Model.AIResponse))
-                                {
-                                    <div class="alert alert-info">
-                                        <h4>AI Response:</h4>
-                                        <p>@Html.Raw(Model.AIResponse?.Replace("\n", "<br/>") ?? "")</p>
-                                    </div>
-                                }
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -193,7 +165,7 @@
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-bar-chart me-2 text-primary"></i>
                                                         <span class="fw-bold">Overall Accuracy Rate:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m=>document.accuracyRate)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyRate)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-award me-2 text-success"></i>
@@ -213,12 +185,12 @@
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">DAta type Similarity:</span>
                                                         <span class="ms-2 text-muted">@Html.DisplayFor(m => document.dataType)%</span>
-                                                    </div>  
+                                                    </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Missing fields rate:</span>
                                                         <span class="ms-2 text-muted">@Html.DisplayFor(m => document.infoOmitted)%</span>
-                                                    </div> 
+                                                    </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Field length similarity:</span>
@@ -232,7 +204,6 @@
                             </tr>
                         </tbody>
                     }
-
 
                 </table>
             </div>
@@ -326,33 +297,6 @@
             } else if (searchInput.value && document.getElementById('searchLLMType').checked) {
                 document.getElementById('searchLLMType').checked = true;
             }
-            // AI Assistant form validation and loading message
-            document.getElementById('aiSearchForm').addEventListener('submit', function(e) {
-                const aiInput = document.getElementById('queryInput');
-                const errorElem = document.getElementById('aiInputError');
-                const llmSelect = document.querySelector('select[name="SelectedLLM"], select[asp-for="SelectedLLM"]');
-                const llmErrorElem = document.getElementById('llmInputError');
-                clearInputError(aiInput, errorElem);
-                llmErrorElem.style.display = 'none';
-                llmErrorElem.textContent = '';
-                if (!aiInput.value.trim()) {
-                    showInputError(aiInput, errorElem, 'Please enter a question for the AI assistant.');
-                    e.preventDefault();
-                    return false;
-                }
-                if (!llmSelect.value) {
-                    llmErrorElem.textContent = 'Please select an LLM type.';
-                    llmErrorElem.style.display = 'block';
-                    llmSelect.classList.add('is-invalid');
-                    e.preventDefault();
-                    return false;
-                } else {
-                    llmSelect.classList.remove('is-invalid');
-                }
-                document.getElementById('aiResponse').innerHTML = '<div class="alert alert-info">Loading response...</div>';
-                return true;
-            });
-
         });
 
         //Row toggle logic
