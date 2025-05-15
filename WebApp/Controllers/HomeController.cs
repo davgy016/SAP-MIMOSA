@@ -20,7 +20,7 @@ namespace SAP_MIMOSAapp.Controllers
             //Avoid creating new HttpClient instances for each request
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("http://127.0.0.1:8000/");
-            _httpClient.Timeout = TimeSpan.FromMinutes(5); 
+            _httpClient.Timeout = TimeSpan.FromMinutes(5);
             _logger = logger;
         }
 
@@ -29,10 +29,7 @@ namespace SAP_MIMOSAapp.Controllers
             var documents = new List<MappingDocument>();
 
             try
-            {
-                // Use ViewModel method to set LLMTypes with selected value
-                model.SetLLMTypes(model.SelectedLLM);
-
+            {               
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
@@ -60,47 +57,9 @@ namespace SAP_MIMOSAapp.Controllers
                     model.FilteredCount = documents.Count;
                     model.SearchResults = documents;
                 }
-
-                else if (!string.IsNullOrEmpty(model.Query))
-                {
-                    var aiResponse = await GetAIResponse(model.Query, model.SelectedLLM, null);
-                    //_logger.LogInformation("AI raw response: {AIResponse}", aiResponse);
-                    //Console.WriteLine("AI raw response: " + aiResponse);
-                    if (!string.IsNullOrWhiteSpace(aiResponse))
-                    {
-                        try
-                        {
-                            var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                            if (parseResponse != null)
-                            {
-                                //parseResponse = await CheckAccuracy(parseResponse);
-                                SaveMappingTempFile(parseResponse);
-                                return RedirectToAction("Create");
-                            }
-                            else
-                            {
-                                ViewBag.ErrorMessage = "AI did not return a valid mapping document.";
-                                return View(model);
-                            }
-                        }
-                        catch (System.Text.Json.JsonException ex)
-                        {
-                            _logger.LogError(ex, "Failed to deserialize AI mapping response");
-                            ViewBag.ErrorMessage = "AI returned an invalid mapping format.";
-                            return View(model);
-                        }
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "AI did not return a valid mapping (no response or invalid format).";
-                        return View(model);
-                    }
-                }
                 else
                 {
-                    model.SearchResults = new List<MappingDocument>();
-                    model.FilteredCount = 0;
-                    model.TotalDocuments = 0;
+                    return View(model);
                 }
             }
             catch (Exception ex)
@@ -112,17 +71,15 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-
-        // Store MappingDocument in TempData
+       
         // Save MappingDocument to temp file
         private void SaveMappingTempFile(MappingDocument doc)
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
             System.IO.File.WriteAllText(tempPath, JsonSerializer.Serialize(doc));
         }
-
-        // Retrieve MappingDocument from TempData
-        // Load MappingDocument from temp file (and delete after reading)
+        
+        // Load MappingDocument from temp file and delete after reading
         private MappingDocument? LoadMappingTempFile()
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
@@ -432,7 +389,7 @@ namespace SAP_MIMOSAapp.Controllers
                     document.dataType = accuracyResult.data_type;
                     document.infoOmitted = accuracyResult.info_omitted;
                     document.fieldLength = accuracyResult.field_length;
-                   
+
                 }
 
                 return document;
@@ -491,7 +448,7 @@ namespace SAP_MIMOSAapp.Controllers
                     catch (System.Text.Json.JsonException)
                     {
                         Console.WriteLine($"Raw AI response: {aiResponse}");
-                       
+
                         return Json(new { success = false, message = "AI returned an invalid mapping format." });
                     }
                 }
@@ -510,7 +467,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             public string prompt { get; set; }
             public string llmType { get; set; }
-            public List <MappingPair>? mappings { get; set; }
+            public List<MappingPair>? mappings { get; set; }
         }
 
 
@@ -567,7 +524,7 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
-                var aR=await CheckAccuracy(model);
+                var aR = await CheckAccuracy(model);
                 if (aR.accuracyRate != null)
                 {
                     aR.accuracyRate = model.accuracyRate;
