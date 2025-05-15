@@ -14,7 +14,7 @@
         </div>
     }
 
-    
+
 
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
@@ -53,7 +53,10 @@
                         </label>
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
-                    <div id="aiResponseArea" class="mb-2"></div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div id="aiResponseArea" class="mb-2"></div>
+                        <div id="importLoading" class="mb-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,7 +64,8 @@
         <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null) ? "block" : "none")">
             <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
             Overall Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong></span> <br />
+                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong>
+            </span> <br />
             Description Similarity: <strong>@Html.DisplayFor(m => m.descriptionSimilarity)%</strong> <br />
             MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.mimosaSimilarity)%</strong><br />
             SAP Similiraty: <strong>@Html.DisplayFor(m => m.sapSimilarity)%</strong><br />
@@ -69,7 +73,7 @@
             Missing fields rate: <strong>@Html.DisplayFor(m => m.infoOmitted)%</strong><br />
             Field length similarity: <strong>@Html.DisplayFor(m => m.fieldLength)%</strong><br />
         </div>
-        
+
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Mapping Pairs</h5>
@@ -107,7 +111,7 @@
         <input type="hidden" asp-for="infoOmitted" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary" @(Model?.mappings ==null || Model.mappings.Count== 0 ? "disabled" : "")>Create</button>
         </div>
     </form>
 </div>
@@ -144,10 +148,10 @@
                 const llmType = aiLLMType.value;
                 const useExisting = document.getElementById('checkBx').checked;
 
-                if (!prompt) {
-                    aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
-                    return;
-                }
+                // if (!prompt) {
+                //     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
+                //     return;
+                // }
 
                 const requestBody = { prompt, llmType };
 
@@ -183,7 +187,7 @@
                 }
 
                 // Send request to AI
-                aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
+                aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
                 try {
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
@@ -272,6 +276,7 @@
                 if (!fileInput.files.length) return alert('Please select a CSV file.');
                 const formData = new FormData();
                 formData.append('csvFile', fileInput.files[0]);
+                importLoading.innerHTML = '<div class="spinner-border text-success" role="status"><span class="visually-hidden"></span></div>';
                 fetch('/Home/ImportCsv', { method: 'POST', body: formData })
                     .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
                     .then(data => {
