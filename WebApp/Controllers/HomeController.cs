@@ -402,50 +402,59 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         //// check accuracy of a mapping
-        //private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
-        //{
-        //    try
-        //    {
-        //        var mappingQuery = new List<MappingDocument> { document };                
+        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        {
+            try
+            {
+                var mappingQuery = new List<MappingDocument> { document };
 
-        //        var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
 
-        //        // Send the request to check accuracy
-        //        var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
+                // Send the request to check accuracy
+                var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
 
-        //        if (!response.IsSuccessStatusCode)
-        //        {
-        //            _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-        //            return document;
-        //        }
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"Error checking accuracy: {response.StatusCode}");
+                    return document;
+                }
 
-        //        // Parse the response
-        //        var responseContent = await response.Content.ReadAsStringAsync();
-        //        var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
+                // Parse the response
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
 
-        //        if (accuracyResult != null)
-        //        {                    
-        //            document.accuracyRate = accuracyResult.accuracy_score;
-        //            document.qualityRate = accuracyResult.quality_score;
-        //            document.matchingRate = accuracyResult.matching_score;
-        //        }
+                if (accuracyResult != null)
+                {
+                    document.accuracyRate = accuracyResult.accuracy_score;
+                    document.descriptionSimilarity = accuracyResult.description_similarity;
+                    document.mimosaSimilarity = accuracyResult.mimosa_similarity;
+                    document.sapSimilarity = accuracyResult.sap_similarity;
+                    document.dataType = accuracyResult.data_type;
+                    document.infoOmitted = accuracyResult.info_omitted;
+                    document.fieldLength = accuracyResult.field_length;
+                   
+                }
 
-        //        return document;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error checking accuracy");
-        //        return document;
-        //    }
-        //}
+                return document;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking accuracy");
+                return document;
+            }
+        }
 
-        // Class to deserialize accuracy response
-        //private class AccuracyResult
-        //{
-        //    public float accuracy_score { get; set; }
-        //    public float quality_score { get; set; }
-        //    public float matching_score { get; set; }            
-        //}
+        //Class to deserialize accuracy response
+        private class AccuracyResult
+        {
+            public float accuracy_score { get; set; }
+            public float description_similarity { get; set; }
+            public float mimosa_similarity { get; set; }
+            public float sap_similarity { get; set; }
+            public float data_type { get; set; }
+            public float info_omitted { get; set; }
+            public float field_length { get; set; }
+        }
 
         // --- AJAX endpoint for AI Assistant in Create view ---
         [HttpPost]
@@ -558,6 +567,17 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
+                var aR=await CheckAccuracy(model);
+                if (aR.accuracyRate != null)
+                {
+                    aR.accuracyRate = model.accuracyRate;
+                    aR.descriptionSimilarity = model.descriptionSimilarity;
+                    aR.mimosaSimilarity = model.mimosaSimilarity;
+                    aR.sapSimilarity = model.sapSimilarity;
+                    aR.dataType = model.dataType;
+                    aR.fieldLength = model.fieldLength;
+                    aR.infoOmitted = model.infoOmitted;
+                }
                 SaveMappingTempFile(model); // Save to temp file instead of TempData
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
