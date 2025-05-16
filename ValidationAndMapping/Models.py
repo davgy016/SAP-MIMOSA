@@ -41,6 +41,7 @@ class Mapping(BaseModel):
     mapID: Optional[str] = None
     LLMType: str
     prompt: Optional[str] = None
+    prompts: Optional[List[str]] = None
     accuracyRate: Optional[float]=None
     descriptionSimilarity: Optional[float]=None
     mimosaSimilarity: Optional[float]=None

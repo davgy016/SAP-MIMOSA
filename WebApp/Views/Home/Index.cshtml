@@ -157,9 +157,24 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-md-6 mb-2 border-end">
-                                                    <h6 class="fw-bold mb-1"><i class="bi bi-chat-left-text"></i> Prompt</h6>
-                                                    <div class="ms-3">@document.prompt</div>
+                                                <div class="col-md-6 mb-2 border-end">                                                   
+                                                    @if (document.prompts != null && document.prompts.Any())
+                                                    {
+                                                        <details>
+                                                            <summary>Prompt History</summary>
+                                                            <ul>
+                                                                @foreach (var prompt in document.prompts)
+                                                                {
+                                                                    <li>@prompt</li>
+                                                                }
+                                                            </ul>
+                                                        </details>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>No prompt history available.</p>
+                                                    }
+                                                   
                                                 </div>
                                                 <div class="col-md-6 mb-2 d-flex flex-column justify-content-center">
                                                     <div class="d-flex align-items-center mb-2">
