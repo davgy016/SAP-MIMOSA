@@ -71,14 +71,12 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-
         // Save MappingDocument to temp file
         private void SaveMappingTempFile(MappingDocument doc)
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
             System.IO.File.WriteAllText(tempPath, JsonSerializer.Serialize(doc));
         }
-
         // Load MappingDocument from temp file and delete after reading
         private MappingDocument? LoadMappingTempFile()
         {
