@@ -480,7 +480,8 @@ namespace SAP_MIMOSAapp.Controllers
                                 fieldName = row.MIMOSA_FieldName ?? "",
                                 dataType = row.MIMOSA_DataType ?? "",
                                 description = row.MIMOSA_Description ?? "",
-                                fieldLength = row.MIMOSA_FieldLength ?? ""
+                                fieldLength = row.MIMOSA_FieldLength ?? "",
+                                notes = row.MIMOSA_Notes ?? ""
                             }
                         };
                         // Only add if at least one side is filled
@@ -496,8 +497,8 @@ namespace SAP_MIMOSAapp.Controllers
                 if (aR != null)
                 {
                     model.accuracyResult = aR.accuracyResult;
-                }
-                SaveMappingTempFile(model); // Save to temp file instead of TempData
+                }        
+                SaveMappingTempFile(model); 
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
@@ -543,7 +544,8 @@ namespace SAP_MIMOSAapp.Controllers
                             EscapeCsv(mapping.mimosa?.fieldName),
                             EscapeCsv(mapping.mimosa?.description),
                             EscapeCsv(mapping.mimosa?.dataType),
-                            EscapeCsv(mapping.mimosa?.fieldLength)
+                            EscapeCsv(mapping.mimosa?.fieldLength),
+                            EscapeCsv(mapping.mimosa?.notes)
                         );
                         csvBuilder.AppendLine(row);
                     }
