@@ -128,6 +128,10 @@
                                                     <form method="post" action="@Url.Action("Delete", "Home", new { id = document.mapID })" class="d-inline delete-form" data-mapid="@document.mapID">
                                                         <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
                                                     </form>
+                                                    <form method="get" action="@Url.Action("ExportMappingCsv", "Home")" style="margin-bottom:0;">
+                                                        <input type="hidden" name="mapId" value="@document.mapID" />
+                                                        <button type="submit" class="form-control btn btn-warning btn-sm w-100">Export</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
@@ -157,7 +161,7 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-md-6 mb-2 border-end">                                                   
+                                                <div class="col-md-6 mb-2 border-end">
                                                     @if (document.prompts != null && document.prompts.Any())
                                                     {
                                                         <details>
@@ -174,7 +178,7 @@
                                                     {
                                                         <p>No prompt history available.</p>
                                                     }
-                                                   
+
                                                 </div>
                                                 <div class="col-md-6 mb-2 d-flex flex-column justify-content-center">
                                                     <div class="d-flex align-items-center mb-2">
