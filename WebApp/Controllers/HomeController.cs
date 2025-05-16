@@ -343,10 +343,9 @@ namespace SAP_MIMOSAapp.Controllers
         private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
         {
             try
-            {
-                var mappingQuery = new List<MappingDocument> { document };
-
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
+            {               
+                var mappingEntries = document.mappings ?? new List<MappingPair>();
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingEntries), Encoding.UTF8,"application/json");
 
                 // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);

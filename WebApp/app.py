@@ -102,7 +102,7 @@ async def ask_AI(request: SearchQuery):
         )
 
         # Call check_accuracy and set the accuracyResult property
-        accuracy_result = await check_accuracy(MappingQuery(root=[mapping_doc]))
+        accuracy_result = await check_accuracy(mapping_entries)
         mapping_doc.accuracyResult = accuracy_result
 
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
@@ -176,10 +176,12 @@ async def delete_workorder(map_id: str):
 
 
 
+from typing import List
+from ValidationAndMapping.Models import MappingEntry
+
 @app.post("/check_accuracy")
-async def check_accuracy(output: MappingQuery):
-    data = output.root 
-    output2 = ScoreManager.scoreOutput(data[0])
+async def check_accuracy(entries: List[MappingEntry]):
+    output2 = ScoreManager.scoreOutput(entries)
     accuracy_result = {
         "accuracyRate": round(float(output2["Accuracy"]) * 100, 2),
         "descriptionSimilarity": round(float(output2["DescriptionSimilarity"]) * 100, 2),
