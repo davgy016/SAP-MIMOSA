@@ -131,6 +131,14 @@ async def ask_AI(request: SearchQuery):
 async def get_workorders():
     return load_data(storagePath)
 
+@app.get("/workorders/{map_id}")
+async def get_workorder(map_id: str):
+    data = load_data(storagePath)
+    for doc in data:
+        if str(doc.get("mapID")) == str(map_id):
+            return doc
+    raise HTTPException(status_code=404, detail="Mapping not found")
+
 @app.post("/workorders")
 async def create_workorder(document: MappingDocument):
     data = load_data(storagePath)    
@@ -145,10 +153,25 @@ async def create_workorder(document: MappingDocument):
     save_data(data, storagePath)
     return document
 
+'''
 @app.put("/workorders")
 async def update_workorders(documents: List[MappingDocument]):
     save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
     return documents
+'''
+@app.put("/workorders/{map_id}")
+async def update_workorder(map_id: str, document: MappingDocument):
+    data = load_data(storagePath)
+    updated = False
+    for idx, doc in enumerate(data):
+        if str(doc.get("mapID")) == str(map_id):
+            data[idx] = document.dict(exclude_none=True)
+            updated = True
+            break
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
+    save_data(data, storagePath)
+    return document
 
 @app.delete("/workorders/{map_id}")
 async def delete_workorder(map_id: str):

@@ -35,7 +35,7 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     var response = await _httpClient.GetStringAsync("workorders");
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();                  
+                    documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
                     model.TotalDocuments = documents.Count;
 
@@ -202,7 +202,7 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     newDocument.mapID = "";
                 }
-                // Ensure platform values are set correctly
+                // platform values set correctly
                 if (newDocument.mappings != null)
                 {
                     foreach (var mapping in newDocument.mappings)
@@ -249,26 +249,20 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync("workorders");
+                var response = await _httpClient.GetStringAsync($"workorders/{id}");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+                var document = JsonSerializer.Deserialize<MappingDocument>(response, options);
 
-                if (documents == null)
-                {
-                    return NotFound();
-                }
-
-                var document = documents.FirstOrDefault(d => d.mapID == id);
                 if (document == null)
                 {
                     return NotFound();
                 }
 
                 return View(document);
-            }
+            }            
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error: {ex.Message}";
@@ -286,61 +280,41 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
-
-                if (documents == null)
-                {
-                    ViewBag.ErrorMessage = "Mapping documents not found";
-                    return View(updatedDocument);
-                }
-
-                var documentIndex = documents.FindIndex(d => d.mapID == updatedDocument.mapID);
-                if (documentIndex == -1)
-                {
-                    ViewBag.ErrorMessage = "Mapping document not found";
-                    return View(updatedDocument);
-                }
-
-
-                // Ensure platform values are set correctly
+                // Ensure platform values are properly set
                 if (updatedDocument.mappings != null)
                 {
                     foreach (var mapping in updatedDocument.mappings)
                     {
-                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.platform))
+                        if (mapping.sap != null && string.IsNullOrWhiteSpace(mapping.sap.platform))
                         {
                             mapping.sap.platform = "SAP";
                         }
 
-                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.platform))
+                        if (mapping.mimosa != null && string.IsNullOrWhiteSpace(mapping.mimosa.platform))
                         {
                             mapping.mimosa.platform = "MIMOSA";
                         }
                     }
                 }
 
-                // Update the document
-                documents[documentIndex] = updatedDocument;
-
-                // Save the updated documents
-                var json = JsonSerializer.Serialize(documents);
+                // Send only the updated document to the correct endpoint
+                var json = JsonSerializer.Serialize(updatedDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var updateResponse = await _httpClient.PutAsync($"workorders/{updatedDocument.mapID}", content);
 
-                var updateResponse = await _httpClient.PutAsync("workorders", content);
-                updateResponse.EnsureSuccessStatusCode();
+                if (!updateResponse.IsSuccessStatusCode)
+                {
+                    var errorContent = await updateResponse.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Failed to update mapping: {errorContent}";
+                    return View(updatedDocument);
+                }
 
-                TempData["SuccessMessage"] = $"Mapping with #ID {updatedDocument.mapID} updated successfully!";
-
+                TempData["SuccessMessage"] = $"Mapping with ID {updatedDocument.mapID} updated successfully.";
                 return RedirectToAction("Index");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Error updating record: {ex.Message}";
+                ViewBag.ErrorMessage = $"Error updating mapping: {ex.Message}";
                 return View(updatedDocument);
             }
         }
@@ -365,7 +339,7 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        //// check accuracy of a mapping
+        // Check accuracy of a mapping
         private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
         {
             try
@@ -420,7 +394,7 @@ namespace SAP_MIMOSAapp.Controllers
             public float field_length { get; set; }
         }
 
-        // --- AJAX endpoint for AI Assistant in Create view ---
+        // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
         public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
         {
@@ -445,7 +419,7 @@ namespace SAP_MIMOSAapp.Controllers
                         if (parseResponse != null)
                         {
                             // Load previous prompts if any
-                            parseResponse.prompts = req.prompts ?? new List<string>();                            
+                            parseResponse.prompts = req.prompts ?? new List<string>();
 
                             SaveMappingTempFile(parseResponse);
                             return Json(new { success = true, redirectUrl = Url.Action("Create") });
@@ -555,6 +529,69 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> ExportMappingCsv(string mapId)
+        {
+            try
+            {
+                // get mapping data for the given mapId
+                var response = await _httpClient.GetAsync($"workorders/{mapId}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return BadRequest("Failed to fetch mapping data.");
+                }
+                var json = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var mappingDoc = JsonSerializer.Deserialize<MappingDocument>(json, options);
+                if (mappingDoc == null)
+                {
+                    return NotFound("No mapping found for the given Map ID.");
+                }
+                // Convert to CSV
+                var csvBuilder = new StringBuilder();
+                csvBuilder.AppendLine("SAP_EntityName,SAP_FieldName,SAP_Description,SAP_DataType,SAP_FieldLength,SAP_Notes,MIMOSA_EntityName,MIMOSA_FieldName,MIMOSA_Description,MIMOSA_DataType,MIMOSA_FieldLength");
+                if (mappingDoc.mappings != null)
+                {
+                    foreach (var mapping in mappingDoc.mappings)
+                    {
+                        var row = string.Join(",",
+                            EscapeCsv(mapping.sap?.entityName),
+                            EscapeCsv(mapping.sap?.fieldName),
+                            EscapeCsv(mapping.sap?.description),
+                            EscapeCsv(mapping.sap?.dataType),
+                            EscapeCsv(mapping.sap?.fieldLength),
+                            EscapeCsv(mapping.sap?.notes),
+                            EscapeCsv(mapping.mimosa?.entityName),
+                            EscapeCsv(mapping.mimosa?.fieldName),
+                            EscapeCsv(mapping.mimosa?.description),
+                            EscapeCsv(mapping.mimosa?.dataType),
+                            EscapeCsv(mapping.mimosa?.fieldLength)
+                        );
+                        csvBuilder.AppendLine(row);
+                    }
+                }
+                var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+                var fileName = $"mapping_{mappingDoc.mappings[0].sap.entityName}_{mapId}.csv";
+                return File(bytes, "text/csv", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting mapping CSV");
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+        private string EscapeCsv(string? value)
+        {
+            if (string.IsNullOrEmpty(value)) return "";
+            if (value.Contains(",") || value.Contains("\""))
+            {
+                value = value.Replace("\"", "\"\"");
+                return $"\"{value}\"";
+            }
+            return value;
+        }
 
     }
 }
