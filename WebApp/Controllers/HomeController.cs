@@ -340,12 +340,11 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         // Check accuracy of a mapping
-        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        private async Task<AccuracyResultViewModel?> CheckAccuracy(List<MappingPair> mappingPair)
         {
             try
-            {               
-                var mappingEntries = document.mappings ?? new List<MappingPair>();
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingEntries), Encoding.UTF8,"application/json");
+            {                                
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingPair),Encoding.UTF8,"application/json");
 
                 // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
@@ -353,30 +352,23 @@ namespace SAP_MIMOSAapp.Controllers
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-                    return document;
+                    return null;
                 }
 
                 // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<SAP_MIMOSAapp.Models.AccuracyResultViewModel>(responseContent);
+                var accuracyResult = JsonSerializer.Deserialize<AccuracyResultViewModel>(responseContent);
 
-                if (accuracyResult != null)
-                {
-                    document.accuracyResult = accuracyResult;
-                }
-
-                return document;
+                return accuracyResult;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking accuracy");
-                return document;
+                return null;
             }
         }
 
-        //Class to deserialize accuracy response
-        // Use AccuracyResultViewModel from Models namespace
-
+       
         // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
         public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
@@ -493,10 +485,10 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
-                var aR = await CheckAccuracy(model);
-                if (aR != null)
+                var accuracyResult= await CheckAccuracy(model.mappings);
+                if (accuracyResult != null)
                 {
-                    model.accuracyResult = aR.accuracyResult;
+                    model.accuracyResult = accuracyResult;
                 }        
                 SaveMappingTempFile(model); 
                 return Json(new { redirectUrl = Url.Action("Create") });
