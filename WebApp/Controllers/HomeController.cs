@@ -359,18 +359,11 @@ namespace SAP_MIMOSAapp.Controllers
 
                 // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
+                var accuracyResult = JsonSerializer.Deserialize<SAP_MIMOSAapp.Models.AccuracyResultViewModel>(responseContent);
 
                 if (accuracyResult != null)
                 {
-                    document.accuracyRate = accuracyResult.accuracy_score;
-                    document.descriptionSimilarity = accuracyResult.description_similarity;
-                    document.mimosaSimilarity = accuracyResult.mimosa_similarity;
-                    document.sapSimilarity = accuracyResult.sap_similarity;
-                    document.dataType = accuracyResult.data_type;
-                    document.infoOmitted = accuracyResult.info_omitted;
-                    document.fieldLength = accuracyResult.field_length;
-
+                    document.accuracyResult = accuracyResult;
                 }
 
                 return document;
@@ -383,16 +376,7 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         //Class to deserialize accuracy response
-        private class AccuracyResult
-        {
-            public float accuracy_score { get; set; }
-            public float description_similarity { get; set; }
-            public float mimosa_similarity { get; set; }
-            public float sap_similarity { get; set; }
-            public float data_type { get; set; }
-            public float info_omitted { get; set; }
-            public float field_length { get; set; }
-        }
+        // Use AccuracyResultViewModel from Models namespace
 
         // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
@@ -510,15 +494,9 @@ namespace SAP_MIMOSAapp.Controllers
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
                 var aR = await CheckAccuracy(model);
-                if (aR.accuracyRate != null)
+                if (aR != null)
                 {
-                    aR.accuracyRate = model.accuracyRate;
-                    aR.descriptionSimilarity = model.descriptionSimilarity;
-                    aR.mimosaSimilarity = model.mimosaSimilarity;
-                    aR.sapSimilarity = model.sapSimilarity;
-                    aR.dataType = model.dataType;
-                    aR.fieldLength = model.fieldLength;
-                    aR.infoOmitted = model.infoOmitted;
+                    model.accuracyResult = aR.accuracyResult;
                 }
                 SaveMappingTempFile(model); // Save to temp file instead of TempData
                 return Json(new { redirectUrl = Url.Action("Create") });

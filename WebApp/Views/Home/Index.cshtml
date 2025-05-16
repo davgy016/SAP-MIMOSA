@@ -184,36 +184,36 @@
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-bar-chart me-2 text-primary"></i>
                                                         <span class="fw-bold">Overall Accuracy Rate:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyRate)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-award me-2 text-success"></i>
                                                         <span class="fw-bold">Description Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.descriptionSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Mimosa Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.mimosaSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.mimosaSimilarity)%</span>
                                                     </div> <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">SAP Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.sapSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.sapSimilarity)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">DAta type Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.dataType)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.dataType)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Missing fields rate:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.infoOmitted)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Field length similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.fieldLength)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span>
                                                     </div>
                                                 </div>
                                             </div>
