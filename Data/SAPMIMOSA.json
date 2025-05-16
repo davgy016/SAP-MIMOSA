@@ -1394,5 +1394,193 @@
                 }
             }
         ]
+    },
+    {
+        "mapID": "022",
+        "LLMType": "gpt-4.1",
+        "prompt": "imrove mapping pair again",
+        "prompts": [
+            "[\"generate one field\",\"imrove mapping pair\",\"imrove mapping pair again\"]"
+        ],
+        "accuracyRate": 48.67,
+        "descriptionSimilarity": 56.0,
+        "mimosaSimilarity": 20.0,
+        "sapSimilarity": 60.0,
+        "dataType": 100.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 36.0,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique Equipment Number – system-generated or manually assigned identifier for each equipment record in SAP Plant Maintenance (PM). Serves as the primary key for equipment tracking and lifecycle management.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key in SAP PM for equipment master record. Uniquely identifies each physical or logical asset in SAP; critical for asset tracking, maintenance history, and integration with external systems.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for an asset in MIMOSA data models. Typically used to reference the asset across systems, including external sources like SAP EQUNR. Uniquely distinguishes each asset within MIMOSA and in interoperability scenarios.",
+                    "dataType": "String",
+                    "notes": "Should store the value from SAP's EQUNR for cross-system mapping. May include other external identifiers if required, but in context of SAP integration, maps 1:1 with SAP Equipment Number. String length should accommodate all possible identifier formats from integrated systems.",
+                    "fieldLength": "50"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "023",
+        "LLMType": "gpt-4.1",
+        "prompt": "improve mappingpair",
+        "prompts": [
+            "[\"generate one field\",\"improve mappingpair\"]"
+        ],
+        "accuracyRate": 43.0,
+        "descriptionSimilarity": 49.88,
+        "mimosaSimilarity": 0.0,
+        "sapSimilarity": 60.0,
+        "dataType": 100.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 28.12,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Unique Equipment Number – primary key in SAP for identifying each physical piece of equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Serves as the main unique identifier for equipment master records in SAP PM. Fixed length, typically zero-padded on the left.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "PhysicalAsset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for a physical asset in MIMOSA. May support multiple identification formats including serial numbers, tags, or plant-specific codes.",
+                    "dataType": "String",
+                    "notes": "Primary key or main identifier corresponding to SAP's EQUNR. MIMOSA allows for various identifier schemes; ensure consistency across systems for integration.",
+                    "fieldLength": "64"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "024",
+        "LLMType": "gpt-4.1",
+        "prompt": "improve mappingpair",
+        "prompts": [
+            "generate one field\r\nimprove mappingpair"
+        ],
+        "accuracyRate": 33.19,
+        "descriptionSimilarity": 52.09,
+        "mimosaSimilarity": 20.0,
+        "sapSimilarity": 0.0,
+        "dataType": 100.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 7.06,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUIPMENT",
+                    "description": "Unique identifier (Equipment Number) for each item of equipment in the SAP system. Typically used to track and manage assets throughout their lifecycle.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment records in SAP; value is unique within the SAP client and usually numeric or alphanumeric.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for a physical asset in the MIMOSA data model, enabling cross-system asset tracking and integration.",
+                    "dataType": "String",
+                    "notes": "Primary unique key for assets in MIMOSA; should be mapped to a globally unique or namespace-prepended value to avoid conflicts when integrating multiple systems.",
+                    "fieldLength": "255"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "025",
+        "LLMType": "gpt-4.1",
+        "prompt": "imrove mapping pair",
+        "prompts": [
+            "generate one field\r",
+            "imrove mapping pair"
+        ],
+        "accuracyRate": 45.43,
+        "descriptionSimilarity": 36.55,
+        "mimosaSimilarity": 20.0,
+        "sapSimilarity": 60.0,
+        "dataType": 100.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 36.0,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number: Unique identifier for a specific physical equipment item within SAP Plant Maintenance (PM) module.",
+                    "dataType": "CHAR",
+                    "notes": "Serves as the primary key for the equipment master record (EQUI). Maximum length is 18 alphanumeric characters. Used for asset lifecycle tracking and integration.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Asset Identifier: Globally unique identifier for an asset in the MIMOSA OSA-EAI information model.",
+                    "dataType": "String",
+                    "notes": "Serves as the primary key for the Asset entity. Must be unique within the enterprise or system context. Used for cross-system asset tracking and interoperability; directly corresponds to EQUNR from SAP.",
+                    "fieldLength": "50"
+                }
+            }
+        ]
+    },
+    {
+        "mapID": "026",
+        "LLMType": "gpt-4.1",
+        "prompt": "improve mappingpair again",
+        "prompts": [
+            "generate one field",
+            "improve mappingpair",
+            "improve mappingpair again"
+        ],
+        "accuracyRate": 37.71,
+        "descriptionSimilarity": 58.14,
+        "mimosaSimilarity": 20.0,
+        "sapSimilarity": 0.0,
+        "dataType": 100.0,
+        "infoOmitted": 20.0,
+        "fieldLength": 28.12,
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUIPMENT",
+                    "description": "Unique identifier for a specific equipment record in SAP Plant Maintenance (PM). Typically an alphanumeric key assigned when an equipment master is created. Serves as the primary reference for tracking maintenance, history, and asset data.",
+                    "dataType": "CHAR",
+                    "notes": "Acts as the primary key in the SAP Equipment (EQUI) master database. This identifier must be unique within the SAP instance and is used extensively for linking technical objects, maintenance notifications, work orders, and asset structures.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique string identifier for an individual asset within the MIMOSA Asset entity. Used to track and reference assets across multiple external systems, including SAP. Serves as the canonical key for an asset in MIMOSA data structures.",
+                    "dataType": "String",
+                    "notes": "Primary key for the Asset entity in MIMOSA. When integrating with SAP, populate AssetIdentifier with the value from SAP's Equipment (EQUIPMENT) field. If the target system requires increased identifier length or enforces uniqueness constraints across multiple SAP sources, consider prefixing or extending EQUIPMENT to ensure global uniqueness within the MIMOSA context.",
+                    "fieldLength": "64"
+                }
+            }
+        ]
     }
 ]

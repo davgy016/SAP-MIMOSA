@@ -47,6 +47,8 @@ public class MappingDocument
     [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
     public float? fieldLength { get; set; }
 
+    public List<string> prompts { get; set; } = new List<string>();
+
 }
 
 

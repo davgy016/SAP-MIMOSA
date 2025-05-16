@@ -29,13 +29,13 @@ namespace SAP_MIMOSAapp.Controllers
             var documents = new List<MappingDocument>();
 
             try
-            {               
+            {
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
                     var response = await _httpClient.GetStringAsync("workorders");
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
+                    documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();                  
 
                     model.TotalDocuments = documents.Count;
 
@@ -71,14 +71,12 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-       
         // Save MappingDocument to temp file
         private void SaveMappingTempFile(MappingDocument doc)
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
             System.IO.File.WriteAllText(tempPath, JsonSerializer.Serialize(doc));
         }
-        
         // Load MappingDocument from temp file and delete after reading
         private MappingDocument? LoadMappingTempFile()
         {
@@ -163,13 +161,15 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = LoadMappingTempFile();
             if (model == null)
             {
-                model = LoadMappingTempFile();
+                model = new MappingDocument();
             }
             if (model != null)
             {
 
                 if (query != null)
+                {
                     model.prompt = query;
+                }
                 if (llmType != null)
                 {
                     model.LLMType = llmType;
@@ -183,6 +183,13 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(MappingDocument newDocument)
         {
+            // Handle prompts posted as a single string with newlines
+            if (Request.Form.ContainsKey("prompts") && Request.Form["prompts"].Count == 1)
+            {
+                var promptsRaw = Request.Form["prompts"].ToString();
+                newDocument.prompts = promptsRaw.Split(',').Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(newDocument);
@@ -437,6 +444,9 @@ namespace SAP_MIMOSAapp.Controllers
                         var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         if (parseResponse != null)
                         {
+                            // Load previous prompts if any
+                            parseResponse.prompts = req.prompts ?? new List<string>();                            
+
                             SaveMappingTempFile(parseResponse);
                             return Json(new { success = true, redirectUrl = Url.Action("Create") });
                         }
@@ -468,6 +478,7 @@ namespace SAP_MIMOSAapp.Controllers
             public string prompt { get; set; }
             public string llmType { get; set; }
             public List<MappingPair>? mappings { get; set; }
+            public List<string>? prompts { get; set; }
         }
 
 
