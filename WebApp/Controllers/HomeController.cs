@@ -183,6 +183,13 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(MappingDocument newDocument)
         {
+            // Retrieve accuracySingleMappingPairJson from the form
+            var accuracySingleMappingPairJson = Request.Form["accuracySingleMappingPairJson"];
+            if (!string.IsNullOrEmpty(accuracySingleMappingPairJson))
+            {
+                newDocument.accuracySingleMappingPair = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(accuracySingleMappingPairJson);
+            }
+
             // Handle prompts posted as a single string with newlines
             if (Request.Form.ContainsKey("prompts") && Request.Form["prompts"].Count == 1)
             {
@@ -262,7 +269,7 @@ namespace SAP_MIMOSAapp.Controllers
                 }
 
                 return View(document);
-            }            
+            }
             catch (System.Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error: {ex.Message}";
@@ -368,10 +375,10 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     overall = JsonSerializer.Deserialize<AccuracyResultViewModel>(overallProp.GetRawText());
                 }
-                if (root.TryGetProperty("details", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("singlePairAccuracydetails", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
                 {
                     details = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(detailsProp.GetRawText());
-                }
+                }                
                 return (overall, details);
             }
             catch (Exception ex)
@@ -381,7 +388,7 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-       
+
         // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
         public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
@@ -497,11 +504,11 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
-                var model = new MappingDocument { mappings = mappings };
-                var (overall, details) = await CheckAccuracy(model.mappings);
+                var model = new MappingDocument { mappings = mappings };               
+                var (overall, details) = await CheckAccuracy(model.mappings);                
                 model.accuracyResult = overall;
                 model.accuracySingleMappingPair = details;
-                SaveMappingTempFile(model); 
+                SaveMappingTempFile(model);
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
