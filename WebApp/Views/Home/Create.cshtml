@@ -101,11 +101,11 @@
                 <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
                     @{
                         var mappingIndex = 0;
+                        // Pass accuracySingleMappingPair to the partial via ViewData
+                        ViewData["AccuracyaccuracySingleMappingPair"] = Model.accuracySingleMappingPair;
                         foreach (var mapping in Model.mappings)
                         {
-                            // Render all existing mappings when the page loads,
-                            // such as when editing or after a failed form submission.
-                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
+                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping), new ViewDataDictionary(ViewData))
                             mappingIndex++;
                         }
                     }

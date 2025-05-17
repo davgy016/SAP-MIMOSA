@@ -5563,5 +5563,228 @@
             }
         ],
         "timestamp": "2025-05-16 16:55:34"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate equipment mappings",
+        "prompts": null,
+        "accuracyResult": {
+            "accuracyRate": 40.51417922973633,
+            "descriptionSimilarity": 74.84418487548828,
+            "mimosaSimilarity": 0.0,
+            "sapSimilarity": 0.0,
+            "dataType": 99.99999999999997,
+            "infoOmitted": 20.000000000000004,
+            "fieldLength": 48.24089635854343
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 35.122169494628906,
+                "descriptionSimilarity": 54.733001708984375,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            },
+            {
+                "accuracyRate": 41.49045944213867,
+                "descriptionSimilarity": 92.94274139404297,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            },
+            {
+                "accuracyRate": 35.238189697265625,
+                "descriptionSimilarity": 75.74287414550781,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 15.686274509803921
+            },
+            {
+                "accuracyRate": 39.96121597290039,
+                "descriptionSimilarity": 89.76728820800781,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 30.000000000000004
+            },
+            {
+                "accuracyRate": 40.223411560058594,
+                "descriptionSimilarity": 61.340450286865234,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 60.0
+            },
+            {
+                "accuracyRate": 42.93259811401367,
+                "descriptionSimilarity": 57.5955810546875,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 48.6312255859375,
+                "descriptionSimilarity": 91.787353515625,
+                "mimosaSimilarity": 0.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentNumber",
+                    "description": "Unique number identifying the equipment in SAP.",
+                    "dataType": "CHAR",
+                    "notes": "Usually referred to as EQUNR in tables like EQUI.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentIdentifier",
+                    "description": "Uniquely identifies an equipment item in MIMOSA schema.",
+                    "dataType": "String",
+                    "notes": "Primary field for equipment entities.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "SerialNumber",
+                    "description": "Manufacturer serial number of the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Field SERNR in EQUI table.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "SerialNumber",
+                    "description": "Serial number associated with the equipment.",
+                    "dataType": "String",
+                    "notes": "MIMOSA equivalent of equipment serial number.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EquipmentDescription",
+                    "description": "Short description of the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Field EQKTX in EQUI table.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "Description",
+                    "description": "Textual description of the equipment item.",
+                    "dataType": "String",
+                    "notes": "Typically description or title in MIMOSA equipment.",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Manufacturer of the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Herst in EQUI table.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "ManufacturerName",
+                    "description": "Organization or company that manufactured the equipment.",
+                    "dataType": "String",
+                    "notes": "String type, more extensive field in MIMOSA.",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "ModelNumber",
+                    "description": "Manufacturer's model number for the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Field TYPBZ in EQUI table.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "ModelNumber",
+                    "description": "Model number for the equipment in MIMOSA schema.",
+                    "dataType": "String",
+                    "notes": "Direct match for model number field.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "FunctionalLocation",
+                    "description": "Functional location where the equipment is installed.",
+                    "dataType": "CHAR",
+                    "notes": "TPLNR in EQUI table.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "FunctionalLocationIdentifier",
+                    "description": "Unique identifier referencing the functional location of installation.",
+                    "dataType": "String",
+                    "notes": "Functional location reference in MIMOSA asset structure.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "StartUpDate",
+                    "description": "Date when equipment was first put into operation.",
+                    "dataType": "DATE",
+                    "notes": "Inbdt in EQUI table.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Equipment",
+                    "fieldName": "InstallationDate",
+                    "description": "Date when the equipment became operational.",
+                    "dataType": "Date",
+                    "notes": "Standard date type in MIMOSA.",
+                    "fieldLength": "10"
+                }
+            }
+        ],
+        "timestamp": "2025-05-17 18:36:43"
     }
 ]

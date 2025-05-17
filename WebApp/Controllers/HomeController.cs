@@ -340,31 +340,44 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         // Check accuracy of a mapping
-        private async Task<AccuracyResultViewModel?> CheckAccuracy(List<MappingPair> mappingPair)
+        // Returns both overall and details as a tuple
+        private async Task<(AccuracyResultViewModel? overall, List<AccuracyResultViewModel>? details)> CheckAccuracy(List<MappingPair> mappingPair)
         {
             try
-            {                                
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingPair),Encoding.UTF8,"application/json");
+            {
+                var jsonRequest = new StringContent(
+                    JsonSerializer.Serialize(mappingPair),
+                    Encoding.UTF8,
+                    "application/json"
+                );
 
-                // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
-
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-                    return null;
+                    return (null, null);
                 }
 
-                // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResultViewModel>(responseContent);
-
-                return accuracyResult;
+                // The response is: { "overall": { ... }, "details": [ {...}, {...} ] }
+                using var doc = JsonDocument.Parse(responseContent);
+                var root = doc.RootElement;
+                AccuracyResultViewModel? overall = null;
+                List<AccuracyResultViewModel>? details = null;
+                if (root.TryGetProperty("overall", out var overallProp))
+                {
+                    overall = JsonSerializer.Deserialize<AccuracyResultViewModel>(overallProp.GetRawText());
+                }
+                if (root.TryGetProperty("details", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
+                {
+                    details = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(detailsProp.GetRawText());
+                }
+                return (overall, details);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking accuracy");
-                return null;
+                return (null, null);
             }
         }
 
@@ -485,11 +498,9 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
-                var accuracyResult= await CheckAccuracy(model.mappings);
-                if (accuracyResult != null)
-                {
-                    model.accuracyResult = accuracyResult;
-                }        
+                var (overall, details) = await CheckAccuracy(model.mappings);
+                model.accuracyResult = overall;
+                model.accuracySingleMappingPair = details;
                 SaveMappingTempFile(model); 
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
