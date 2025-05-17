@@ -21,6 +21,9 @@ public class MappingDocument
     [JsonPropertyName("accuracyResult")]
     public AccuracyResultViewModel? accuracyResult { get; set; }
 
+    [JsonPropertyName("accuracySingleMappingPair")]
+    public List<AccuracyResultViewModel>? accuracySingleMappingPair { get; set; }
+
     public List<string> prompts { get; set; } = new List<string>();
 
 }

@@ -11,6 +11,7 @@ from .Score import Score
 from .Accuracy import Accuracy
 from .Models import Mapping
 from typing import List
+from .Models import AccuracyResult
 
 class ScoreManager:
 
@@ -48,4 +49,53 @@ class ScoreManager:
             output["InfoOmitted"] += acc["InfoOmitted"] / n
             output["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
         return output
+
+    # This method processes a list of MappingEntry objects and returns Overall mapping accuracy result and per mapping entry accuracy result.
+    @staticmethod
+    def scoreOutputWithDetails(mappings: list) -> dict:
+        """
+        Returns both the overall aggregated accuracy metrics and a list of per-mapping-pair accuracy results.
+        """
+        accuracy_scorer = Accuracy()
+        n = len(mappings)
+        overall = {
+            "Accuracy": 0,
+            "DataType": 0,
+            "DescriptionSimilarity": 0,
+            "FieldLength": 0,
+            "SAPSimilarity": 0,
+            "InfoOmitted": 0,
+            "MimosaSimilarity": 0
+        }
+        singlePairAccuracydetails = []
+        if n == 0:
+            return {"overall": AccuracyResult(), "details": details}
+        for map in mappings:
+            acc = accuracy_scorer.calculateAccuracy(map)
+            overall["Accuracy"] += acc["Accuracy"] / n
+            overall["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
+            overall["FieldLength"] += acc["FieldLength"] / n
+            overall["DataType"] += acc["DataType"] / n
+            overall["SAPSimilarity"] += acc["SAPSimilarity"] / n
+            overall["InfoOmitted"] += acc["InfoOmitted"] / n
+            overall["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
+            singlePairAccuracydetails.append(AccuracyResult(
+                accuracyRate=acc["Accuracy"] * 100,
+                descriptionSimilarity=acc["DescriptionSimilarity"] * 100,
+                mimosaSimilarity=acc["MimosaSimilarity"] * 100,
+                sapSimilarity=acc["SAPSimilarity"] * 100,
+                dataType=acc["DataType"] * 100,
+                infoOmitted=acc["InfoOmitted"] * 100,
+                fieldLength=acc["FieldLength"] * 100
+            ))
+        overall_result = AccuracyResult(
+            accuracyRate=overall["Accuracy"] * 100,
+            descriptionSimilarity=overall["DescriptionSimilarity"] * 100,
+            mimosaSimilarity=overall["MimosaSimilarity"] * 100,
+            sapSimilarity=overall["SAPSimilarity"] * 100,
+            dataType=overall["DataType"] * 100,
+            infoOmitted=overall["InfoOmitted"] * 100,
+            fieldLength=overall["FieldLength"] * 100
+        )
+        return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
 

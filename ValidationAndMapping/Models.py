@@ -46,12 +46,13 @@ class AccuracyResult(BaseModel):
     infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
 
-class Mapping(BaseModel):
+class Mapping(BaseModel):    
     mapID: Optional[str] = None
     LLMType: str
     prompt: Optional[str] = None
     prompts: Optional[List[str]] = None
     accuracyResult: Optional[AccuracyResult] = None
+    accuracySingleMappingPair: Optional[List[AccuracyResult]] = None
     mappings: List[MappingEntry]
 
     model_config = ConfigDict(validate_by_name=True)

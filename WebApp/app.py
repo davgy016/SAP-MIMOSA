@@ -56,13 +56,13 @@ def store_raw_data_of_AI_responses(mapping_doc):
 
 import re
 
-# Helper to extract JSON from LLM response
+# Extract JSON from LLM response
 def extract_json_from_response(response_text):
     # Try to extract JSON from a markdown code block
     match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
     if match:
         return match.group(1)
-    # Fallback: try to find the first JSON-looking structure
+    # Try to find the first JSON-looking structure
     match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
     if match:
         return match.group(1)
@@ -85,7 +85,8 @@ async def ask_AI(request: SearchQuery):
         # Extract JSON from LLM response
         json_str = extract_json_from_response(result)
         mapping_doc_dict = json.loads(json_str)
-        #print("AI returned:", mapping_doc_dict)        
+        #print("AI returned:", mapping_doc_dict)  
+        
         if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
             mappings = mapping_doc_dict["mappings"]
         elif isinstance(mapping_doc_dict, list):
@@ -101,14 +102,15 @@ async def ask_AI(request: SearchQuery):
             prompt=request.Query
         )
 
-        # Call check_accuracy and set the accuracyResult property
+        # Call check_accuracy and set the accuracyResult and accuracy of Single MappingPair  properties
         accuracy_result = await check_accuracy(mapping_entries)
-        mapping_doc.accuracyResult = accuracy_result
+        mapping_doc.accuracyResult = accuracy_result["overall"]
+        mapping_doc.accuracySingleMappingPair = accuracy_result["singlePairAccuracydetails"]       
 
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
         store_raw_data_of_AI_responses(mapping_doc)
 
-        # Return the Mapping object directly!
+        # Return the Mapping object directly
         return mapping_doc
 
     except Exception as e:
@@ -181,17 +183,13 @@ from ValidationAndMapping.Models import MappingEntry
 
 @app.post("/check_accuracy")
 async def check_accuracy(entries: List[MappingEntry]):
-    output2 = ScoreManager.scoreOutput(entries)
-    accuracy_result = {
-        "accuracyRate": round(float(output2["Accuracy"]) * 100, 2),
-        "descriptionSimilarity": round(float(output2["DescriptionSimilarity"]) * 100, 2),
-        "mimosaSimilarity": round(float(output2["MimosaSimilarity"]) * 100, 2),
-        "sapSimilarity": round(float(output2["SAPSimilarity"]) * 100, 2),
-        "dataType": round(float(output2["DataType"]) * 100, 2),
-        "infoOmitted": round(float(output2["InfoOmitted"]) * 100, 2),
-        "fieldLength": round(float(output2["FieldLength"]) * 100, 2)
+    results = ScoreManager.scoreOutputWithDetails(entries)
+    # results = {"overall": AccuracyResult, "singlePairAccuracydetails": [AccuracyResult, ...]}
+    # FastAPI will serialize the AccuracyResult objects automatically
+    return {
+        "overall": results["overall"],
+        "singlePairAccuracydetails": [r for r in results["singlePairAccuracydetails"]]
     }
-    return accuracy_result
 
 def start():
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
