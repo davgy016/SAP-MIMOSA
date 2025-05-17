@@ -111,6 +111,10 @@
                     }
                 </div>
             }
+            @{
+                var accuracySingleMappingPairJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>());
+            }
+            <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@accuracySingleMappingPairJson' />
         </div>
 
         @* <input type="hidden" asp-for="prompt" /> *@
