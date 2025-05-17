@@ -18,17 +18,11 @@ public class MappingDocument
     [JsonPropertyName("prompt")]
     public string? prompt { get; set; } = string.Empty;
 
-    [JsonPropertyName("accuracyRate")]
-    [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
-    public float? accuracyRate { get; set; }
+    [JsonPropertyName("accuracyResult")]
+    public AccuracyResultViewModel? accuracyResult { get; set; }
 
-    [JsonPropertyName("qualityRate")]
-    [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
-    public float? qualityRate { get; set; }
+    public List<string> prompts { get; set; } = new List<string>();
 
-    [JsonPropertyName("matchingRate")]
-    [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
-    public float? matchingRate { get; set; }
 }
 
 

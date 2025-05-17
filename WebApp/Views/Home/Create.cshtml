@@ -14,7 +14,7 @@
         </div>
     }
 
-    
+
 
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
@@ -53,19 +53,40 @@
                         </label>
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
-                    <div id="aiResponseArea" class="mb-2"></div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div id="aiResponseArea" class="mb-2"></div>
+                        <div id="importLoading" class="mb-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
         @* Metrics alert is always present but hidden if no metrics *@
-        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
-            <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
-            Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong></span> <br />
-            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyResult?.accuracyRate != null) ? "block" : "none")">
+
+            @if (Model?.prompts != null && Model.prompts.Any())
+            {
+                <div class="section">
+                    <h5>Prompt History</h5>
+                    <ul>
+                        @foreach (var prompt in Model.prompts)
+                        {
+                            <li>@prompt</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            Overall Accuracy: <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
+                <strong>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</strong>
+            </span> <br />
+            Description Similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong> <br />
+            MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong><br />
+            SAP Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong><br />
+            Data type similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong><br />
+            Missing fields rate: <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong><br />
+            Field length similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong><br />
         </div>
-        
+
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>Mapping Pairs</h5>
@@ -94,12 +115,17 @@
 
         @* <input type="hidden" asp-for="prompt" /> *@
         @* <input type="hidden" asp-for="LLMType" /> *@
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        <input type="hidden" asp-for="accuracyResult.accuracyRate" />
+        <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.sapSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.dataType" />
+        <input type="hidden" asp-for="accuracyResult.fieldLength" />
+        <input type="hidden" asp-for="accuracyResult.infoOmitted" />
+        <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "")>Create</button>
         </div>
     </form>
 </div>
@@ -136,10 +162,10 @@
                 const llmType = aiLLMType.value;
                 const useExisting = document.getElementById('checkBx').checked;
 
-                if (!prompt) {
-                    aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
-                    return;
-                }
+                // if (!prompt) {
+                //     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
+                //     return;
+                // }
 
                 const requestBody = { prompt, llmType };
 
@@ -155,8 +181,8 @@
                                 fieldName: pair.querySelector('[name*="sap.fieldName"]').value,
                                 description: pair.querySelector('[name*="sap.description"]').value,
                                 dataType: pair.querySelector('[name*="sap.dataType"]').value,
-                                notes: pair.querySelector('[name*="sap.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value
+                                notes: pair.querySelector('[name*="sap.notes"]').value || "",
+                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value || ""
                             },
                             mimosa: {
                                 platform: pair.querySelector('[name*="mimosa.platform"]').value,
@@ -164,8 +190,8 @@
                                 fieldName: pair.querySelector('[name*="mimosa.fieldName"]').value,
                                 description: pair.querySelector('[name*="mimosa.description"]').value,
                                 dataType: pair.querySelector('[name*="mimosa.dataType"]').value,
-                                notes: pair.querySelector('[name*="mimosa.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value
+                                notes: pair.querySelector('[name*="mimosa.notes"]').value || "",
+                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value || ""
                             }
                         };
                         mappings.push(mapping);
@@ -173,9 +199,26 @@
 
                     requestBody.mappings = mappings;
                 }
+                // Read existing prompts from hidden input
+                let existingPrompts = [];
+                const hiddenPromptInput = document.getElementById('prompts');
+                if (hiddenPromptInput && hiddenPromptInput.value) {
+                    existingPrompts = hiddenPromptInput.value.split(',').filter(p => p.trim() !== '');
+                }
+                // Add the new prompt to history if improving existing mapping
+                if (useExisting) {
+                    existingPrompts.push(prompt);
+                } else {
+                    existingPrompts = [prompt];
+                }
+                // Update the hidden input value
+                if (hiddenPromptInput) {
+                    hiddenPromptInput.value = existingPrompts.join('\n');
+                }
+                requestBody.prompts = existingPrompts;
 
                 // Send request to AI
-                aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
+                aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
                 try {
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
@@ -264,6 +307,7 @@
                 if (!fileInput.files.length) return alert('Please select a CSV file.');
                 const formData = new FormData();
                 formData.append('csvFile', fileInput.files[0]);
+                importLoading.innerHTML = '<div class="spinner-border text-success" role="status"><span class="visually-hidden"></span></div>';
                 fetch('/Home/ImportCsv', { method: 'POST', body: formData })
                     .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
                     .then(data => {

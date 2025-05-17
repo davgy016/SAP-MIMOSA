@@ -3,12 +3,18 @@
 @{
     ViewData["Title"] = "Edit Mapping";
 }
-@if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
+@if (Model?.accuracyResult?.accuracyRate != null)
 {
     <div class="alert alert-info mb-3">
-        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
-        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+        Overall Accuracy: <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
+            <strong>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</strong>
+        </span> <br />
+        Description Similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong> <br />
+        MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong><br />
+        SAP Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong><br />
+        Data type similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong><br />
+        Missing fields rate: <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong><br />
+        Field length similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong><br />
     </div>
 }
 @if (!string.IsNullOrWhiteSpace(Model?.prompt))
@@ -145,9 +151,13 @@
             </div>
         </div>
         <input type="hidden" asp-for="prompt" />
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        <input type="hidden" asp-for="accuracyResult.accuracyRate" />
+        <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.sapSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.dataType" />
+        <input type="hidden" asp-for="accuracyResult.fieldLength" />
+        <input type="hidden" asp-for="accuracyResult.infoOmitted" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>

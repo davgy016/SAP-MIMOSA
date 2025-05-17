@@ -54,12 +54,26 @@ def store_raw_data_of_AI_responses(mapping_doc):
         import traceback
         traceback.print_exc()
 
+import re
+
+# Helper to extract JSON from LLM response
+def extract_json_from_response(response_text):
+    # Try to extract JSON from a markdown code block
+    match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
+    if match:
+        return match.group(1)
+    # Fallback: try to find the first JSON-looking structure
+    match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
+    if match:
+        return match.group(1)
+    raise ValueError("No JSON found in AI response")
+
 # OpenAI endpoint
 @app.post("/ask_AI")
 async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model 
-        print("Received MappingsPPPPPP: ", request.mappings)
+        #print("Received MappingsPPPPPP: ", request.mappings)
 
         #Call OpenAIModel and pass user query and selected LLM model
         ai_model = OpenAIModel(request.Query, llm_model, request.mappings)
@@ -68,7 +82,9 @@ async def ask_AI(request: SearchQuery):
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
 
-        mapping_doc_dict = json.loads(result)
+        # Extract JSON from LLM response
+        json_str = extract_json_from_response(result)
+        mapping_doc_dict = json.loads(json_str)
         #print("AI returned:", mapping_doc_dict)        
         if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
             mappings = mapping_doc_dict["mappings"]
@@ -79,21 +95,16 @@ async def ask_AI(request: SearchQuery):
 
         # Convert list of dicts to list of MappingEntry objects
         mapping_entries = [MappingEntry(**item) for item in mappings]
-
-        # Create a Mapping object with required fields
         mapping_doc = MappingDocument(
             LLMType=llm_model,
             mappings=mapping_entries,
             prompt=request.Query
         )
 
-        # Call check_accuracy and set the scores on the Mapping object
-        mapping_query = MappingQuery(root=[mapping_doc])
-        accuracyResult = await check_accuracy(mapping_query)
-        mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
-        mapping_doc.qualityRate = accuracyResult["quality_score"]
-        mapping_doc.matchingRate = accuracyResult["matching_score"] 
-        
+        # Call check_accuracy and set the accuracyResult property
+        accuracy_result = await check_accuracy(mapping_entries)
+        mapping_doc.accuracyResult = accuracy_result
+
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
         store_raw_data_of_AI_responses(mapping_doc)
 
@@ -111,6 +122,14 @@ async def ask_AI(request: SearchQuery):
 async def get_workorders():
     return load_data(storagePath)
 
+@app.get("/workorders/{map_id}")
+async def get_workorder(map_id: str):
+    data = load_data(storagePath)
+    for doc in data:
+        if str(doc.get("mapID")) == str(map_id):
+            return doc
+    raise HTTPException(status_code=404, detail="Mapping not found")
+
 @app.post("/workorders")
 async def create_workorder(document: MappingDocument):
     data = load_data(storagePath)    
@@ -125,10 +144,25 @@ async def create_workorder(document: MappingDocument):
     save_data(data, storagePath)
     return document
 
+'''
 @app.put("/workorders")
 async def update_workorders(documents: List[MappingDocument]):
     save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
     return documents
+'''
+@app.put("/workorders/{map_id}")
+async def update_workorder(map_id: str, document: MappingDocument):
+    data = load_data(storagePath)
+    updated = False
+    for idx, doc in enumerate(data):
+        if str(doc.get("mapID")) == str(map_id):
+            data[idx] = document.dict(exclude_none=True)
+            updated = True
+            break
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
+    save_data(data, storagePath)
+    return document
 
 @app.delete("/workorders/{map_id}")
 async def delete_workorder(map_id: str):
@@ -142,19 +176,22 @@ async def delete_workorder(map_id: str):
 
 
 
+from typing import List
+from ValidationAndMapping.Models import MappingEntry
+
 @app.post("/check_accuracy")
-async def check_accuracy(output: MappingQuery):
-    data = output.root 
-    accuracy_score = float(ScoreManager.scoreOutput(data))*100
-    quality_score = float(0.75451) *100
-    matching_score = float(0.80561)*100
-    
-    return {
-        "accuracy_score": round(accuracy_score,2),
-        "quality_score": round(quality_score, 2),
-        "matching_score": round(matching_score,2)
-        
+async def check_accuracy(entries: List[MappingEntry]):
+    output2 = ScoreManager.scoreOutput(entries)
+    accuracy_result = {
+        "accuracyRate": round(float(output2["Accuracy"]) * 100, 2),
+        "descriptionSimilarity": round(float(output2["DescriptionSimilarity"]) * 100, 2),
+        "mimosaSimilarity": round(float(output2["MimosaSimilarity"]) * 100, 2),
+        "sapSimilarity": round(float(output2["SAPSimilarity"]) * 100, 2),
+        "dataType": round(float(output2["DataType"]) * 100, 2),
+        "infoOmitted": round(float(output2["InfoOmitted"]) * 100, 2),
+        "fieldLength": round(float(output2["FieldLength"]) * 100, 2)
     }
+    return accuracy_result
 
 def start():
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
