@@ -95,25 +95,16 @@ async def ask_AI(request: SearchQuery):
 
         # Convert list of dicts to list of MappingEntry objects
         mapping_entries = [MappingEntry(**item) for item in mappings]
-
-        # Create a Mapping object with required fields
         mapping_doc = MappingDocument(
             LLMType=llm_model,
             mappings=mapping_entries,
             prompt=request.Query
         )
 
-        # Call check_accuracy and set the scores on the Mapping object
-        mapping_query = MappingQuery(root=[mapping_doc])
-        accuracyResult = await check_accuracy(mapping_query)
-        mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
-        mapping_doc.descriptionSimilarity = accuracyResult["description_similarity"]
-        mapping_doc.mimosaSimilarity = accuracyResult["mimosa_similarity"] 
-        mapping_doc.sapSimilarity = accuracyResult["sap_similarity"] 
-        mapping_doc.dataType = accuracyResult["data_type"] 
-        mapping_doc.infoOmitted = accuracyResult["info_omitted"] 
-        mapping_doc.fieldLength = accuracyResult["field_length"] 
-        #print("data_similarity  ", accuracyResult["data_type"] )
+        # Call check_accuracy and set the accuracyResult property
+        accuracy_result = await check_accuracy(mapping_entries)
+        mapping_doc.accuracyResult = accuracy_result
+
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
         store_raw_data_of_AI_responses(mapping_doc)
 
@@ -185,27 +176,22 @@ async def delete_workorder(map_id: str):
 
 
 
-@app.post("/check_accuracy")
-async def check_accuracy(output: MappingQuery):
-    data = output.root 
-    output2 = ScoreManager.scoreOutput(data[0])
-    accuracy_score = float(output2["Accuracy"])*100
-    description_similarity = float(output2["DescriptionSimilarity"]) *100
-    mimosa_similarity = float(output2["MimosaSimilarity"])*100
-    sap_similarity = float(output2["SAPSimilarity"])*100
-    data_type= float(output2["DataType"])*100
-    info_omitted = float(output2["InfoOmitted"])*100
-    field_length = float(output2["FieldLength"])*100    
+from typing import List
+from ValidationAndMapping.Models import MappingEntry
 
-    return {
-        "accuracy_score": round(accuracy_score,2),
-        "description_similarity": round(description_similarity,2),
-        "mimosa_similarity": round(mimosa_similarity,2),
-        "sap_similarity": round(sap_similarity,2),
-        "data_type": round(data_type,2),
-        "info_omitted": round(info_omitted,2),
-        "field_length": round(field_length,2)
+@app.post("/check_accuracy")
+async def check_accuracy(entries: List[MappingEntry]):
+    output2 = ScoreManager.scoreOutput(entries)
+    accuracy_result = {
+        "accuracyRate": round(float(output2["Accuracy"]) * 100, 2),
+        "descriptionSimilarity": round(float(output2["DescriptionSimilarity"]) * 100, 2),
+        "mimosaSimilarity": round(float(output2["MimosaSimilarity"]) * 100, 2),
+        "sapSimilarity": round(float(output2["SAPSimilarity"]) * 100, 2),
+        "dataType": round(float(output2["DataType"]) * 100, 2),
+        "infoOmitted": round(float(output2["InfoOmitted"]) * 100, 2),
+        "fieldLength": round(float(output2["FieldLength"]) * 100, 2)
     }
+    return accuracy_result
 
 def start():
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

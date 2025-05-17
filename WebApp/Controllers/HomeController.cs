@@ -340,13 +340,11 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         // Check accuracy of a mapping
-        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        private async Task<AccuracyResultViewModel?> CheckAccuracy(List<MappingPair> mappingPair)
         {
             try
-            {
-                var mappingQuery = new List<MappingDocument> { document };
-
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
+            {                                
+                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingPair),Encoding.UTF8,"application/json");
 
                 // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
@@ -354,46 +352,23 @@ namespace SAP_MIMOSAapp.Controllers
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-                    return document;
+                    return null;
                 }
 
                 // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
+                var accuracyResult = JsonSerializer.Deserialize<AccuracyResultViewModel>(responseContent);
 
-                if (accuracyResult != null)
-                {
-                    document.accuracyRate = accuracyResult.accuracy_score;
-                    document.descriptionSimilarity = accuracyResult.description_similarity;
-                    document.mimosaSimilarity = accuracyResult.mimosa_similarity;
-                    document.sapSimilarity = accuracyResult.sap_similarity;
-                    document.dataType = accuracyResult.data_type;
-                    document.infoOmitted = accuracyResult.info_omitted;
-                    document.fieldLength = accuracyResult.field_length;
-
-                }
-
-                return document;
+                return accuracyResult;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking accuracy");
-                return document;
+                return null;
             }
         }
 
-        //Class to deserialize accuracy response
-        private class AccuracyResult
-        {
-            public float accuracy_score { get; set; }
-            public float description_similarity { get; set; }
-            public float mimosa_similarity { get; set; }
-            public float sap_similarity { get; set; }
-            public float data_type { get; set; }
-            public float info_omitted { get; set; }
-            public float field_length { get; set; }
-        }
-
+       
         // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
         public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
@@ -497,7 +472,8 @@ namespace SAP_MIMOSAapp.Controllers
                                 fieldName = row.MIMOSA_FieldName ?? "",
                                 dataType = row.MIMOSA_DataType ?? "",
                                 description = row.MIMOSA_Description ?? "",
-                                fieldLength = row.MIMOSA_FieldLength ?? ""
+                                fieldLength = row.MIMOSA_FieldLength ?? "",
+                                notes = row.MIMOSA_Notes ?? ""
                             }
                         };
                         // Only add if at least one side is filled
@@ -509,18 +485,12 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
                 var model = new MappingDocument { mappings = mappings };
-                var aR = await CheckAccuracy(model);
-                if (aR.accuracyRate != null)
+                var accuracyResult= await CheckAccuracy(model.mappings);
+                if (accuracyResult != null)
                 {
-                    aR.accuracyRate = model.accuracyRate;
-                    aR.descriptionSimilarity = model.descriptionSimilarity;
-                    aR.mimosaSimilarity = model.mimosaSimilarity;
-                    aR.sapSimilarity = model.sapSimilarity;
-                    aR.dataType = model.dataType;
-                    aR.fieldLength = model.fieldLength;
-                    aR.infoOmitted = model.infoOmitted;
-                }
-                SaveMappingTempFile(model); // Save to temp file instead of TempData
+                    model.accuracyResult = accuracyResult;
+                }        
+                SaveMappingTempFile(model); 
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
@@ -566,7 +536,8 @@ namespace SAP_MIMOSAapp.Controllers
                             EscapeCsv(mapping.mimosa?.fieldName),
                             EscapeCsv(mapping.mimosa?.description),
                             EscapeCsv(mapping.mimosa?.dataType),
-                            EscapeCsv(mapping.mimosa?.fieldLength)
+                            EscapeCsv(mapping.mimosa?.fieldLength),
+                            EscapeCsv(mapping.mimosa?.notes)
                         );
                         csvBuilder.AppendLine(row);
                     }

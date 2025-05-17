@@ -15,40 +15,37 @@ from typing import List
 class ScoreManager:
 
     @staticmethod
-    def scoreOutput(mapping: Mapping) -> float:
+    def scoreOutput(mappings: list) -> dict:
         """
-        This method processes the list of Mapping objects and returns a score.
-        
+        This method processes a list of MappingEntry objects and returns aggregated accuracy metrics.
         Args:
-            mappings (List[Mapping]): A list of Mapping objects to score.
-        
+            mappings (List[MappingEntry]): A list of MappingEntry objects to score.
         Returns:
-            str: The computed score as a string.
+            dict: The computed accuracy metrics as a dictionary.
         """
-        print("Received mappings for scoring:", mapping.mappings)
-        
-        # Create accuracy and quality objects to score each mapping
+        print("Received mappings for scoring:", mappings)
         accuracy_scorer = Accuracy()
 
-        # Numbers to store the aggregate of each type of score
-
-        output = {}
-        output["Accuracy"] = 0  
-        output["DataType"] = 0
-        output["DescriptionSimilarity"] = 0
-        output["FieldLength"] = 0
-        output["SAPSimilarity"] = 0       
-        output["InfoOmitted"] = 0
-        output["MimosaSimilarity"] = 0
-
-        # Iterate over all of the mappings
-        for map in mapping.mappings:
-            output["Accuracy"] += accuracy_scorer.calculateAccuracy(map)["Accuracy"]/len(mapping.mappings)
-            output["DescriptionSimilarity"] += accuracy_scorer.calculateAccuracy(map)["DescriptionSimilarity"]/len(mapping.mappings)
-            output["FieldLength"] += accuracy_scorer.calculateAccuracy(map)["FieldLength"]/len(mapping.mappings)
-            output["DataType"] += accuracy_scorer.calculateAccuracy(map)["DataType"]/len(mapping.mappings)
-            output["SAPSimilarity"] += accuracy_scorer.calculateAccuracy(map)["SAPSimilarity"]/len(mapping.mappings)
-            output["InfoOmitted"] += accuracy_scorer.calculateAccuracy(map)["InfoOmitted"]/len(mapping.mappings)
-            output["MimosaSimilarity"] += accuracy_scorer.calculateAccuracy(map)["MimosaSimilarity"]/len(mapping.mappings)
-        
+        output = {
+            "Accuracy": 0,
+            "DataType": 0,
+            "DescriptionSimilarity": 0,
+            "FieldLength": 0,
+            "SAPSimilarity": 0,
+            "InfoOmitted": 0,
+            "MimosaSimilarity": 0
+        }
+        n = len(mappings)
+        if n == 0:
+            return output
+        for map in mappings:
+            acc = accuracy_scorer.calculateAccuracy(map)
+            output["Accuracy"] += acc["Accuracy"] / n
+            output["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
+            output["FieldLength"] += acc["FieldLength"] / n
+            output["DataType"] += acc["DataType"] / n
+            output["SAPSimilarity"] += acc["SAPSimilarity"] / n
+            output["InfoOmitted"] += acc["InfoOmitted"] / n
+            output["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
         return output
+
