@@ -368,7 +368,7 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     overall = JsonSerializer.Deserialize<AccuracyResultViewModel>(overallProp.GetRawText());
                 }
-                if (root.TryGetProperty("details", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("singlePairAccuracydetails", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
                 {
                     details = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(detailsProp.GetRawText());
                 }
