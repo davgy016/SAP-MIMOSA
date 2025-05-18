@@ -56,13 +56,13 @@ def store_raw_data_of_AI_responses(mapping_doc):
 
 import re
 
-# Helper to extract JSON from LLM response
+# Extract JSON from LLM response
 def extract_json_from_response(response_text):
     # Try to extract JSON from a markdown code block
     match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
     if match:
         return match.group(1)
-    # Fallback: try to find the first JSON-looking structure
+    # Try to find the first JSON-looking structure
     match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
     if match:
         return match.group(1)
@@ -85,7 +85,8 @@ async def ask_AI(request: SearchQuery):
         # Extract JSON from LLM response
         json_str = extract_json_from_response(result)
         mapping_doc_dict = json.loads(json_str)
-        #print("AI returned:", mapping_doc_dict)        
+        #print("AI returned:", mapping_doc_dict)  
+        
         if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
             mappings = mapping_doc_dict["mappings"]
         elif isinstance(mapping_doc_dict, list):
@@ -95,29 +96,21 @@ async def ask_AI(request: SearchQuery):
 
         # Convert list of dicts to list of MappingEntry objects
         mapping_entries = [MappingEntry(**item) for item in mappings]
-
-        # Create a Mapping object with required fields
         mapping_doc = MappingDocument(
             LLMType=llm_model,
             mappings=mapping_entries,
             prompt=request.Query
         )
 
-        # Call check_accuracy and set the scores on the Mapping object
-        mapping_query = MappingQuery(root=[mapping_doc])
-        accuracyResult = await check_accuracy(mapping_query)
-        mapping_doc.accuracyRate = accuracyResult["accuracy_score"]
-        mapping_doc.descriptionSimilarity = accuracyResult["description_similarity"]
-        mapping_doc.mimosaSimilarity = accuracyResult["mimosa_similarity"] 
-        mapping_doc.sapSimilarity = accuracyResult["sap_similarity"] 
-        mapping_doc.dataType = accuracyResult["data_type"] 
-        mapping_doc.infoOmitted = accuracyResult["info_omitted"] 
-        mapping_doc.fieldLength = accuracyResult["field_length"] 
-        #print("data_similarity  ", accuracyResult["data_type"] )
+        # Call check_accuracy and set the accuracyResult and accuracy of Single MappingPair  properties
+        accuracy_result = await check_accuracy(mapping_entries)
+        mapping_doc.accuracyResult = accuracy_result["overall"]
+        mapping_doc.accuracySingleMappingPair = accuracy_result["singlePairAccuracydetails"]       
+
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
         store_raw_data_of_AI_responses(mapping_doc)
 
-        # Return the Mapping object directly!
+        # Return the Mapping object directly
         return mapping_doc
 
     except Exception as e:
@@ -130,6 +123,14 @@ async def ask_AI(request: SearchQuery):
 @app.get("/workorders")
 async def get_workorders():
     return load_data(storagePath)
+
+@app.get("/workorders/{map_id}")
+async def get_workorder(map_id: str):
+    data = load_data(storagePath)
+    for doc in data:
+        if str(doc.get("mapID")) == str(map_id):
+            return doc
+    raise HTTPException(status_code=404, detail="Mapping not found")
 
 @app.post("/workorders")
 async def create_workorder(document: MappingDocument):
@@ -145,10 +146,25 @@ async def create_workorder(document: MappingDocument):
     save_data(data, storagePath)
     return document
 
+'''
 @app.put("/workorders")
 async def update_workorders(documents: List[MappingDocument]):
     save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
     return documents
+'''
+@app.put("/workorders/{map_id}")
+async def update_workorder(map_id: str, document: MappingDocument):
+    data = load_data(storagePath)
+    updated = False
+    for idx, doc in enumerate(data):
+        if str(doc.get("mapID")) == str(map_id):
+            data[idx] = document.dict(exclude_none=True)
+            updated = True
+            break
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
+    save_data(data, storagePath)
+    return document
 
 @app.delete("/workorders/{map_id}")
 async def delete_workorder(map_id: str):
@@ -162,26 +178,17 @@ async def delete_workorder(map_id: str):
 
 
 
-@app.post("/check_accuracy")
-async def check_accuracy(output: MappingQuery):
-    data = output.root 
-    output2 = ScoreManager.scoreOutput(data[0])
-    accuracy_score = float(output2["Accuracy"])*100
-    description_similarity = float(output2["DescriptionSimilarity"]) *100
-    mimosa_similarity = float(output2["MimosaSimilarity"])*100
-    sap_similarity = float(output2["SAPSimilarity"])*100
-    data_type= float(output2["DataType"])*100
-    info_omitted = float(output2["InfoOmitted"])*100
-    field_length = float(output2["FieldLength"])*100    
+from typing import List
+from ValidationAndMapping.Models import MappingEntry
 
+@app.post("/check_accuracy")
+async def check_accuracy(entries: List[MappingEntry]):
+    results = ScoreManager.scoreOutputWithDetails(entries)
+    # results = {"overall": AccuracyResult, "singlePairAccuracydetails": [AccuracyResult, ...]}
+    # FastAPI will serialize the AccuracyResult objects automatically
     return {
-        "accuracy_score": round(accuracy_score,2),
-        "description_similarity": round(description_similarity,2),
-        "mimosa_similarity": round(mimosa_similarity,2),
-        "sap_similarity": round(sap_similarity,2),
-        "data_type": round(data_type,2),
-        "info_omitted": round(info_omitted,2),
-        "field_length": round(field_length,2)
+        "overall": results["overall"],
+        "singlePairAccuracydetails": [r for r in results["singlePairAccuracydetails"]]
     }
 
 def start():

@@ -1,0 +1,78 @@
+Sl. No,Entity name,Final Entity Name,Final Attribute Name,Attribute Name,Sample Value,Physical Entity ,SAP PM Field Defn,Notes
+1,WorkOrder,WorkOrder,ShortName,ShortName,2.00E+11,AUFK (OrderMaster),Order Number,"We have mapped this to IDInInfoSource, especially if SAP system is the InfoSource (i.e., the system of record)"
+2,WorkOrder,WorkManagementType,/WorkManagementType/ShortName,WorkManagementType,PM01,AUFK (OrderMaster),Order Type,"Will likely be a mapping to the Reference Data entry, not so much mapping PM01 into the name of the WorkManagementType. E.g., the entry for 'Maintenance, Corrective' with UUID 'cdc33a36-5f93-4f4c-a467-b4a78ff75578'"
+3,WorkOrder,Agent,/Creator/FullName,Creator,SAP_USER_PM01,AUFK (OrderMaster),Entered by,Would map to the 'Agent' entity with a specific UUID that has the IDInInfoSource matching the user id stored in this field.
+4,WorkOrder,WorkOrder,Created,Created,20211228:221210,AUFK (OrderMaster),"Created on, Time created",
+5,WorkOrder,Agent,/LastEditor/FullName,LastEditor,SAP_USER_PM02,AUFK (OrderMaster),Last changed by,As for 'Entered by'
+6,WorkOrder,WorkOrder,LastEdited,LastEdited,20211230:211210,AUFK (OrderMaster),"Change date for Order Number, Changed at",
+7,WorkOrder,WorkOrder,StartBefore,StartBefore,20220115: 080000,AFIH (MaintenanceOrderHeader),"PM Order: Reference Date, Time of Reference Date","Our initial mapping looked at 'Date until which the system is available' as StartAfter. But the BAPI data structure we use has something called Basic start, that we have not traced back to the table itself"
+8,WorkOrder,WorkOrder,Endbefore,EndBefore,20220131: 163000,AFKO (WorkOrderHeader),Basic finish date,"WorkOrderHeader is for Production Work Orders.
+Our initial mapping looked at 'Date after which the system is available' as EndBefore. But the BAPI data structure we use has something called Basic end, that we have not traced back to the table itself"
+9,WorkOrder,WorkOrder,FullName,FullName,Shorttextfororderheaderwith40characters,AUFK (OrderMaster),Description,Would make this Short Name
+10,WorkOrder,WorkOrder,Description,Description,Long text for orderheader with multiple lines,LongTextDescription,Text Line,
+11,WorkOrder,WorkOrder,PriorityLevelType,PriorityLevelType,4,AFIH (MaintenanceOrderHeader),Priority,"We have mapped this to the 6 PriorityLevelTypes in the CCOM Ref library. 1 -Highest, 2-High, 3-Moderate, 4-Lowest. Whether or not that is 'correct' could be disucssed and agreed upon."
+12,WorkOrder,Asset,/Asset/Shortname,ShortName,1.00E+11,AFIH (MaintenanceOrderHeader),Equipment Number,"Would map to the Asset entity that matches the Equipment Number (i.e., as IDInInfoSource)."
+13,WorkOrder,,,To be mapped to CCOM,MECHANIK,CRHD (WorkCenterHeader),Work Center,"This is related to the financial side of things. So far we have been treating that as internal to SAP and not exchaning these details. There are a couple of possibilities, could map to custom properties or map to Segments structures that rerpesent the work centre/financial elements."
+14,WorkOrder,Same as A15,Same as A15,Same as A15?? - clarification needed,MARS,CRHD (WorkCenterHeader),Plant,A segment or possibly site from the breakdown structure
+15,Work Order,Site,/Segment/RegistrationSite/ShortName,RegistrationSite,MARS,ILOA (FunctionLocation),Maintenance Plant,Would be a mapping to a Site Entity that matches the Maintenance Plant id/code of this field.
+16,Work Order,Segment,/Segment/ShortName,ShortName,LOCATION01,ILOA (FunctionLocation),Location of maintenance object,"This is a data struct relating some more specific location information, possibly to the segment or site, but not the segment itself"
+17,WorkOrder,Segment,/Segment/FullName,FullName,Z378-DTRN_-DEVO_D-512A-00000000000001,IFLOS (FunctionalLocationLabel),Functional Location Label,"Should this be 'Functional Location' referencing IFLOT which would be the reference to the Segment Entity that is the funcitonal location? Actually, IFLOT is at bottom A71, but unsure of the originating context, i.e., WorkOrder vs. WorkStep?"
+18,WorkOrder,WorkStatus,/WorkStatus/ShortName,ShortName,REL PRC MANC SETC,JEST ,System Individual status of an object (short form) - Table TJ02T?,"This would map to WorkStatusTypes (via the WorkStatus entity). That is, each time the status changes, a new WorkStatus pointing to the matching WorkStatusType would be created in the CCOM representation."
+19,WorkOrder,WorkStatus,/WorkStatus/FullName,FullName,SCP9 PLN9 MAT8,JEST,User Individual status of an object (short form) - Table TJ30T?,related to above.
+20,WorkOrder,Agent,/AgentRoleWithWork/AgentRole/Agent/ShortName,ShortName,P1D,AFIH (MaintenanceOrderHeader),Planner Group for Customer Service and Plant Maintenance,"Will reference an Agent Entity, via the path described, that matches the ID/name of the planner group.
+Will need reference data for the AgentRoleType to indicate that it is a Planner Group Role"
+21,WorkOrder,Agent,/AgentRoleWithWork/AgentRole/Agent/FullName,FullName,Mechanical Planner,T024(PlannerGroup),Name of Maintenance Planner Group,"This is part of mapping the planner group into Agent, and may be ShortName."
+22,WorkOrder,WorkManagementType,/Step/WorkManagementType/ShortName,ShortName,BKD,AFIH (MaintenanceOrderHeader),Maintenance Activity Type,"This would be an indicator of a more specialised WorkManagement Type from the taxonomy, which would be mapped to."
+23,WorkOrder,WorkManagementType,/Step/WorkManagementType/FullName,FullName,Breakdown Maintenance Activity,T353I_T(MaintenanceActivtyType),Description of maintenance activity type,related to previous
+24,Work Order,HealthAssessment,/Asset/HealthAssessment/HealthLevelPrecise,HealthLevelPrecise,1,AFIH (MaintenanceOrderHeader),Syst. Condition,Would map to HealthLevelType reference data items
+25,Work Order,HealthAssessment,/Asset/HealthAssessment/HealthLevelType,HealthLevelType,Breakdown Maintenance Activity Sys. Cond,T357M_T(MachineOperatingCondition),Text on Operating Condition,This likely not need to be mapped directly as it is related to the system condition entry.
+26,WorkOrder,PresentLifeCycleStatus,/PresentLifeCycleStatus/ShortName,ShortName,10000012,AFIH (MaintenanceOrderHeader),Revision for Plant Maintenance and Customer Service,This looks like it would actually refer to a parent WorkOrder in a WorkOrderHierarchy as the Revisions are used to group work to be executed together during some time period.
+27,WorkOrder,PresentLifeCycleStatus,/PresentLifeCycleStatus/FullName,FullName,Maintennance revision for preventive order,T352R(MaintenanceRevision),Revision Description,related to above
+28,Segment,,,get better understanding of how ABC is used in Dow,A,ILOA (FunctionLocation),ABC Indicator for technical object,Criticality of the Segment and the CriticalityScaleType
+29,Segment,,,get better understanding of how ABC is used in Dow,ABC indicator Tecobj,T370C (ABCIndicator),Text for ABC Indicator for Technical Objects,related to above
+30,WorkOrder,Agent,/Agent/ShortName??,ShortName,U41777777778,IHPA(Partner),Partner,"Yes, would map to another AgentRoleWithWork, an appropriate AgentRoleType for 'Partner', and the Agent itself for the role."
+31,WorkOrder,Agent,/Agent/FullName??,FullName,SAP PM USER WITH 80 Character,ADRP,Full Name of Person,Dependent on previous
+32,WorkOrder,,,get better understanding how Notification No. is defined,1.00E+11,AFIH (MaintenanceOrderHeader),Notification No,Mapping to Request for Work entity is how we have mapped the Notifications at the moment.
+33,WorkOrder,WorkOrder,LastEdited?,LastEdited - DUPLICATE A6??,,Null,,
+34,WorkOrder,,,no SAP field is given - need more clarification (CFP field is given),,Null,,
+35,WorkOrder,,,no SAP field is given - need more clarification (CFP field is given),,Null,,
+36,WorkOrder,,,Duplicate A1 (H col same) - clarification needed,2.00E+11,AUFK (OrderMaster),Order Number,
+37,Segment,Duplicate A15,Duplicate A15,Duplicate A15 (H col same) - clarification needed,MARS,ILOA (FunctionLocation),Maintenance Plant,
+38,WorkOrder,WorkStep??,WorkStep???,get better understanding of how Operation/Activity No is defined,10,AFVC(OrderOperation),Operation/Activity Number,"Yes, (Maintenance) Order Operations are the WorkSteps."
+39,WorkOrder,Same as A38?,Same as A38?,Same as A38?,1,AFVC(OrderOperation),Operation/Activity Number,Is this the ID for a second operation/work step in the list?
+40,WorkOder,,,get better understanding of how control key is defined,PM01,AFVC(OrderOperation),Control Key (See Table T430 for Description),Potentially this maps to higher-level WorkTaskTypes in a taxonomy or a WorkManagementType for WorkSteps
+41,WorkOrder,,,get better understanding of how standard text key is defined,STANTXKY,AFVC(OrderOperation),Standard text key (See Table 435 for Values),
+42,WorkOrder,Duplicate A15,Duplicate A13,Duplicate A13?? - clarification needed,MECHANIK,CRHD (WorkCenterHeader),Work Center,
+43,WorkOrder,Same as A15??,Same as A15??,Same as A15?? - clarification needed,US01,AFVC(OrderOperation),Plant,
+44,WorkOrder,,,get better undertanding of how work center description is defined,Mechanical Work Center ( 40 CHAR) ,CRTX(WorkCenterText),Short Description,
+45,WorkOrder,WorkTaskType,/WorkTaskType/Shortname,WorkTaskType,100001,AFVC(OrderOperation),Activity Type,"Yes, but the 100001 would likely map to the WorkTaskType's IDInInfoSource. Alternatively, there would be a mapping to existing WorkTaskType reference data elements."
+46,WorkStep??,,,get better undertanding of how operation short text is defined,Operation Short text,AFVC(OrderOperation),Operation short text,Likely comes from or maps to the ShortName of the WorkStep
+47,WorkStep??,Same as A38,Same as A38,get better undertanding of how operation activity number is defined,123,AFVC(OrderOperation),Operation/Activity Number,
+48,WorkOrder,TimeStampedEvent,/EventCause//TimestampedEvent/End-Start,End-Start ??,1000001,AFVV(OperationValues),Values/Activity Number; Normal duration of activity,Not sure where this is coming from or where it should go. If this is referring to 'normal' durations then it may be a property a SolutionPackage which is a kind of template for WorkOrders.
+49,WorkOrder,MeasurementLocation,MeasurementLocation/DefautUnitofMeasure,Value??,HRS,AFVV(OperationValues),Values/Activity Number; Normal duration/unit,"would likely be the unit of measure associated with a Measure object (i.e., value plus unit pair)"
+50,WorkStatus,WorkStatus,WorkStatus,WorkStatus,REL CNF,JEST,JEST/Activity Number,duplicate of A18??
+51,WorkStatus,Agent,???/Agent/AgentRoleWithWork,AgentRoleWithWork,SCP9 PLN9 MAT8,JEST,JEST/Activity Number,duplicate of A19??
+52,WorkOrder,,StartBefore?? -same as A56??,Same as A56??,1,AFVV(OperationValues),Values/Activity Number; Constraint on the basic start date for the activity,"If these are for the operations, then they would map to, e.g., StartBefore, etc., of the WorkStep"
+53,WorkOrder,RequestForWork,EndBefore??,Same as A57??,Must Start On,AFVV(OperationValues),Values/Activity Number; Constraint on the finish date of activity,as above
+54,WorkOrder,,Duplicate of A52?? In SAP not CFP?,Duplicate of A52??,1,AFVV(OperationValues),Values/Activity Number; Constraint on the basic start date for the activity,as above
+55,WorkOrder,RequestForWork,Duplicate of A53?? In SAP not CFP?,Duplicate of A53??,Must End On,AFVV(OperationValues),Values/Activity Number;  Constrait on the finish date of activity,as above
+56,WorkOrder,WorkOrder,StartBefore,StartBefore,20221501 : 080000,AFVV(OperationValues),Values/Activity Number; Constraint for activity start/start time,as above
+57,WorkOrder,WorkOrder,EndBefore,EndBefore,20221701 : 080000,AFVV(OperationValues),Values/Activity Number;Constraint for Finish of Activity (basic finish time of activity),as above
+58,WorkOrder,WorkOrder,StartAfter,StartAfter,20221501 : 080000,AFVV(OperationValues),Values/Activity Number; Earliest scheduled start (date and time),as above
+59,WorkOrder,WorkOrder,EndAfter,EndAfter,20221701 : 080000,AFVV(OperationValues),Values/Activity Number; Earliest scheduled finish (date and time),as above
+60,WorkOrder,,,get better understanding of how key word ID is defined,TK_TERKC,AFVU(OperationUserFields),Fields/Activity Number; Key word ID for user-defined fields,"If these are truly custom values then they would Properties ,likely of the WorkStep, if they are related to the operations."
+61,WorkOrder,,,get better understanding of how user field is defined,TEXT 20 CHAR,AFVU(OperationUserFields),Fields/Activity Number; User field with 20 characters,as above
+62,WorkOrder,,,Duplicate A6?,20211230:211210,AUFK (OrderMaster),Master/Activity Number,Not sure where this value/field is coming from.
+63,WorkOrder,,,Duplicate A12?,1.00E+11,AFIH (MaintenanceOrderHeader),Header/Activity Number; Equipment Number,Or is this meant to be in association with an operation/workstep?
+64,Segment,Same as A17,Same as A17,Duplicate for A17,Z378-DTRN_-DEVO_D-512A-00000000000001,IFLOS (FunctionalLocationLabel),Functional Location Label,as above?
+65,Asset,Asset,/Asset/HealthAssessment,HealthAssessment,0,AFVC(OrderOperation),System Condition,"(Maintenance) Order Operations are the WorkSteps within a WorkOrder, so this would be a similar mapping as to the work order above at line 24, but for the work step."
+66,WorkOrder,,,get better understanding of purchase req # - not yet mapped to CCOM,1000000020,AFVC(OrderOperation),Purchase requisition number,"we haven't mapped to this, but would likely map to an appropriate 'Request' entity of appropriate reference data once we do, if doing the mapping fully in CCOM."
+67,WorkOrder,,,get better understanding of purchase req # - not yet mapped to CCOM,10,AFVC(OrderOperation),Item numberof the purchase requisition in the order,as above
+68,WorkOrder,,,get better understanding of purchasing doc #- not yet mapped to CCOM,4500000012,AFVC(OrderOperation),Purchasing Document Number,as above
+69,WorkOrder,,,get better understanding of item # of purchasing doc - not yet mapped to CCOM,10,AFVC(OrderOperation),Item Number of Purchasing Document,as above
+70,Asset,Asset,/Asset/Manufacturer,Manufacturer?,1000000010,AFVC(OrderOperation),Account Number of Vendor or Creditor,"Agree this would likely map to a Manufacturer, but not necessasrily the manufacturer of the existing asset in cases where it is a like replacement. If related to the purchase order, it would be the recipient of the 'Request'. This would be a 'Organisation' (Agent), which may be mapped to an equivalent Manufacturer for Assets but not other things."
+71,Segment,??,??,Duplicate of A17?,Z378-DTRN_-DEVO_D-512A-00000000000001,IFLOT(FunctionalLocation),Functional Location,Would be a Segment in the breakdown structure
+72,Segment,Same as A17,Same as A17,Duplicate for A17??,Z378-DTRN_-DEVO_D-512A-00000000000001,IFLOT(FunctionalLocationLabels),Functional Location Label,based on previous
+73,Segment,SegmentType?,/Type/Shortname?,Type?,Devolatizer,IFLOT(FunctionalLocationShortText),Description of Functional Location,"Depends on whether this is always general description, it may match back to the SegmentType reference data. But if it is object specific and an arbitrary description of the functional location, then it would be either the FullName or Description of the Segment itself."
+74,Segment,,,to be mapped to CCOM,EN,IFLOT(FunctionalLocationShortText),Language Key,"All CCOM Text elements can specify their language as they are derived from the Core Component Type schema , which has a language attribute for their TextType."
+75,,Same as A15,Same as A15,Same as A15,,Plant,Plant,

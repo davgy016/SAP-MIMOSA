@@ -29,7 +29,7 @@ namespace SAP_MIMOSAapp.Controllers
             var documents = new List<MappingDocument>();
 
             try
-            {               
+            {
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
@@ -71,14 +71,12 @@ namespace SAP_MIMOSAapp.Controllers
             return View(model);
         }
 
-       
         // Save MappingDocument to temp file
         private void SaveMappingTempFile(MappingDocument doc)
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "tempImportData.json");
             System.IO.File.WriteAllText(tempPath, JsonSerializer.Serialize(doc));
         }
-        
         // Load MappingDocument from temp file and delete after reading
         private MappingDocument? LoadMappingTempFile()
         {
@@ -163,13 +161,15 @@ namespace SAP_MIMOSAapp.Controllers
             MappingDocument? model = LoadMappingTempFile();
             if (model == null)
             {
-                model = LoadMappingTempFile();
+                model = new MappingDocument();
             }
             if (model != null)
             {
 
                 if (query != null)
+                {
                     model.prompt = query;
+                }
                 if (llmType != null)
                 {
                     model.LLMType = llmType;
@@ -183,6 +183,20 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(MappingDocument newDocument)
         {
+            // Retrieve accuracySingleMappingPairJson from the form
+            var accuracySingleMappingPairJson = Request.Form["accuracySingleMappingPairJson"];
+            if (!string.IsNullOrEmpty(accuracySingleMappingPairJson))
+            {
+                newDocument.accuracySingleMappingPair = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(accuracySingleMappingPairJson);
+            }
+
+            // Handle prompts posted as a single string with newlines
+            if (Request.Form.ContainsKey("prompts") && Request.Form["prompts"].Count == 1)
+            {
+                var promptsRaw = Request.Form["prompts"].ToString();
+                newDocument.prompts = promptsRaw.Split(',').Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(newDocument);
@@ -195,7 +209,7 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     newDocument.mapID = "";
                 }
-                // Ensure platform values are set correctly
+                // platform values set correctly
                 if (newDocument.mappings != null)
                 {
                     foreach (var mapping in newDocument.mappings)
@@ -242,19 +256,13 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync("workorders");
+                var response = await _httpClient.GetStringAsync($"workorders/{id}");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
+                var document = JsonSerializer.Deserialize<MappingDocument>(response, options);
 
-                if (documents == null)
-                {
-                    return NotFound();
-                }
-
-                var document = documents.FirstOrDefault(d => d.mapID == id);
                 if (document == null)
                 {
                     return NotFound();
@@ -279,61 +287,41 @@ namespace SAP_MIMOSAapp.Controllers
 
             try
             {
-                var response = await _httpClient.GetStringAsync("workorders");
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options);
-
-                if (documents == null)
-                {
-                    ViewBag.ErrorMessage = "Mapping documents not found";
-                    return View(updatedDocument);
-                }
-
-                var documentIndex = documents.FindIndex(d => d.mapID == updatedDocument.mapID);
-                if (documentIndex == -1)
-                {
-                    ViewBag.ErrorMessage = "Mapping document not found";
-                    return View(updatedDocument);
-                }
-
-
-                // Ensure platform values are set correctly
+                // Ensure platform values are properly set
                 if (updatedDocument.mappings != null)
                 {
                     foreach (var mapping in updatedDocument.mappings)
                     {
-                        if (mapping.sap != null && string.IsNullOrEmpty(mapping.sap.platform))
+                        if (mapping.sap != null && string.IsNullOrWhiteSpace(mapping.sap.platform))
                         {
                             mapping.sap.platform = "SAP";
                         }
 
-                        if (mapping.mimosa != null && string.IsNullOrEmpty(mapping.mimosa.platform))
+                        if (mapping.mimosa != null && string.IsNullOrWhiteSpace(mapping.mimosa.platform))
                         {
                             mapping.mimosa.platform = "MIMOSA";
                         }
                     }
                 }
 
-                // Update the document
-                documents[documentIndex] = updatedDocument;
-
-                // Save the updated documents
-                var json = JsonSerializer.Serialize(documents);
+                // Send only the updated document to the correct endpoint
+                var json = JsonSerializer.Serialize(updatedDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var updateResponse = await _httpClient.PutAsync($"workorders/{updatedDocument.mapID}", content);
 
-                var updateResponse = await _httpClient.PutAsync("workorders", content);
-                updateResponse.EnsureSuccessStatusCode();
+                if (!updateResponse.IsSuccessStatusCode)
+                {
+                    var errorContent = await updateResponse.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Failed to update mapping: {errorContent}";
+                    return View(updatedDocument);
+                }
 
-                TempData["SuccessMessage"] = $"Mapping with #ID {updatedDocument.mapID} updated successfully!";
-
+                TempData["SuccessMessage"] = $"Mapping with ID {updatedDocument.mapID} updated successfully.";
                 return RedirectToAction("Index");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Error updating record: {ex.Message}";
+                ViewBag.ErrorMessage = $"Error updating mapping: {ex.Message}";
                 return View(updatedDocument);
             }
         }
@@ -358,62 +346,50 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
-        //// check accuracy of a mapping
-        private async Task<MappingDocument> CheckAccuracy(MappingDocument document)
+        // Check accuracy of a mapping
+        // Returns both overall and details as a tuple
+        private async Task<(AccuracyResultViewModel? overall, List<AccuracyResultViewModel>? details)> CheckAccuracy(List<MappingPair> mappingPair)
         {
             try
             {
-                var mappingQuery = new List<MappingDocument> { document };
+                var jsonRequest = new StringContent(
+                    JsonSerializer.Serialize(mappingPair),
+                    Encoding.UTF8,
+                    "application/json"
+                );
 
-                var jsonRequest = new StringContent(JsonSerializer.Serialize(mappingQuery), Encoding.UTF8, "application/json");
-
-                // Send the request to check accuracy
                 var response = await _httpClient.PostAsync("check_accuracy", jsonRequest);
-
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Error checking accuracy: {response.StatusCode}");
-                    return document;
+                    return (null, null);
                 }
 
-                // Parse the response
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var accuracyResult = JsonSerializer.Deserialize<AccuracyResult>(responseContent);
-
-                if (accuracyResult != null)
+                // The response is: { "overall": { ... }, "details": [ {...}, {...} ] }
+                using var doc = JsonDocument.Parse(responseContent);
+                var root = doc.RootElement;
+                AccuracyResultViewModel? overall = null;
+                List<AccuracyResultViewModel>? details = null;
+                if (root.TryGetProperty("overall", out var overallProp))
                 {
-                    document.accuracyRate = accuracyResult.accuracy_score;
-                    document.descriptionSimilarity = accuracyResult.description_similarity;
-                    document.mimosaSimilarity = accuracyResult.mimosa_similarity;
-                    document.sapSimilarity = accuracyResult.sap_similarity;
-                    document.dataType = accuracyResult.data_type;
-                    document.infoOmitted = accuracyResult.info_omitted;
-                    document.fieldLength = accuracyResult.field_length;
-
+                    overall = JsonSerializer.Deserialize<AccuracyResultViewModel>(overallProp.GetRawText());
                 }
-
-                return document;
+                if (root.TryGetProperty("singlePairAccuracydetails", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
+                {
+                    details = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(detailsProp.GetRawText());
+                }                
+                return (overall, details);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking accuracy");
-                return document;
+                return (null, null);
             }
         }
 
-        //Class to deserialize accuracy response
-        private class AccuracyResult
-        {
-            public float accuracy_score { get; set; }
-            public float description_similarity { get; set; }
-            public float mimosa_similarity { get; set; }
-            public float sap_similarity { get; set; }
-            public float data_type { get; set; }
-            public float info_omitted { get; set; }
-            public float field_length { get; set; }
-        }
 
-        // --- AJAX endpoint for AI Assistant in Create view ---
+        // --- Endpoint for AI Assistant in Create view ---
         [HttpPost]
         public async Task<IActionResult> AskAI([FromBody] AskAIRequest req)
         {
@@ -437,6 +413,9 @@ namespace SAP_MIMOSAapp.Controllers
                         var parseResponse = JsonSerializer.Deserialize<MappingDocument>(aiResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         if (parseResponse != null)
                         {
+                            // Load previous prompts if any
+                            parseResponse.prompts = req.prompts ?? new List<string>();
+
                             SaveMappingTempFile(parseResponse);
                             return Json(new { success = true, redirectUrl = Url.Action("Create") });
                         }
@@ -468,6 +447,7 @@ namespace SAP_MIMOSAapp.Controllers
             public string prompt { get; set; }
             public string llmType { get; set; }
             public List<MappingPair>? mappings { get; set; }
+            public List<string>? prompts { get; set; }
         }
 
 
@@ -512,7 +492,8 @@ namespace SAP_MIMOSAapp.Controllers
                                 fieldName = row.MIMOSA_FieldName ?? "",
                                 dataType = row.MIMOSA_DataType ?? "",
                                 description = row.MIMOSA_Description ?? "",
-                                fieldLength = row.MIMOSA_FieldLength ?? ""
+                                fieldLength = row.MIMOSA_FieldLength ?? "",
+                                notes = row.MIMOSA_Notes ?? ""
                             }
                         };
                         // Only add if at least one side is filled
@@ -523,19 +504,11 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
-                var model = new MappingDocument { mappings = mappings };
-                var aR = await CheckAccuracy(model);
-                if (aR.accuracyRate != null)
-                {
-                    aR.accuracyRate = model.accuracyRate;
-                    aR.descriptionSimilarity = model.descriptionSimilarity;
-                    aR.mimosaSimilarity = model.mimosaSimilarity;
-                    aR.sapSimilarity = model.sapSimilarity;
-                    aR.dataType = model.dataType;
-                    aR.fieldLength = model.fieldLength;
-                    aR.infoOmitted = model.infoOmitted;
-                }
-                SaveMappingTempFile(model); // Save to temp file instead of TempData
+                var model = new MappingDocument { mappings = mappings };               
+                var (overall, details) = await CheckAccuracy(model.mappings);                
+                model.accuracyResult = overall;
+                model.accuracySingleMappingPair = details;
+                SaveMappingTempFile(model);
                 return Json(new { redirectUrl = Url.Action("Create") });
             }
             catch (Exception ex)
@@ -544,6 +517,70 @@ namespace SAP_MIMOSAapp.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> ExportMappingCsv(string mapId)
+        {
+            try
+            {
+                // get mapping data for the given mapId
+                var response = await _httpClient.GetAsync($"workorders/{mapId}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return BadRequest("Failed to fetch mapping data.");
+                }
+                var json = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var mappingDoc = JsonSerializer.Deserialize<MappingDocument>(json, options);
+                if (mappingDoc == null)
+                {
+                    return NotFound("No mapping found for the given Map ID.");
+                }
+                // Convert to CSV
+                var csvBuilder = new StringBuilder();
+                csvBuilder.AppendLine("SAP_EntityName,SAP_FieldName,SAP_Description,SAP_DataType,SAP_FieldLength,SAP_Notes,MIMOSA_EntityName,MIMOSA_FieldName,MIMOSA_Description,MIMOSA_DataType,MIMOSA_FieldLength");
+                if (mappingDoc.mappings != null)
+                {
+                    foreach (var mapping in mappingDoc.mappings)
+                    {
+                        var row = string.Join(",",
+                            EscapeCsv(mapping.sap?.entityName),
+                            EscapeCsv(mapping.sap?.fieldName),
+                            EscapeCsv(mapping.sap?.description),
+                            EscapeCsv(mapping.sap?.dataType),
+                            EscapeCsv(mapping.sap?.fieldLength),
+                            EscapeCsv(mapping.sap?.notes),
+                            EscapeCsv(mapping.mimosa?.entityName),
+                            EscapeCsv(mapping.mimosa?.fieldName),
+                            EscapeCsv(mapping.mimosa?.description),
+                            EscapeCsv(mapping.mimosa?.dataType),
+                            EscapeCsv(mapping.mimosa?.fieldLength),
+                            EscapeCsv(mapping.mimosa?.notes)
+                        );
+                        csvBuilder.AppendLine(row);
+                    }
+                }
+                var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+                var fileName = $"mapping_{mappingDoc.mappings[0].sap.entityName}_{mapId}.csv";
+                return File(bytes, "text/csv", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting mapping CSV");
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+        private string EscapeCsv(string? value)
+        {
+            if (string.IsNullOrEmpty(value)) return "";
+            if (value.Contains(",") || value.Contains("\""))
+            {
+                value = value.Replace("\"", "\"\"");
+                return $"\"{value}\"";
+            }
+            return value;
+        }
 
     }
 }

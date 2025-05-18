@@ -128,6 +128,10 @@
                                                     <form method="post" action="@Url.Action("Delete", "Home", new { id = document.mapID })" class="d-inline delete-form" data-mapid="@document.mapID">
                                                         <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
                                                     </form>
+                                                    <form method="get" action="@Url.Action("ExportMappingCsv", "Home")" style="margin-bottom:0;">
+                                                        <input type="hidden" name="mapId" value="@document.mapID" />
+                                                        <button type="submit" class="form-control btn btn-warning btn-sm w-100">Export</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
@@ -158,43 +162,58 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6 mb-2 border-end">
-                                                    <h6 class="fw-bold mb-1"><i class="bi bi-chat-left-text"></i> Prompt</h6>
-                                                    <div class="ms-3">@document.prompt</div>
+                                                    @if (document.prompts != null && document.prompts.Any())
+                                                    {
+                                                        <details>
+                                                            <summary>Prompt History</summary>
+                                                            <ul>
+                                                                @foreach (var prompt in document.prompts)
+                                                                {
+                                                                    <li>@prompt</li>
+                                                                }
+                                                            </ul>
+                                                        </details>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>No prompt history available.</p>
+                                                    }
+
                                                 </div>
                                                 <div class="col-md-6 mb-2 d-flex flex-column justify-content-center">
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-bar-chart me-2 text-primary"></i>
                                                         <span class="fw-bold">Overall Accuracy Rate:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyRate)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center mb-2">
                                                         <i class="bi bi-award me-2 text-success"></i>
                                                         <span class="fw-bold">Description Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.descriptionSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Mimosa Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.mimosaSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.mimosaSimilarity)%</span>
                                                     </div> <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">SAP Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.sapSimilarity)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.sapSimilarity)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">DAta type Similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.dataType)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.dataType)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Missing fields rate:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.infoOmitted)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <i class="bi bi-link-45deg me-2 text-info"></i>
                                                         <span class="fw-bold">Field length similarity:</span>
-                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.fieldLength)%</span>
+                                                        <span class="ms-2 text-muted">@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span>
                                                     </div>
                                                 </div>
                                             </div>

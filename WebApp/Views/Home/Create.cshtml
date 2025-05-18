@@ -61,17 +61,30 @@
             </div>
         </div>
         @* Metrics alert is always present but hidden if no metrics *@
-        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null) ? "block" : "none")">
-            <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
-            Overall Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong>
+        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyResult?.accuracyRate != null) ? "block" : "none")">
+
+            @if (Model?.prompts != null && Model.prompts.Any())
+            {
+                <div class="section">
+                    <h5>Prompt History</h5>
+                    <ul>
+                        @foreach (var prompt in Model.prompts)
+                        {
+                            <li>@prompt</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            Overall Accuracy: <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
+                <strong>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</strong>
             </span> <br />
-            Description Similarity: <strong>@Html.DisplayFor(m => m.descriptionSimilarity)%</strong> <br />
-            MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.mimosaSimilarity)%</strong><br />
-            SAP Similiraty: <strong>@Html.DisplayFor(m => m.sapSimilarity)%</strong><br />
-            Data type similarity: <strong>@Html.DisplayFor(m => m.dataType)%</strong><br />
-            Missing fields rate: <strong>@Html.DisplayFor(m => m.infoOmitted)%</strong><br />
-            Field length similarity: <strong>@Html.DisplayFor(m => m.fieldLength)%</strong><br />
+            Description Similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong> <br />
+            MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong><br />
+            SAP Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong><br />
+            Data type similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong><br />
+            Missing fields rate: <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong><br />
+            Field length similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong><br />
         </div>
 
         <div class="card mb-4">
@@ -88,30 +101,35 @@
                 <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
                     @{
                         var mappingIndex = 0;
+                        // Pass accuracySingleMappingPair to the partial via ViewData
+                        ViewData["AccuracyaccuracySingleMappingPair"] = Model.accuracySingleMappingPair;
                         foreach (var mapping in Model.mappings)
                         {
-                            // Render all existing mappings when the page loads,
-                            // such as when editing or after a failed form submission.
-                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
+                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping), new ViewDataDictionary(ViewData))
                             mappingIndex++;
                         }
                     }
                 </div>
             }
+            @{
+                var accuracySingleMappingPairJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>());
+            }
+            <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@accuracySingleMappingPairJson' />
         </div>
 
         @* <input type="hidden" asp-for="prompt" /> *@
         @* <input type="hidden" asp-for="LLMType" /> *@
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="descriptionSimilarity" />
-        <input type="hidden" asp-for="mimosaSimilarity" />
-        <input type="hidden" asp-for="sapSimilarity" />
-        <input type="hidden" asp-for="dataType" />
-        <input type="hidden" asp-for="fieldLength" />
-        <input type="hidden" asp-for="infoOmitted" />
+        <input type="hidden" asp-for="accuracyResult.accuracyRate" />
+        <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.sapSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.dataType" />
+        <input type="hidden" asp-for="accuracyResult.fieldLength" />
+        <input type="hidden" asp-for="accuracyResult.infoOmitted" />
+        <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary" @(Model?.mappings ==null || Model.mappings.Count== 0 ? "disabled" : "")>Create</button>
+            <button type="submit" class="btn btn-primary" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "")>Create</button>
         </div>
     </form>
 </div>
@@ -185,6 +203,23 @@
 
                     requestBody.mappings = mappings;
                 }
+                // Read existing prompts from hidden input
+                let existingPrompts = [];
+                const hiddenPromptInput = document.getElementById('prompts');
+                if (hiddenPromptInput && hiddenPromptInput.value) {
+                    existingPrompts = hiddenPromptInput.value.split(',').filter(p => p.trim() !== '');
+                }
+                // Add the new prompt to history if improving existing mapping
+                if (useExisting) {
+                    existingPrompts.push(prompt);
+                } else {
+                    existingPrompts = [prompt];
+                }
+                // Update the hidden input value
+                if (hiddenPromptInput) {
+                    hiddenPromptInput.value = existingPrompts.join('\n');
+                }
+                requestBody.prompts = existingPrompts;
 
                 // Send request to AI
                 aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
