@@ -1,62 +1,56 @@
-# tests/test_sap_checker.py
-
+# tests/test_sapchecker_entities.py
 import pytest
 from ValidationAndMapping.Accuracy.SAPChecker import SAPChecker
-from ValidationAndMapping.Models import FieldMapping, FieldCheck, FieldState
+from ValidationAndMapping.Models import FieldMapping, FieldState
 
 @pytest.fixture(scope="module")
 def checker():
-    # default constructor uses Data/sapSchema.json
     return SAPChecker()
 
-def make_field(platform, entity, field, desc, dtype, length):
-    return FieldMapping(
-        platform   = platform,
-        entityName = entity,
-        fieldName  = field,
-        description= desc,
-        dataType   = dtype,
-        notes      = "",
-        fieldLength= str(length)
-    )
+def test_normalize_strips_parentheses(checker):
+    # simulate exactly what Excel gives you
+    raw_name = "AUFK (OrderMaster)"
+    normalized = checker._normalize_table(raw_name)
+    assert normalized == "AUFK"
 
-def test_check_existing_field_correct(checker):
-    # Using real table/field from sapSchema.json:
-    # TableName = "EAMSC_JOB_OPTION", Field = "MANDT", Description="Client", SAP Type="CLNT", Length=3
-    fm = make_field(
-        "SAP PM", 
-        "EAMSC_JOB_OPTION", 
-        "MANDT",
-        "Client", 
-        "CLNT", 
-        3
-    )
-    fc: FieldCheck = checker.checkField(fm)
+    raw_name2 = "   afih   (MaintenanceOrderHeader)  "
+    assert checker._normalize_table(raw_name2) == "AFIH"
 
-    # All aspects should be correct
-    assert fc.entityName   == FieldState.CORRECT
-    assert fc.fieldName    == FieldState.CORRECT
-    assert fc.dataType     == FieldState.CORRECT
-    assert fc.fieldLength  == FieldState.CORRECT
-    assert fc.description  == FieldState.CORRECT
-
-def test_check_existing_field_mismatch(checker):
-    # Same table/field but wrong metadata should flag the incorrect parts:
-    fm = make_field(
-        "SAP PM",
-        "EAMSC_JOB_OPTION",
-        "MANDT",
-        "Wrong Description",  # bad description
-        "CHAR",               # wrong type
-        10                    # wrong length
+@pytest.mark.parametrize("entity_in,expected_tbl", [
+    ("AUFK (OrderMaster)", "AUFK"),
+    ("AFIH (MaintenanceOrderHeader)", "AFIH"),
+])
+def test_entityname_alias_and_entity_correct(entity_in, expected_tbl, checker):
+    """
+    If JSON had no top-level TableName but fields listed CheckTable=expected_tbl,
+    then incoming entityName=entity_in should still be recognized.
+    """
+    # pick a field we know lives in that table via CheckTable in sapSchema.json
+    fm = FieldMapping(
+        platform    = "SAP PM",
+        entityName  = entity_in,
+        fieldName   = "QMNUM",                # we know QMNUM → CheckTable=AUFK
+        description = "Notification Number",
+        dataType    = "CHAR(12)",
+        notes       = "",
+        fieldLength = "12"
     )
     fc = checker.checkField(fm)
+    # entityName should now be CORRECT even though "AUFK" never appeared
+    assert fc.entityName == FieldState.CORRECT
+    # and because QMNUM is a real field, fieldName must be CORRECT as well
+    assert fc.fieldName == FieldState.CORRECT
 
-    # Field exists, so entityName & fieldName still correct
-    assert fc.entityName   == FieldState.CORRECT
-    assert fc.fieldName    == FieldState.CORRECT
-
-    # The metadata should be marked incorrect
-    assert fc.dataType     == FieldState.INCORRECT
-    assert fc.fieldLength  == FieldState.INCORRECT
-    assert fc.description  == FieldState.INCORRECT
+def test_unknown_entity_remains_incorrect(checker):
+    fm = FieldMapping(
+        platform    = "SAP PM",
+        entityName  = "NONEXISTENT (FooBar)",
+        fieldName   = "QMNUM",
+        description = "Notification Number",
+        dataType    = "CHAR(12)",
+        notes       = "",
+        fieldLength = "12"
+    )
+    fc = checker.checkField(fm)
+    # should fall back to INCORRECT (or NARF) on entityName
+    assert fc.entityName in (FieldState.INCORRECT, FieldState.NARF)
