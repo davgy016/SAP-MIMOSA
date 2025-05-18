@@ -31,6 +31,11 @@ class FieldCheck(BaseModel):
     dataType: FieldState = FieldState.UNCHECKED
     fieldLength: FieldState = FieldState.UNCHECKED
 
+    def to_score(self) -> float:
+        # 5 dimensions, 1 point per CORRECT
+        correct = sum(1 for v in self.model_dump().values() if v == FieldState.CORRECT)
+        return correct / 5
+
 class MappingEntry(BaseModel):
     sap: FieldMapping
     mimosa: FieldMapping

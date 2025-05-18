@@ -14,88 +14,70 @@ from typing import List
 from .Models import AccuracyResult
 
 class ScoreManager:
-
-    @staticmethod
-    def scoreOutput(mappings: list) -> dict:
-        """
-        This method processes a list of MappingEntry objects and returns aggregated accuracy metrics.
-        Args:
-            mappings (List[MappingEntry]): A list of MappingEntry objects to score.
-        Returns:
-            dict: The computed accuracy metrics as a dictionary.
-        """
-        print("Received mappings for scoring:", mappings)
-        accuracy_scorer = Accuracy()
-
-        output = {
-            "Accuracy": 0,
-            "DataType": 0,
-            "DescriptionSimilarity": 0,
-            "FieldLength": 0,
-            "SAPSimilarity": 0,
-            "InfoOmitted": 0,
-            "MimosaSimilarity": 0
-        }
-        n = len(mappings)
-        if n == 0:
-            return output
-        for map in mappings:
-            acc = accuracy_scorer.calculateAccuracy(map)
-            output["Accuracy"] += acc["Accuracy"] / n
-            output["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            output["FieldLength"] += acc["FieldLength"] / n
-            output["DataType"] += acc["DataType"] / n
-            output["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            output["InfoOmitted"] += acc["InfoOmitted"] / n
-            output["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
-        return output
-
+    
     # This method processes a list of MappingEntry objects and returns Overall mapping accuracy result and per mapping entry accuracy result.
     @staticmethod
     def scoreOutputWithDetails(mappings: list) -> dict:
         """
-        Returns both the overall aggregated accuracy metrics and a list of per-mapping-pair accuracy results.
+        Returns both the overall aggregated accuracy metrics and a list of per-mapping accuracy results.
         """
         accuracy_scorer = Accuracy()
         n = len(mappings)
-        overall = {
-            "Accuracy": 0,
-            "DataType": 0,
-            "DescriptionSimilarity": 0,
-            "FieldLength": 0,
-            "SAPSimilarity": 0,
-            "InfoOmitted": 0,
-            "MimosaSimilarity": 0
+
+        # Initialize accumulators
+        accum = {
+            "Accuracy":             0.0,
+            "DescriptionSimilarity":0.0,
+            "FieldLength":          0.0,
+            "DataType":             0.0,
+            "SAPSimilarity":        0.0,
+            "InfoOmitted":          0.0,
+            "MIMOSASimilarity":     0.0,
         }
-        singlePairAccuracydetails = []
+        details = []
+
         if n == 0:
-            return {"overall": AccuracyResult(), "details": details}
-        for map in mappings:
-            acc = accuracy_scorer.calculateAccuracy(map)
-            overall["Accuracy"] += acc["Accuracy"] / n
-            overall["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            overall["FieldLength"] += acc["FieldLength"] / n
-            overall["DataType"] += acc["DataType"] / n
-            overall["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            overall["InfoOmitted"] += acc["InfoOmitted"] / n
-            overall["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
-            singlePairAccuracydetails.append(AccuracyResult(
-                accuracyRate=acc["Accuracy"] * 100,
-                descriptionSimilarity=acc["DescriptionSimilarity"] * 100,
-                mimosaSimilarity=acc["MimosaSimilarity"] * 100,
-                sapSimilarity=acc["SAPSimilarity"] * 100,
-                dataType=acc["DataType"] * 100,
-                infoOmitted=acc["InfoOmitted"] * 100,
-                fieldLength=acc["FieldLength"] * 100
-            ))
-        overall_result = AccuracyResult(
-            accuracyRate=overall["Accuracy"] * 100,
-            descriptionSimilarity=overall["DescriptionSimilarity"] * 100,
-            mimosaSimilarity=overall["MimosaSimilarity"] * 100,
-            sapSimilarity=overall["SAPSimilarity"] * 100,
-            dataType=overall["DataType"] * 100,
-            infoOmitted=overall["InfoOmitted"] * 100,
-            fieldLength=overall["FieldLength"] * 100
+            # return zeroed-out AccuracyResult and empty details
+            return {
+                "overall": AccuracyResult(),  
+                "details": []
+            }
+
+        # Score each pair
+        for entry in mappings:
+            scores = accuracy_scorer.calculateAccuracy(entry)
+
+            # Build the per-entry AccuracyResult, using .get(...) so missing keys → 0
+            details.append(
+                AccuracyResult(
+                    accuracyRate=             scores.get("Accuracy", 0.0) * 100,
+                    descriptionSimilarity=    scores.get("DescriptionSimilarity", 0.0) * 100,
+                    fieldLength=              scores.get("FieldLength", 0.0) * 100,
+                    dataType=                 scores.get("DataType", 0.0) * 100,
+                    sapSimilarity=            scores.get("SAPSimilarity", 0.0) * 100,
+                    infoOmitted=              scores.get("InfoOmitted", 0.0) * 100,
+                    mimosaSimilarity=         scores.get("MIMOSASimilarity", 0.0) * 100,
+                )
+            )
+
+            # Accumulate for overall
+            for k in accum:
+                # normalize by n right away
+                accum[k] += scores.get(k, 0.0) / n
+
+        # Build the overall AccuracyResult
+        overall = AccuracyResult(
+            accuracyRate=             accum["Accuracy"] * 100,
+            descriptionSimilarity=    accum["DescriptionSimilarity"] * 100,
+            fieldLength=              accum["FieldLength"] * 100,
+            dataType=                 accum["DataType"] * 100,
+            sapSimilarity=            accum["SAPSimilarity"] * 100,
+            infoOmitted=              accum["InfoOmitted"] * 100,
+            mimosaSimilarity=         accum["MIMOSASimilarity"] * 100,
         )
-        return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
+
+        return {
+            "overall": overall,
+            "details": details
+        }   
 
