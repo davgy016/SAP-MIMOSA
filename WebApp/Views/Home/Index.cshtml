@@ -15,32 +15,42 @@
         <div class="row">
             <div class="col-md-12 mb-4">
                 <!-- Search Controls -->
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Search Mappings</h4>
+                <div class="card search-card p-0 overflow-hidden border-0 shadow-lg">
+                    <div class="card-header bg-gradient text-white d-flex align-items-center" style="background: linear-gradient(90deg, #4CAF50 60%, #00e6a6 100%); box-shadow: 0 4px 24px 0 #00e6a6a0;">
+                        <i class="bi bi-search me-2 fs-3"></i>
+                        <h4 class="mb-0 flex-grow-1">Search Mappings</h4>
+                        <a href="@Url.Action("Create", "Home")" class="btn btn-floating-create ms-auto d-none d-md-inline-block" title="Create New Mapping">
+                            <i class="bi bi-plus-lg"></i>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <div class="row mt-2">
-                            <div class="col-md-6">
+                    <div class="card-body bg-glassmorph">
+                        <div class="row align-items-end g-3">
+                            <div class="col-md-7">
                                 <form id="mappingSearchForm" method="get" action="@Url.Action("Index", "Home")">
-                                    <div class="mb-3">
-                                        @* <label for="searchInput" class="form-label">Search</label> *@
-                                        <input type="text" id="searchInput" class="form-control" placeholder="@(string.IsNullOrEmpty(Model.SearchByLLM) ? "Enter entity name..." : "Enter LLM type...")" value="@(string.IsNullOrEmpty(Model.SearchByLLM) ? Model.SearchByEntityName : Model.SearchByLLM)" />
-                                        <div id="searchInputError" class="invalid-feedback" style="display:none;"></div>
+                                    <div class="d-flex align-items-center mb-4 gap-3">
+                                        <div class="position-relative flex-grow-1">
+                                            <input type="text" id="searchInput" name="SearchInput" class="form-control search-input px-4 py-3 shadow-sm pe-5" placeholder="" value="@(string.IsNullOrEmpty(Model.SearchByLLM) ? Model.SearchByEntityName : Model.SearchByLLM)" />
+                                            <label for="searchInput" class="search-label" id="search-label"></label>
+                                            <div class="position-absolute top-50 end-0 translate-middle-y d-flex align-items-center me-2" style="z-index:2; gap:0.25rem;">
+                                                <button type="submit" class="btn btn-gradient search-embedded-btn" style="padding: 0.375rem 0.85rem; border-radius: 0.7rem;" tabindex="-1">
+                                                    <i>Search</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-light ms-2 px-4 py-2">Clear</a>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <div class="form-check form-check-inline">
+                                    <p id="searchInputError" class="invalid-feedback" style="display:none;"></p>
+                                    <div class="mb-4 d-flex gap-4 align-items-center">
+                                        <div class="form-check form-check-inline search-radio">
                                             <input class="form-check-input" type="radio" name="SearchType" id="searchEntityName" value="EntityName" @(string.IsNullOrEmpty(Model.SearchByLLM) ? "checked" : "")>
-                                            <label class="form-check-label" for="searchEntityName">Search by Entity Name</label>
+                                            <label class="form-check-label" for="searchEntityName"><i class="bi bi-diagram-3"></i> Entity Name</label>
                                         </div>
-                                        <div class="form-check form-check-inline">
+                                        <div class="form-check form-check-inline search-radio">
                                             <input class="form-check-input" type="radio" name="SearchType" id="searchLLMType" value="LLMType" @(!string.IsNullOrEmpty(Model.SearchByLLM) ? "checked" : "")>
-                                            <label class="form-check-label" for="searchLLMType">Search by LLM Type</label>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Clear</a>
+                                            <label class="form-check-label" for="searchLLMType"><i class="bi bi-cpu"></i> LLM Type</label>
+                                        </div>                                       
                                     </div>
                                     @if (!string.IsNullOrEmpty(Model.SearchByEntityName) || !string.IsNullOrEmpty(Model.SearchByLLM))
                                     {
@@ -52,381 +62,384 @@
                                     }
                                 </form>
                             </div>
-                            <div class="col-md-2 ms-auto">
-                                <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Create New Mapping</a>
+                            <div class="col-md-3 text-end d-md-none">
+                                <a href="@Url.Action("Create", "Home")" class="btn btn-floating-create" title="Create New Mapping">
+                                    <i class="bi bi-plus-lg"></i> Create New Mapping
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                
             </div>
-        </div>       
+        </div>
+    </div>
 
-        <!-- Display Mappings-->
-        @if ((Model.SearchResults != null && Model.SearchResults.Count > 0)
-        || !string.IsNullOrEmpty(Model.SearchByEntityName)
-        || !string.IsNullOrEmpty(Model.SearchByLLM))
+    <!-- Display Mappings-->
+    @if ((Model.SearchResults != null && Model.SearchResults.Count > 0)
+    || !string.IsNullOrEmpty(Model.SearchByEntityName)
+    || !string.IsNullOrEmpty(Model.SearchByLLM))
+    {
+        // Only show table if searching by EntityName or LLM, not by AI/Query
+        @if (Model.SearchResults.Count == 0)
         {
-            // Only show table if searching by EntityName or LLM, not by AI/Query
-            @if (Model.SearchResults.Count == 0)
-            {
 
-                <p class="text-center">No mappings found.</p>
+            <p class="text-center">No mappings found.</p>
 
-            }
-            else
-            {
-                <div id="mappings-container">
-                    @foreach (var document in Model.SearchResults)
-                    {
-                        <div class="card mapping-card" id="group-@document.mapID">
-                            <div class="card-header">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <h5 class="mb-0">@document.mapID</h5>
-                                            <span class="badge badge-outline">@document.LLMType</span>
-                                        </div>
-                                        <small class="text-muted">@document.mappings.Count field mapping@(document.mappings.Count > 1 ? "s" : "")</small>
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDetails('@document.mapID')">
-                                            <i class="bi bi-chevron-down details-icon-@document.mapID"></i>
-                                            Details
-                                        </button>
-                                        <a href="@Url.Action("Edit", "Home", new { id = document.mapID })" class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-pencil"></i>
-                                            Edit
-                                        </a>
-
-                                        <button class="btn btn-outline-danger btn-sm delete-btn" data-mapid="@document.mapID">
-                                            <i class="bi bi-trash"></i>
-                                            Delete
-                                        </button>
-
-                                        <a href="@Url.Action("ExportMappingCsv", "Home", new { mapId = document.mapID })" class="btn btn-outline-warning btn-sm">
-                                            <i class="bi bi-download"></i>
-                                            Export
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-body">
-                                <!-- Tabs Navigation -->
-                                <ul class="nav nav-tabs" id="viewTabs-@document.mapID" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="table-tab-@document.mapID" data-bs-toggle="tab"
-                                                data-bs-target="#table-view-@document.mapID" type="button" role="tab" aria-selected="true">
-                                            Table View
-                                        </button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="card-tab-@document.mapID" data-bs-toggle="tab"
-                                                data-bs-target="#card-view-@document.mapID" type="button" role="tab" aria-selected="false">
-                                            Card View
-                                        </button>
-                                    </li>
-                                </ul>
-                                <div class="row">
-                                    <!-- Details Section (Collapsible) -->
-                                    <div id="details-@document.mapID" class="details-row border-top bg-light">
-                                        <div class="card m-3 shadow-sm border-info">
-                                            <div class="card-header bg-info text-white">
-                                                <i class="bi bi-info-circle-fill me-2"></i>
-                                                <strong>Mapping Details</strong>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6 mb-3 border-end">
-                                                        <h5 class="mb-3"><i class="bi bi-chat-text me-2"></i>Prompt History</h5>
-                                                        @if (document.prompts != null && document.prompts.Any())
-                                                        {
-                                                            <ul class="list-group list-group-flush">
-                                                                @foreach (var prompt in document.prompts)
-                                                                {
-                                                                    <li class="list-group-item bg-transparent">@prompt</li>
-                                                                }
-                                                            </ul>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p class="text-muted">No prompt history available.</p>
-                                                        }
-                                                    </div>
-                                                    <div class="col-md-6 mb-3">
-                                                        <h5 class="mb-3"><i class="bi bi-bar-chart me-2"></i>Accuracy Metrics</h5>
-                                                        @if (document.accuracyResult != null)
-                                                        {
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Overall Accuracy Rate</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-success" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.accuracyRate)%"
-                                                                         aria-valuenow="@document.accuracyResult.accuracyRate" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Description Similarity</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-primary" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.descriptionSimilarity)%"
-                                                                         aria-valuenow="@document.accuracyResult.descriptionSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Mimosa Similarity</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.mimosaSimilarity)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.mimosaSimilarity)%"
-                                                                         aria-valuenow="@document.accuracyResult.mimosaSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">SAP Similarity</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.sapSimilarity)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.sapSimilarity)%"
-                                                                         aria-valuenow="@document.accuracyResult.sapSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Data Type Similarity</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.dataType)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.dataType)%"
-                                                                         aria-valuenow="@document.accuracyResult.dataType" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Missing Fields Rate</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-danger" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.infoOmitted)%"
-                                                                         aria-valuenow="@document.accuracyResult.infoOmitted" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <div class="d-flex justify-content-between mb-1">
-                                                                    <span class="fw-medium">Field Length Similarity</span>
-                                                                    <span>@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span>
-                                                                </div>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar bg-success" role="progressbar"
-                                                                         style="width: @(document.accuracyResult.fieldLength)%"
-                                                                         aria-valuenow="@document.accuracyResult.fieldLength" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p class="text-muted">No accuracy metrics available.</p>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tab Content -->
-                                <div class="tab-content" id="viewTabsContent-@document.mapID">
-                                    <!-- Table View -->
-                                    <div class="tab-pane fade show active table-view" id="table-view-@document.mapID" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="5" class="text-center sap-table-header">SAP</th>
-                                                        <th colspan="5" class="text-center mimosa-table-header">MIMOSA</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Table Name</th>
-                                                        <th>Field Name</th>
-                                                        <th>Description</th>
-                                                        <th>Data Type</th>
-                                                        <th class="border-right-thick">Length</th>
-                                                        <th>Table Name</th>
-                                                        <th>Field Name</th>
-                                                        <th>Description</th>
-                                                        <th>Data Type</th>
-                                                        <th>Length</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var mapping in document.mappings)
-                                                    {
-                                                        <tr>
-                                                            <td>@mapping.sap.entityName</td>
-                                                            <td class="fw-medium">@mapping.sap.fieldName</td>
-                                                            <td>@mapping.sap.description</td>
-                                                            <td>@mapping.sap.dataType</td>
-                                                            <td class="border-right-thick">@mapping.sap.fieldLength</td>
-                                                            <td>@mapping.mimosa.entityName</td>
-                                                            <td class="fw-medium">@mapping.mimosa.fieldName</td>
-                                                            <td>@mapping.mimosa.description</td>
-                                                            <td>@mapping.mimosa.dataType</td>
-                                                            <td>@mapping.mimosa.fieldLength</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <!-- Card View -->
-                                    <div class="tab-pane fade card-view" id="card-view-@document.mapID" role="tabpanel">
-                                        <div class="row">
-                                            @foreach (var mapping in document.mappings)
-                                            {
-                                                <div class="col-12 mb-3">
-                                                    <div class="card mapping-pair-card">
-                                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                                            <h6 class="mb-0">Mapping Pair</h6>
-                                                            <div class="badge bg-light text-dark">Field Mapping</div>
-                                                        </div>
-                                                        <div class="card-body p-0">
-                                                            <div class="row g-0">
-                                                                <!-- SAP Side -->
-                                                                <div class="col-md-6 sap-side">
-                                                                    <div class="p-3 h-100 border-end-md">
-                                                                        <div class="d-flex align-items-center mb-3">
-                                                                            <div class="sap-indicator me-2"></div>
-                                                                            <h6 class="mb-0">SAP</h6>
-                                                                        </div>
-                                                                        <div class="mapping-details">
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Table:</div>
-                                                                                <div class="mapping-value">@mapping.sap.entityName</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Field:</div>
-                                                                                <div class="mapping-value fw-semibold">@mapping.sap.fieldName</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Description:</div>
-                                                                                <div class="mapping-value">@mapping.sap.description</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Data Type:</div>
-                                                                                <div class="mapping-value">@mapping.sap.dataType</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Length:</div>
-                                                                                <div class="mapping-value">@mapping.sap.fieldLength</div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <!-- MIMOSA Side -->
-                                                                <div class="col-md-6 mimosa-side">
-                                                                    <div class="p-3 h-100">
-                                                                        <div class="d-flex align-items-center mb-3">
-                                                                            <div class="mimosa-indicator me-2"></div>
-                                                                            <h6 class="mb-0">MIMOSA</h6>
-                                                                        </div>
-                                                                        <div class="mapping-details">
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Table:</div>
-                                                                                <div class="mapping-value">@mapping.mimosa.entityName</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Field:</div>
-                                                                                <div class="mapping-value fw-semibold">@mapping.mimosa.fieldName</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Description:</div>
-                                                                                <div class="mapping-value">@mapping.mimosa.description</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Data Type:</div>
-                                                                                <div class="mapping-value">@mapping.mimosa.dataType</div>
-                                                                            </div>
-                                                                            <div class="mapping-item">
-                                                                                <div class="mapping-label">Length:</div>
-                                                                                <div class="mapping-value">@mapping.mimosa.fieldLength</div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    }
-                </div>
-            }
         }
-    </div>
+        else
+        {
+            <div id="mappings-container">
+                @foreach (var document in Model.SearchResults)
+                {
+                    <div class="card mapping-card" id="group-@document.mapID">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <h5 class="mb-0">@document.mapID</h5>
+                                        <span class="badge badge-outline">@document.LLMType</span>
+                                    </div>
+                                    <small class="text-muted">@document.mappings.Count field mapping@(document.mappings.Count > 1 ? "s" : "")</small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleDetails('@document.mapID')">
+                                        <i class="bi bi-chevron-down details-icon-@document.mapID"></i>
+                                        Details
+                                    </button>
+                                    <a href="@Url.Action("Edit", "Home", new { id = document.mapID })" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                        Edit
+                                    </a>
+
+                                    <button class="btn btn-outline-danger btn-sm delete-btn" data-mapid="@document.mapID">
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+                                    </button>
+
+                                    <a href="@Url.Action("ExportMappingCsv", "Home", new { mapId = document.mapID })" class="btn btn-outline-warning btn-sm">
+                                        <i class="bi bi-download"></i>
+                                        Export
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs" id="viewTabs-@document.mapID" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="table-tab-@document.mapID" data-bs-toggle="tab"
+                                            data-bs-target="#table-view-@document.mapID" type="button" role="tab" aria-selected="true">
+                                        Table View
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="card-tab-@document.mapID" data-bs-toggle="tab"
+                                            data-bs-target="#card-view-@document.mapID" type="button" role="tab" aria-selected="false">
+                                        Card View
+                                    </button>
+                                </li>
+                            </ul>
+                            <div class="row">
+                                <!-- Details Section (Collapsible) -->
+                                <div id="details-@document.mapID" class="details-row border-top bg-light">
+                                    <div class="card m-3 shadow-sm border-info">
+                                        <div class="card-header bg-info text-white">
+                                            <i class="bi bi-info-circle-fill me-2"></i>
+                                            <strong>Mapping Details</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3 border-end">
+                                                    <h5 class="mb-3"><i class="bi bi-chat-text me-2"></i>Prompt History</h5>
+                                                    @if (document.prompts != null && document.prompts.Any())
+                                                    {
+                                                        <ul class="list-group list-group-flush">
+                                                            @foreach (var prompt in document.prompts)
+                                                            {
+                                                                <li class="list-group-item bg-transparent">@prompt</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="text-muted">No prompt history available.</p>
+                                                    }
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <h5 class="mb-3"><i class="bi bi-bar-chart me-2"></i>Accuracy Metrics</h5>
+                                                    @if (document.accuracyResult != null)
+                                                    {
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Overall Accuracy Rate</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-success" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.accuracyRate)%"
+                                                                     aria-valuenow="@document.accuracyResult.accuracyRate" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Description Similarity</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-primary" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.descriptionSimilarity)%"
+                                                                     aria-valuenow="@document.accuracyResult.descriptionSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Mimosa Similarity</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.mimosaSimilarity)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-info" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.mimosaSimilarity)%"
+                                                                     aria-valuenow="@document.accuracyResult.mimosaSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">SAP Similarity</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.sapSimilarity)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-info" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.sapSimilarity)%"
+                                                                     aria-valuenow="@document.accuracyResult.sapSimilarity" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Data Type Similarity</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.dataType)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-warning" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.dataType)%"
+                                                                     aria-valuenow="@document.accuracyResult.dataType" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Missing Fields Rate</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-danger" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.infoOmitted)%"
+                                                                     aria-valuenow="@document.accuracyResult.infoOmitted" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                                <span class="fw-medium">Field Length Similarity</span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-success" role="progressbar"
+                                                                     style="width: @(document.accuracyResult.fieldLength)%"
+                                                                     aria-valuenow="@document.accuracyResult.fieldLength" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="text-muted">No accuracy metrics available.</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="viewTabsContent-@document.mapID">
+                                <!-- Table View -->
+                                <div class="tab-pane fade show active table-view" id="table-view-@document.mapID" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5" class="text-center sap-table-header">SAP</th>
+                                                    <th colspan="5" class="text-center mimosa-table-header">MIMOSA</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Table Name</th>
+                                                    <th>Field Name</th>
+                                                    <th>Description</th>
+                                                    <th>Data Type</th>
+                                                    <th class="border-right-thick">Length</th>
+                                                    <th>Table Name</th>
+                                                    <th>Field Name</th>
+                                                    <th>Description</th>
+                                                    <th>Data Type</th>
+                                                    <th>Length</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var mapping in document.mappings)
+                                                {
+                                                    <tr>
+                                                        <td>@mapping.sap.entityName</td>
+                                                        <td class="fw-medium">@mapping.sap.fieldName</td>
+                                                        <td>@mapping.sap.description</td>
+                                                        <td>@mapping.sap.dataType</td>
+                                                        <td class="border-right-thick">@mapping.sap.fieldLength</td>
+                                                        <td>@mapping.mimosa.entityName</td>
+                                                        <td class="fw-medium">@mapping.mimosa.fieldName</td>
+                                                        <td>@mapping.mimosa.description</td>
+                                                        <td>@mapping.mimosa.dataType</td>
+                                                        <td>@mapping.mimosa.fieldLength</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Card View -->
+                                <div class="tab-pane fade card-view" id="card-view-@document.mapID" role="tabpanel">
+                                    <div class="row">
+                                        @foreach (var mapping in document.mappings)
+                                        {
+                                            <div class="col-12 mb-3">
+                                                <div class="card mapping-pair-card">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h6 class="mb-0">Mapping Pair</h6>
+                                                        <div class="badge bg-light text-dark">Field Mapping</div>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="row g-0">
+                                                            <!-- SAP Side -->
+                                                            <div class="col-md-6 sap-side">
+                                                                <div class="p-3 h-100 border-end-md">
+                                                                    <div class="d-flex align-items-center mb-3">
+                                                                        <div class="sap-indicator me-2"></div>
+                                                                        <h6 class="mb-0">SAP</h6>
+                                                                    </div>
+                                                                    <div class="mapping-details">
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Table:</div>
+                                                                            <div class="mapping-value">@mapping.sap.entityName</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Field:</div>
+                                                                            <div class="mapping-value fw-semibold">@mapping.sap.fieldName</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Description:</div>
+                                                                            <div class="mapping-value">@mapping.sap.description</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Data Type:</div>
+                                                                            <div class="mapping-value">@mapping.sap.dataType</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Length:</div>
+                                                                            <div class="mapping-value">@mapping.sap.fieldLength</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- MIMOSA Side -->
+                                                            <div class="col-md-6 mimosa-side">
+                                                                <div class="p-3 h-100">
+                                                                    <div class="d-flex align-items-center mb-3">
+                                                                        <div class="mimosa-indicator me-2"></div>
+                                                                        <h6 class="mb-0">MIMOSA</h6>
+                                                                    </div>
+                                                                    <div class="mapping-details">
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Table:</div>
+                                                                            <div class="mapping-value">@mapping.mimosa.entityName</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Field:</div>
+                                                                            <div class="mapping-value fw-semibold">@mapping.mimosa.fieldName</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Description:</div>
+                                                                            <div class="mapping-value">@mapping.mimosa.description</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Data Type:</div>
+                                                                            <div class="mapping-value">@mapping.mimosa.dataType</div>
+                                                                        </div>
+                                                                        <div class="mapping-item">
+                                                                            <div class="mapping-label">Length:</div>
+                                                                            <div class="mapping-value">@mapping.mimosa.fieldLength</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-    <div class="section mt-4">
-        <h2>Key Differences Between SAP PM and MIMOSA Data  Models</h2>
-        <ol>
-            <li>
-                <strong>Naming Conventions:</strong>
-                <ul>
-                    <li>SAP PM uses short, often cryptic field names (e.g., AUFNR, AUART)</li>
-                    <li>MIMOSA uses descriptive, human-readable field names (e.g., WorkOrderID, WorkOrderType)</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Data Types:</strong>
-                <ul>
-                    <li>SAP PM has specific length constraints for character fields</li>
-                    <li>MIMOSA uses more generic data types without explicit length constraints</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Relationships:</strong>
-                <ul>
-                    <li>SAP PM uses technical keys for relationships (EQUNR, TPLNR)</li>
-                    <li>MIMOSA uses more semantic relationship fields (AssetID, LocationID)</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Extensions:</strong>
-                <ul>
-                    <li>SAP PM can be extended with custom Z-fields (Z*)</li>
-                    <li>MIMOSA allows for standard-compliant extensions through its object model</li>
-                </ul>
-            </li>
-        </ol>
-    </div>
+                    </div>
+                }
+            </div>
+        }
+    }
 </div>
+
+
+<div class="section mt-4">
+    <h2>Key Differences Between SAP PM and MIMOSA Data  Models</h2>
+    <ol>
+        <li>
+            <strong>Naming Conventions:</strong>
+            <ul>
+                <li>SAP PM uses short, often cryptic field names (e.g., AUFNR, AUART)</li>
+                <li>MIMOSA uses descriptive, human-readable field names (e.g., WorkOrderID, WorkOrderType)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Data Types:</strong>
+            <ul>
+                <li>SAP PM has specific length constraints for character fields</li>
+                <li>MIMOSA uses more generic data types without explicit length constraints</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Relationships:</strong>
+            <ul>
+                <li>SAP PM uses technical keys for relationships (EQUNR, TPLNR)</li>
+                <li>MIMOSA uses more semantic relationship fields (AssetID, LocationID)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Extensions:</strong>
+            <ul>
+                <li>SAP PM can be extended with custom Z-fields (Z*)</li>
+                <li>MIMOSA allows for standard-compliant extensions through its object model</li>
+            </ul>
+        </li>
+    </ol>
+</div>
+
 
 @section Scripts {
     <script>
@@ -434,13 +447,16 @@
         function updateSearchInputName() {
             const searchType = document.querySelector('input[name="SearchType"]:checked').value;
             const searchInput = document.getElementById('searchInput');
+            const label = document.getElementById('search-label');
             searchInput.removeAttribute('name');
             if (searchType === 'EntityName') {
                 searchInput.name = 'SearchByEntityName';
-                searchInput.placeholder = 'Enter entity name...';
+                // searchInput.placeholder = 'Enter entity name...';
+                label.innerHTML = '<i class="bi bi-search me-1"></i> Enter entity name...';
             } else {
                 searchInput.name = 'SearchByLLM';
-                searchInput.placeholder = 'Enter LLM type...';
+                // searchInput.placeholder = 'Enter LLM type...';
+                label.innerHTML = '<i class="bi bi-search me-1"></i> Enter LLM type...';
             }
         }
 

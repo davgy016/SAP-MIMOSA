@@ -1,4 +1,18 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
+
+// Animate logo for only 10 seconds on first page load
+window.addEventListener('DOMContentLoaded', function () {
+  // Select all wave-letter and wave-arrow elements
+  var waveLetters = document.querySelectorAll('.wave-letter');
+  var waveArrows = document.querySelectorAll('.wave-arrow');
+
+  // Add a class to enable animation
+  waveLetters.forEach(function(el) { el.classList.add('wave-animate'); });
+  waveArrows.forEach(function(el) { el.classList.add('wave-animate'); });
+
+  // After 10 seconds, remove the animation class
+  setTimeout(function() {
+    waveLetters.forEach(function(el) { el.classList.remove('wave-animate'); });
+    waveArrows.forEach(function(el) { el.classList.remove('wave-animate'); });
+  }, 10000);
+});
