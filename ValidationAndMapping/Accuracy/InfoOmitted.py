@@ -3,33 +3,20 @@
 from ..Models import MappingEntry
 
 class InfoOmitted:
-    """
-    Checks that each MappingEntry has non-empty
-    `fieldName`, `dataType`, `description` and `fieldLength`.
-    Scores as: (# entries with all info) / (total entries).
-    """
     @staticmethod
-    def score(mapping: MappingEntry) -> float:
-        total = 10
-        good = 0
+    def existence(mapping: MappingEntry) -> dict[str,bool]:
+        """Return which of the 5 metadata fields that actually exist on *both* SAP and MIMOSA."""
         sap = mapping.sap
-        # ensure none of these are empty or whitespace
-        if all([
-            sap.entityName and sap.entityName.strip(),
-            sap.fieldName and sap.fieldName.strip(),
-            sap.dataType    and sap.dataType.strip(),
-            sap.description and sap.description.strip(),
-            sap.fieldLength and sap.fieldLength.strip()
-        ]):
-            good += 1
-        mimosa = mapping.mimosa
-        # ensure none of these are empty or whitespace
-        if all([
-            mimosa.entityName and sap.entityName.strip(),
-            mimosa.fieldName and sap.fieldName.strip(),
-            mimosa.dataType    and sap.dataType.strip(),
-            mimosa.description and sap.description.strip(),
-            mimosa.fieldLength and sap.fieldLength.strip()
-        ]):
-            good += 1
-        return good / total
+        mim = mapping.mimosa
+
+        has = lambda attr: bool(
+            getattr(sap,   attr, None) and getattr(sap,   attr).strip() and
+            getattr(mim,   attr, None) and getattr(mim,   attr).strip()
+        )
+        return {
+            "entityName": has("entityName"),
+            "fieldName":  has("fieldName"),
+            "description":has("description"),
+            "dataType":   has("dataType"),
+            "fieldLength":has("fieldLength"),
+        }
