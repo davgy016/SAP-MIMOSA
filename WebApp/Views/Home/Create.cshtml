@@ -27,35 +27,45 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <input asp-for="prompt" type="text" id="aiPrompt" class="form-control" placeholder="Enter for initial mapping" style="max-width: 450px;" />
-                        <select asp-for="LLMType" id="aiLLMType" class="form-select" style="max-width: 150px;">
-                            @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button type="button" class="btn  btn-primary" id="askAiBtn">Ask AI</button>
-                        <div class="d-flex align-items-center gap-2 ms-auto">
-                            <div class="input-group input-group-sm" style="width: auto;">
+                    <div class="ai-mapping-search-area mb-4">
+                        @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
+                        <div class="search-bar-container d-flex  align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
+                            <i class="bi bi-search fs-4 text-primary"></i>
+                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" />
+                            <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
+                                @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-gradient-glow d-flex align-items-center gap-1 px-4 py-2 fw-bold fs-5" id="askAiBtn" style="margin-left: 0.8rem; box-shadow: 0 0 18px 2px #00e6a6cc, 0 0 8px 2px #1976D2aa; border-radius: 2rem; background: linear-gradient(90deg,#00e6a6 60%,#1976D2 100%); color: #fff; border: none;">
+                                <i class="bi bi-stars"></i> Ask AI
+                            </button>
+                            <div class="vr mx-4 d-none d-md-block" style="height: 2.5rem;"></div>
+                            <div class="d-flex align-items-center gap-2 ms-auto upload-section">
                                 <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">
-                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary d-flex align-items-center gap-1 mb-0">
-                                    <i class="bi bi-upload"></i> <span>Choose CSV</span>
+                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary  align-items-center gap-1 mb-0 rounded-pill px-3 py-2" style="background: linear-gradient(90deg,#fff 60%,#00e6a6 100%); border: 1.5px solid #00e6a6; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <i class="bi bi-upload"></i>
+                                    <span id="csvLabelText" style="display: inline-block; vertical-align: middle;">Choose CSV</span>
                                 </label>
+                                <button type="button" class="btn btn-success d-flex align-items-center gap-1 rounded-pill px-4 py-2 fw-bold" id="importCsvBtn" style="box-shadow: 0 0 10px 2px #00e6a6aa;">
+                                    <i class="bi bi-box-arrow-in-down"></i> Import
+                                </button>
                             </div>
-
-                            <button type="button" class="btn btn-success d-flex align-items-center gap-1" id="importCsvBtn">Import</button>
                         </div>
                     </div>
-                    <div>
+                    <div class="d-flex ms-auto">
                         <label class="small text-muted">
-                            <input type="checkbox" name="checkBx" id="checkBx" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "") /> Use Existing Mapping
+                            <input type="checkbox" name="checkBx" id="checkBx" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "") /> Re-use Existing Mapping
                         </label>
+                        <a href="@Url.Action("Create", "Home")" class="btn btn-outline-danger ms-auto  d-flex align-items-center gap-1 px-4 py-2 fw-bold fs-5 rounded-pill ms-2" id="clearPageBtn" style="border-width: 2px;">
+                            <i class="bi bi-eraser fs-4"></i> Clear
+                        </a>                        
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
-                    <div class="d-flex justify-content-between mb-2">
+                    <div>
                         <div id="aiResponseArea" class="mb-2"></div>
-                        <div id="importLoading" class="mb-2"></div>
+                        <div id="importLoading" class=" mb-2"></div>
                     </div>
                 </div>
             </div>
@@ -148,7 +158,7 @@
         const aiPrompt = document.getElementById('aiPrompt');
 
         mappingCheckBx.addEventListener('change', () => {
-            aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter for initial mapping";
+            aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter prompt to generate initial mapping";
         });
 
 
@@ -158,6 +168,7 @@
             const aiLLMType = document.getElementById('aiLLMType');
             const askAiBtn = document.getElementById('askAiBtn');
             const aiResponseArea = document.getElementById('aiResponseArea');
+            
 
             // Ask AI button
             askAiBtn?.addEventListener('click', async () => {
@@ -166,10 +177,13 @@
                 const llmType = aiLLMType.value;
                 const useExisting = document.getElementById('checkBx').checked;
 
-                // if (!prompt) {
-                //     aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
-                //     return;
-                // }
+                // Alert when click AskAI btn and  llmtype and prompt are empty
+                if (!prompt || !llmType) {
+                    aiResponseArea.innerHTML = `<div class="alert alert-danger">${!prompt ? 'Please enter a prompt.' : ''}
+                    ${!prompt && !llmType ? '<br>' : ''}${!llmType ? 'Please select a model.' : ''}</div>`;
+                    return;
+                } 
+                
 
                 const requestBody = { prompt, llmType };
 
@@ -177,38 +191,38 @@
                 if (useExisting) {
                     const mappings = [];
                     document.querySelectorAll('.mapping-pair').forEach(pair => {
-                        const mapping = {
+                        const getValue = name => pair.querySelector(`[name*="${name}"]`)?.value || "";
+
+                        mappings.push({
                             sap: {
-                                // Operator '*' means contains, finding elements whose names might include some prefix/suffix, not just exact matching
-                                platform: pair.querySelector('[name*="sap.platform"]').value,
-                                entityName: pair.querySelector('[name*="sap.entityName"]').value,
-                                fieldName: pair.querySelector('[name*="sap.fieldName"]').value,
-                                description: pair.querySelector('[name*="sap.description"]').value,
-                                dataType: pair.querySelector('[name*="sap.dataType"]').value,
-                                notes: pair.querySelector('[name*="sap.notes"]').value || "",
-                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value || ""
+                                platform: getValue('sap.platform'),
+                                entityName: getValue('sap.entityName'),
+                                fieldName: getValue('sap.fieldName'),
+                                description: getValue('sap.description'),
+                                dataType: getValue('sap.dataType'),
+                                notes: getValue('sap.notes'),
+                                fieldLength: getValue('sap.fieldLength'),
                             },
                             mimosa: {
-                                platform: pair.querySelector('[name*="mimosa.platform"]').value,
-                                entityName: pair.querySelector('[name*="mimosa.entityName"]').value,
-                                fieldName: pair.querySelector('[name*="mimosa.fieldName"]').value,
-                                description: pair.querySelector('[name*="mimosa.description"]').value,
-                                dataType: pair.querySelector('[name*="mimosa.dataType"]').value,
-                                notes: pair.querySelector('[name*="mimosa.notes"]').value || "",
-                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value || ""
+                                platform: getValue('mimosa.platform'),
+                                entityName: getValue('mimosa.entityName'),
+                                fieldName: getValue('mimosa.fieldName'),
+                                description: getValue('mimosa.description'),
+                                dataType: getValue('mimosa.dataType'),
+                                notes: getValue('mimosa.notes'),
+                                fieldLength: getValue('mimosa.fieldLength'),
                             }
-                        };
-                        mappings.push(mapping);
+                        });           
                     });
-
+                        
                     requestBody.mappings = mappings;
+
                 }
-                // Read existing prompts from hidden input
-                let existingPrompts = [];
+
+                // Read existing prompts from hidden input                
                 const hiddenPromptInput = document.getElementById('prompts');
-                if (hiddenPromptInput && hiddenPromptInput.value) {
-                    existingPrompts = hiddenPromptInput.value.split(',').filter(p => p.trim() !== '');
-                }
+                let existingPrompts = hiddenPromptInput?.value?.split('\n').filter(p => p.trim()) || [];
+
                 // Add the new prompt to history if improving existing mapping
                 if (useExisting) {
                     existingPrompts.push(prompt);
@@ -308,7 +322,7 @@
             document.getElementById('importCsvBtn')?.addEventListener('click', event => {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
-                if (!fileInput.files.length) return alert('Please select a CSV file.');
+                if (!fileInput.files.length) {return importLoading.innerHTML = '<div class="alert alert-danger">Please select a CSV file.</div>';}
                 const formData = new FormData();
                 formData.append('csvFile', fileInput.files[0]);
                 importLoading.innerHTML = '<div class="spinner-border text-success" role="status"><span class="visually-hidden"></span></div>';
@@ -331,10 +345,11 @@
             fileInput.addEventListener('change', function () {
                 if (this.files.length > 0) {
                     labelSpan.textContent = this.files[0].name;
+                    labelSpan.title = this.files[0].name;
                 } else {
                     labelSpan.textContent = "Choose CSV";
                 }
-            });
+            });            
         });
     </script>
 }

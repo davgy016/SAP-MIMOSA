@@ -657,12 +657,12 @@ tr:hover {
 }
 /*for short animation*/
 .wave-animate.wave-letter {
-    animation: wave 1s ease-in-out;
+    animation: wave 1s ease-in-out infinite;
     animation-delay: calc(var(--i) * 0.13s);
 }
 /*for short animation*/
 .wave-animate.wave-arrow {
-    animation: wave-arrow 3s ease-in-out;
+    animation: wave-arrow 2s ease-in-out infinite;
     animation-delay: calc(var(--i) * 0.13s);
 }
 
@@ -676,14 +676,33 @@ tr:hover {
 
 /*infinite moving*/
 /*.wave-arrow {
-    display: inline-block;
-    animation: wave-arrow 3.4s infinite ease-in-out;
-    animation-delay: calc(var(--i) * 2.13s);
+display: inline-block;
+animation: wave-arrow 3.4s infinite ease-in-out;
+animation-delay: calc(var(--i) * 2.13s);
 }*/
 
 @keyframes wave-arrow {
-    0%, 100% { transform: translateY(0) scale(1); }
-    25% { transform: translateY(-10px) scale(1.09); }
-    50% { transform: translateY(3px) scale(0.95); }
-    75% { transform: translateY(-6px) scale(1.04); }
+0%, 100% { transform: translateY(0) scale(1); }
+25% { transform: translateY(-10px) scale(1.09); }
+50% { transform: translateY(3px) scale(0.95); }
+75% { transform: translateY(-6px) scale(1.04); }
+}
+
+/* --- AI mapping search area & button glow --- */
+.btn-gradient-glow:hover, .btn-gradient-glow:focus {
+background: linear-gradient(90deg,#1976D2 60%,#00e6a6 100%) !important;
+box-shadow: 0 0 32px 4px #1976D2cc, 0 0 12px 2px #00e6a6cc !important;
+color: #fff !important;
+transform: translateY(-2px) scale(1.05);
+}
+.ai-mapping-search-area .search-bar-container {
+transition: box-shadow 0.25s, border 0.25s;
+}
+.ai-mapping-search-area .search-bar-container:focus-within {
+box-shadow: 0 0 48px 8px #00e6a6cc, 0 0 18px 4px #1976D2bb;
+border-color: #1976D2;
+}
+.ai-mapping-search-area .upload-section label:hover, .ai-mapping-search-area .upload-section label:focus {
+background: linear-gradient(90deg,#00e6a6 60%,#fff 100%) !important;
+border-color: #1976D2;
 }
