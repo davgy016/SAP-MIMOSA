@@ -11,6 +11,8 @@ The system was designed to be interacted with through a web interface, with func
 # Initial Setup
 Install required components by running `pip install`
 Navigate to the SAP-MIMOSA directory and run the main.py file using the command `python3 main.py`
+Create a new file called `.env` in the WebApp directory
+Add open AI envrionment variable by running 
 
 # Codebase Structure
 The system has 3 main folders:
