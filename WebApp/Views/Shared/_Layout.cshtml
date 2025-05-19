@@ -12,20 +12,39 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: #4CAF50; color: white;">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SAP_MIMOSAapp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar mt-4 mb-4 shadow rounded">
+            <div class="container-fluid px-4">
+                @* <a class="navbar-brand sap-mimosa-logo d-flex align-items-center gap-2 py-2 px-3 rounded" asp-area="" asp-controller="Home" asp-action="Index"> *@
+                @*     <span class="fw-bold sap-text">SAP</span> *@
+                @*     <span class="mx-2 arrow-logo"> *@
+                @*         <i class="bi bi-arrow-left-right"></i> *@
+                @*     </span> *@
+                @*     <span class="fw-bold mimosa-text">MIMOSA</span> *@
+                @* </a> *@
+                <a class="navbar-brand sap-mimosa-logo d-flex align-items-center gap-2 py-2 px-3 rounded" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="fw-bold sap-text">
+                        <span class="wave-letter" style="--i:0">S</span><span class="wave-letter" style="--i:1">A</span><span class="wave-letter" style="--i:2">P</span>
+                    </span>
+                    <span class="mx-3 arrow-logo wave-arrow" style="--i:3"><i class="bi bi-arrow-left-right"></i></span>
+                    <span class="fw-bold mimosa-text">
+                        <span class="wave-letter" style="--i:4">M</span><span class="wave-letter" style="--i:5">I</span><span class="wave-letter" style="--i:6">M</span><span class="wave-letter" style="--i:7">O</span><span class="wave-letter" style="--i:8">S</span><span class="wave-letter" style="--i:9">A</span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white fw-semibold px-3 py-2 rounded hover-bg" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white fw-semibold px-3 py-2 rounded hover-bg" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock me-1"></i> Privacy
+                            </a>
                         </li>
                     </ul>
                 </div>
