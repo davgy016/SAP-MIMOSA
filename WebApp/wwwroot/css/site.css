@@ -706,3 +706,82 @@ border-color: #1976D2;
 background: linear-gradient(90deg,#00e6a6 60%,#fff 100%) !important;
 border-color: #1976D2;
 }
+
+/* --- Overall Mapping Accuracy Result Card in Create View --- */
+.modern-metrics-card {
+    border-radius: 1.25rem;
+    background: linear-gradient(120deg, #f8fafc 60%, #e3f9f5 100%);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10), 0 0 24px 0 #00e6a6a0;
+    border: none;
+}
+.modern-metrics-card .card-body {
+    padding: 2rem 1.5rem;
+}
+.metric-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1976D2;
+    margin-bottom: 0.15rem;
+    letter-spacing: 0.03em;
+}
+.metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.modern-metrics-card .badge {
+    font-size: 1.15rem;
+    border-radius: 1.5rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+@media (max-width: 767px) {
+    .modern-metrics-card .card-body {
+        padding: 1rem 0.5rem;
+    }
+    .metric-label, .metric-value {
+        font-size: 0.97rem;
+    }
+}
+
+/* --- Mapping Pair Accuracy Details --- */
+.accuracy-details-metrics {
+    background: #f7fafc;
+    border-radius: 0.75rem;
+    padding: 1rem 0.75rem 0.5rem 0.75rem;
+    border: 1px solid #e3f2fd;
+    margin-bottom: 0.5rem;
+}
+.accuracy-details-metrics .fw-semibold {
+    font-size: 1.07rem;
+    letter-spacing: 0.02em;
+}
+.accuracy-metric-box {
+    background: #fff;
+    border-radius: 0.6rem;
+    box-shadow: 0 2px 8px 0 #e3f9f5a0;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+}
+.accuracy-metric-box .metric-label {
+    color: #1976D2;
+    font-size: 0.97rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.accuracy-metric-box .metric-value {
+    font-size: 1.07rem;
+    font-weight: 600;
+    color: #222;
+    margin-left: 0.5rem;
+}
+

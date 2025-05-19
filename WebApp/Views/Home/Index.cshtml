@@ -2,14 +2,7 @@
 
 
 <div class="container py-4">
-    <h1 class="mb-4">Generate Mapping Between SAP PM & MIMOSA</h1>
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div id="success-message" class="alert alert-success" role="alert">
-            @TempData["SuccessMessage"]
-        </div>
-    }
+    <h1 class="mb-4">Generate Mapping Between SAP PM & MIMOSA</h1>    
 
     <div class="section">
         <div class="row">
@@ -18,7 +11,16 @@
                 <div class="card search-card p-0 overflow-hidden border-0 shadow-lg">
                     <div class="card-header bg-gradient text-white d-flex align-items-center" style="background: linear-gradient(90deg, #4CAF50 60%, #00e6a6 100%); box-shadow: 0 4px 24px 0 #00e6a6a0;">
                         <i class="bi bi-search me-2 fs-3"></i>
-                        <h4 class="mb-0 flex-grow-1">Search Mappings</h4>
+                        <h4 class="mb-0 flex-grow-1">Search Mappings
+                       
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <span id="success-message" class="m-5 alert alert-success" role="alert">
+                                @TempData["SuccessMessage"]
+                            </span>
+                        }
+                        </h4>
+                       
                         <a href="@Url.Action("Create", "Home")" class="btn btn-floating-create ms-auto d-none d-md-inline-block" title="Create New Mapping">
                             <i class="bi bi-plus-lg"></i>
                         </a>

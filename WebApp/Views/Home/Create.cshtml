@@ -60,7 +60,7 @@
                         </label>
                         <a href="@Url.Action("Create", "Home")" class="btn btn-outline-danger ms-auto  d-flex align-items-center gap-1 px-4 py-2 fw-bold fs-5 rounded-pill ms-2" id="clearPageBtn" style="border-width: 2px;">
                             <i class="bi bi-eraser fs-4"></i> Clear
-                        </a>                        
+                        </a>
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
                     <div>
@@ -86,15 +86,63 @@
                 </div>
             }
 
-            Overall Accuracy: <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-                <strong>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</strong>
-            </span> <br />
-            Description Similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong> <br />
-            MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong><br />
-            SAP Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong><br />
-            Data type similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong><br />
-            Missing fields rate: <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong><br />
-            Field length similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong><br />
+            <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+                <div class="card-body p-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                            <div class="display-5 fw-bold text-primary">
+                                <i class="bi bi-graph-up-arrow"></i>
+                                <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
+                            </div>
+                            <div class="fw-semibold">Overall Accuracy</div>
+                            <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
+                                @if (Model?.accuracyResult?.accuracyRate < 35)
+                                {
+                                    <i class="bi bi-emoji-frown"></i>
+                                }
+                                @if (Model?.accuracyResult?.accuracyRate >= 35 && Model?.accuracyResult?.accuracyRate < 70)
+                                {
+                                    <i class="bi bi-emoji-neutral"></i>
+                                }
+                                @if (Model?.accuracyResult?.accuracyRate >= 70)
+                                {
+                                    <i class="bi bi-emoji-smile"></i>
+                                }
+                                @Html.DisplayFor(m => m.accuracyResult.accuracyRate)%
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <div class="row g-2">
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Description Similarity</div>
+                                    <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">MIMOSA Similarity</div>
+                                    <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Data Type Similarity</div>
+                                    <div class="metric-value"><i class="bi bi-list-check"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">SAP Similarity</div>
+                                    <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Field Length Similarity</div>
+                                    <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Missing Fields Rate</div>
+                                    <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="card mb-4">
@@ -168,7 +216,7 @@
             const aiLLMType = document.getElementById('aiLLMType');
             const askAiBtn = document.getElementById('askAiBtn');
             const aiResponseArea = document.getElementById('aiResponseArea');
-            
+
 
             // Ask AI button
             askAiBtn?.addEventListener('click', async () => {
@@ -182,8 +230,8 @@
                     aiResponseArea.innerHTML = `<div class="alert alert-danger">${!prompt ? 'Please enter a prompt.' : ''}
                     ${!prompt && !llmType ? '<br>' : ''}${!llmType ? 'Please select a model.' : ''}</div>`;
                     return;
-                } 
-                
+                }
+
 
                 const requestBody = { prompt, llmType };
 
@@ -212,14 +260,14 @@
                                 notes: getValue('mimosa.notes'),
                                 fieldLength: getValue('mimosa.fieldLength'),
                             }
-                        });           
+                        });
                     });
-                        
+
                     requestBody.mappings = mappings;
 
                 }
 
-                // Read existing prompts from hidden input                
+                // Read existing prompts from hidden input
                 const hiddenPromptInput = document.getElementById('prompts');
                 let existingPrompts = hiddenPromptInput?.value?.split('\n').filter(p => p.trim()) || [];
 
@@ -349,7 +397,7 @@
                 } else {
                     labelSpan.textContent = "Choose CSV";
                 }
-            });            
+            });
         });
     </script>
 }
