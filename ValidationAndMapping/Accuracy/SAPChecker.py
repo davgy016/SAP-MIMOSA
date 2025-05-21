@@ -1,3 +1,5 @@
+#SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field.
+
 from pathlib import Path
 import json
 from ..Models import FieldMapping, FieldState, FieldCheck
