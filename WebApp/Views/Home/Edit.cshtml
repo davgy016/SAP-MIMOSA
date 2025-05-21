@@ -88,7 +88,7 @@
         </div>
     }
 
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" id="editForm">
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Mapping Details</h5>
@@ -134,7 +134,7 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" asp-for="prompt" />
+        <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
         <input type="hidden" asp-for="accuracyResult.accuracyRate" />
         <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
         <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
@@ -142,9 +142,10 @@
         <input type="hidden" asp-for="accuracyResult.dataType" />
         <input type="hidden" asp-for="accuracyResult.fieldLength" />
         <input type="hidden" asp-for="accuracyResult.infoOmitted" />
+        <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>())' />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
 </div>
@@ -159,51 +160,195 @@
             let mappingIndex = @(Model.mappings?.Count ?? 0);
             const mappingsContainer = document.getElementById('mappingsContainer');
             const noMappingsMessage = document.getElementById('noMappingsMessage');
-            const template = document.getElementById('mappingPairTemplate').innerHTML;
+            const template = document.getElementById('mappingPairTemplate').textContent || document.getElementById('mappingPairTemplate').innerHTML;
+            let formModified = false;
+            const editForm = document.getElementById('editForm');
 
-            // Add mapping button click handler
+            // Track form modifications
+            document.querySelectorAll('form input, form textarea, form select').forEach(input => {
+                input.addEventListener('change', () => {
+                    formModified = true;
+                    recalculateAccuracy();
+                });
+            });
+
+            
             document.getElementById('addMapping').addEventListener('click', function() {
                 addMappingPair();
+                renumberMappings();
+                formModified = true;
+                recalculateAccuracy();
             });
+
+            // Save changes with confirmation
+            document.getElementById('saveChangesBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to save changes to this mapping document?')) {
+                    editForm.submit();
+                }
+            });
+
+            // Attach remove handler to all mapping pairs
+            document.querySelectorAll('.mapping-pair').forEach(attachRemoveHandler);
 
             // Add event listeners to existing remove buttons
-            document.querySelectorAll('.remove-mapping').forEach(button => {
-                button.addEventListener('click', function() {
-                    this.closest('.mapping-pair').remove();
+            function attachRemoveHandler(el) {
+                el.querySelector('.remove-mapping')?.addEventListener('click', function() {
+                    el.remove();
+                    renumberMappings();
+                    formModified = true;
 
                     // Show the "no mappings" message if there are no mappings
                     if (mappingsContainer.querySelectorAll('.mapping-pair').length === 0) {
                         noMappingsMessage.style.display = 'block';
                     }
+
+                    recalculateAccuracy();
                 });
-            });
+            }
 
             // Function to add a new mapping pair
-            function addMappingPair() {
-                // Hide the "no mappings" message
+            function addMappingPair(mappingData) {
                 noMappingsMessage.style.display = 'none';
-
-                // Create a new mapping pair from template
-                const newMapping = template.replace(/{index}/g, mappingIndex);
-
-                // Create a container for the new mapping
+                const newMapping = template.replace(/\[@Model\.Item1\]|\[-1\]/g, `[${mappingIndex}]`).replace(/{index}/g, mappingIndex);
                 const mappingElement = document.createElement('div');
                 mappingElement.innerHTML = newMapping;
-                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
-                    mappingElement.remove();
-
-                    // Show the "no mappings" message if there are no mappings
-                    if (mappingsContainer.querySelectorAll('.mapping-pair').length === 0) {
-                        noMappingsMessage.style.display = 'block';
-                    }
+                attachRemoveHandler(mappingElement);
+                mappingElement.querySelectorAll('input, textarea, select').forEach(input => {
+                    input.addEventListener('change', () => {
+                        formModified = true;
+                        recalculateAccuracy();
+                    });
                 });
-
-                // Add the new mapping to the container
+                
+                if (mappingData) {
+                    ["sap", "mimosa"].forEach(type => {
+                        ["entityName", "fieldName", "dataType", "description", "fieldLength", "notes", "platform"].forEach(field => {
+                            const input = mappingElement.querySelector(`[name$=\".${type}.${field}\"]`);
+                            if (input && mappingData[type] && mappingData[type][field] !== undefined) {
+                                if (input.tagName.toLowerCase() === 'textarea') {
+                                    input.textContent = mappingData[type][field];
+                                } else {
+                                    input.value = mappingData[type][field];
+                                }
+                            }
+                        });
+                    });
+                }
                 mappingsContainer.appendChild(mappingElement);
-
-                // Increment the index for the next mapping
                 mappingIndex++;
+                renumberMappings();
             }
+
+            // Renumber mapping input names for proper model binding
+            function renumberMappings() {
+                document.querySelectorAll('.mapping-pair').forEach((pair, idx) => {
+                    pair.querySelectorAll('input, textarea, select').forEach(field => {
+                        field.name = field.name.replace(/mappings\[\d+\]/g, `mappings[${idx}]`);
+                        if (field.id) {
+                            field.id = field.id.replace(/_\d+$/, `_${idx}`);
+                        }
+                    });
+                });
+                mappingIndex = document.querySelectorAll('.mapping-pair').length;
+            }
+
+            // Gather all mapping data from DOM
+            function gatherMappings() {
+                const mappings = [];
+                document.querySelectorAll('.mapping-pair').forEach(pair => {
+                    function getValue(selector) {
+                        const el = pair.querySelector(selector);
+                        return el ? el.value : '';
+                    }
+                    mappings.push({
+                        sap: {
+                            entityName: getValue('[name$=".sap.entityName"]'),
+                            fieldName: getValue('[name$=".sap.fieldName"]'),
+                            dataType: getValue('[name$=".sap.dataType"]'),
+                            description: getValue('[name$=".sap.description"]'),
+                            fieldLength: getValue('[name$=".sap.fieldLength"]'),
+                            notes: getValue('[name$=".sap.notes"]'),
+                            platform: getValue('[name$=".sap.platform"]') || 'SAP'
+                        },
+                        mimosa: {
+                            entityName: getValue('[name$=".mimosa.entityName"]'),
+                            fieldName: getValue('[name$=".mimosa.fieldName"]'),
+                            dataType: getValue('[name$=".mimosa.dataType"]'),
+                            description: getValue('[name$=".mimosa.description"]'),
+                            fieldLength: getValue('[name$=".mimosa.fieldLength"]'),
+                            notes: getValue('[name$=".mimosa.notes"]'),
+                            platform: getValue('[name$=".mimosa.platform"]') || 'MIMOSA'
+                        }
+                    });
+                });
+                return mappings;
+            }
+
+            // Recalculate accuracy and update hidden fields
+            async function recalculateAccuracy() {
+                const mappings = gatherMappings();
+                if (mappings.length === 0) return;
+                try {
+                    const response = await fetch('/Home/RecalculateAccuracy', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(mappings)
+                    });
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    document.querySelector('[name="accuracyResult.accuracyRate"]').value = data.overall.accuracyRate;
+                    document.querySelector('[name="accuracyResult.descriptionSimilarity"]').value = data.overall.descriptionSimilarity;
+                    document.querySelector('[name="accuracyResult.mimosaSimilarity"]').value = data.overall.mimosaSimilarity;
+                    document.querySelector('[name="accuracyResult.sapSimilarity"]').value = data.overall.sapSimilarity;
+                    document.querySelector('[name="accuracyResult.dataType"]').value = data.overall.dataType;
+                    document.querySelector('[name="accuracyResult.fieldLength"]').value = data.overall.fieldLength;
+                    document.querySelector('[name="accuracyResult.infoOmitted"]').value = data.overall.infoOmitted;
+                    const metricsAlert = document.getElementById('metricsAlert');
+                    if (metricsAlert) {
+                        metricsAlert.style.display = 'block';
+                        metricsAlert.querySelector('.display-5 span').textContent = data.overall.accuracyRate + '%';
+                        const metricValues = metricsAlert.querySelectorAll('.metric-value strong');
+                        metricValues[0].textContent = data.overall.descriptionSimilarity + '%';
+                        metricValues[1].textContent = data.overall.mimosaSimilarity + '%';
+                        metricValues[2].textContent = data.overall.dataType + '%';
+                        metricValues[3].textContent = data.overall.sapSimilarity + '%';
+                        metricValues[4].textContent = data.overall.fieldLength + '%';
+                        metricValues[5].textContent = data.overall.infoOmitted + '%';
+                        const badge = metricsAlert.querySelector('.badge');
+                        badge.className = 'badge px-3 py-2 fs-6 mt-2';
+                        if (data.overall.accuracyRate < 35) {
+                            badge.classList.add('bg-danger');
+                            badge.innerHTML = '<i class="bi bi-emoji-frown"></i> ' + data.overall.accuracyRate + '%';
+                        } else if (data.overall.accuracyRate < 70) {
+                            badge.classList.add('bg-warning', 'text-dark');
+                            badge.innerHTML = '<i class="bi bi-emoji-neutral"></i> ' + data.overall.accuracyRate + '%';
+                        } else {
+                            badge.classList.add('bg-success');
+                            badge.innerHTML = '<i class="bi bi-emoji-smile"></i> ' + data.overall.accuracyRate + '%';
+                        }
+                    }
+                    let accuracySingleMappingPairJson = document.getElementById('accuracySingleMappingPairJson');
+                    if (!accuracySingleMappingPairJson) {
+                        accuracySingleMappingPairJson = document.createElement('input');
+                        accuracySingleMappingPairJson.type = 'hidden';
+                        accuracySingleMappingPairJson.id = 'accuracySingleMappingPairJson';
+                        accuracySingleMappingPairJson.name = 'accuracySingleMappingPairJson';
+                        document.querySelector('form').appendChild(accuracySingleMappingPairJson);
+                    }
+                    accuracySingleMappingPairJson.value = JSON.stringify(data.details);
+                } catch (e) {
+                    console.error('Error recalculating accuracy:', e);
+                }
+            }
+
+            // Add warning when navigating away with unsaved changes
+            window.addEventListener('beforeunload', function(e) {
+                if (formModified) {
+                    const message = 'You have unsaved changes. Are you sure you want to leave?';                    
+                    return message;
+                }
+            });
         });
     </script>
 }

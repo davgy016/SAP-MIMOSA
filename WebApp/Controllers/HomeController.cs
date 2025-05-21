@@ -280,6 +280,13 @@ namespace SAP_MIMOSAapp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(MappingDocument updatedDocument)
         {
+            // Retrieve accuracySingleMappingPairJson from the form and deserialize it
+            var accuracySingleMappingPairJson = Request.Form["accuracySingleMappingPairJson"];
+            if (!string.IsNullOrEmpty(accuracySingleMappingPairJson))
+            {
+                updatedDocument.accuracySingleMappingPair = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(accuracySingleMappingPairJson);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(updatedDocument);
@@ -303,6 +310,8 @@ namespace SAP_MIMOSAapp.Controllers
                         }
                     }
                 }
+                
+                updatedDocument.prompts.Add("Modified Manually");
 
                 // Send only the updated document to the correct endpoint
                 var json = JsonSerializer.Serialize(updatedDocument);
@@ -386,6 +395,18 @@ namespace SAP_MIMOSAapp.Controllers
                 _logger.LogError(ex, "Error checking accuracy");
                 return (null, null);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecalculateAccuracy([FromBody] List<MappingPair> mappings)
+        {
+            var (overall, details) = await CheckAccuracy(mappings);
+            return Json(new
+            {
+                success = true,
+                overall,
+                details
+            });
         }
 
 
