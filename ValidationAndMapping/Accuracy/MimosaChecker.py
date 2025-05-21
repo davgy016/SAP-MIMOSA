@@ -1,3 +1,5 @@
+#Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field.
+
 from ..Models import FieldMapping, FieldState, FieldCheck
 import xml.etree.ElementTree as ET
 import os
@@ -26,6 +28,13 @@ import os
 
 class MimosaChecker:
     def checkField(self, field: FieldMapping) -> FieldCheck:
+        #clean each field
+        field.entityName = field.entityName.replace(" ","").trim()
+        field.fieldName = field.fieldName.replace(" ","").trim()
+        field.description = field.description.trim()
+        field.dataType = field.dataType.replace(" ","").trim()
+
+
         self.counter = 0
         fieldCheck = FieldCheck()
         if self._getRoot() == False:
@@ -91,8 +100,6 @@ class MimosaChecker:
         self.counter += 1
         foundField = []
         for child in root:
-            # if child.tag.replace(self.xsd_namespace,"") == "element":
-            #     print("ElementTag",child.tag.replace(self.xsd_namespace,""),"Name",child.get("name"))
             if child.get("name") == name:
                 foundField.append(child)
             foundField.extend(self._findWithName(child, name))
@@ -114,12 +121,12 @@ class MimosaChecker:
 
     
     def _checkDataType(self, element, expected):
-        if element.get("type") == expected:
+        if expected in element.get("type"):
             return True
         else:
             return False
         
     def _checkDescription(self, element, expected):
-        if self._findAnnotation(self.root,element.get("name")) == expected:
+        if expected in self._findAnnotation(self.root,element.get("name")):
             return True
         return False

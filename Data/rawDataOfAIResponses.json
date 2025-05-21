@@ -5786,5 +5786,723 @@
             }
         ],
         "timestamp": "2025-05-17 18:36:43"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate work order mapping",
+        "prompts": null,
+        "accuracyResult": {
+            "accuracyRate": 47.20447540283203,
+            "descriptionSimilarity": 52.94110870361328,
+            "mimosaSimilarity": 20.000000000000004,
+            "sapSimilarity": 74.2857142857143,
+            "dataType": 71.42857142857142,
+            "infoOmitted": 20.000000000000004,
+            "fieldLength": 44.57142857142857
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 47.960269927978516,
+                "descriptionSimilarity": 43.76161575317383,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 52.15453338623047,
+                "descriptionSimilarity": 72.92721557617188,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 40.0
+            },
+            {
+                "accuracyRate": 50.34697723388672,
+                "descriptionSimilarity": 62.08184814453125,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 19.999999999999996
+            },
+            {
+                "accuracyRate": 43.298824310302734,
+                "descriptionSimilarity": 35.79292678833008,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 44.11371612548828,
+                "descriptionSimilarity": 64.6822738647461,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 44.12346649169922,
+                "descriptionSimilarity": 64.74079132080078,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 48.43351364135742,
+                "descriptionSimilarity": 26.601070404052734,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 43.99999999999999
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUFNR",
+                    "description": "Order Number",
+                    "dataType": "CHAR",
+                    "notes": "Unique identifier for the work order in SAP",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderID",
+                    "description": "Unique identifier for the work order",
+                    "dataType": "String",
+                    "notes": "Corresponds to the work order ID in external systems",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "KTEXT",
+                    "description": "Order Short Description",
+                    "dataType": "CHAR",
+                    "notes": "Brief text describing the work order",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ShortDescription",
+                    "description": "Short description or title for the work order",
+                    "dataType": "String",
+                    "notes": "Typically a summary for the work order",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "dataType": "CHAR",
+                    "notes": "Type of the work order (e.g., maintenance, corrective, preventive)",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderType",
+                    "description": "Type or category of the work order",
+                    "dataType": "String",
+                    "notes": "Defines work order classification",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "ERNAM",
+                    "description": "Created By",
+                    "dataType": "CHAR",
+                    "notes": "User who created the work order",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "CreatorID",
+                    "description": "Identifier for the user that created the work order",
+                    "dataType": "String",
+                    "notes": "Can be mapped to external user or system ID",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GSTRP",
+                    "description": "Basic Start Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled start date of the work order",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledStartDate",
+                    "description": "Scheduled start date for the work order",
+                    "dataType": "Date",
+                    "notes": "Format: YYYYMMDD or ISO8601",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GLTRP",
+                    "description": "Basic Finish Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled finish date of the work order",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledFinishDate",
+                    "description": "Scheduled finish date for the work order",
+                    "dataType": "Date",
+                    "notes": "Format: YYYYMMDD or ISO8601",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "OBJNR",
+                    "description": "Object Number",
+                    "dataType": "CHAR",
+                    "notes": "Technical object related to the work order",
+                    "fieldLength": "22"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "RelatedAssetID",
+                    "description": "Identifier for the asset related to the work order",
+                    "dataType": "String",
+                    "notes": "Links work order to an asset record",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-18 11:26:42"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "improve mapping",
+        "prompts": null,
+        "accuracyResult": {
+            "accuracyRate": 45.64983367919922,
+            "descriptionSimilarity": 43.61328887939453,
+            "mimosaSimilarity": 20.000000000000004,
+            "sapSimilarity": 74.2857142857143,
+            "dataType": 71.42857142857142,
+            "infoOmitted": 20.000000000000004,
+            "fieldLength": 44.57142857142857
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 46.49965286254883,
+                "descriptionSimilarity": 34.9979248046875,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 49.09563064575195,
+                "descriptionSimilarity": 54.57378005981445,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 40.0
+            },
+            {
+                "accuracyRate": 48.943782806396484,
+                "descriptionSimilarity": 53.66269302368164,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 19.999999999999996
+            },
+            {
+                "accuracyRate": 41.96797561645508,
+                "descriptionSimilarity": 27.807844161987305,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 42.410282135009766,
+                "descriptionSimilarity": 54.46168899536133,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 42.56185531616211,
+                "descriptionSimilarity": 55.37112808227539,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 48.069664001464844,
+                "descriptionSimilarity": 24.41797637939453,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 43.99999999999999
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUFNR",
+                    "description": "Order Number",
+                    "dataType": "CHAR",
+                    "notes": "Unique identifier for the work order in SAP (main primary key in work order tables); leading zeros may be present",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderID",
+                    "description": "Unique identifier for the work order. Should match SAP's AUFNR.",
+                    "dataType": "String",
+                    "notes": "Maps directly to AUFNR from SAP, ensure preservation of leading zeros for cross-system uniqueness",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "KTEXT",
+                    "description": "Order Short Description",
+                    "dataType": "CHAR",
+                    "notes": "Brief text describing the work order (may be truncated at 40 characters in SAP)",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ShortDescription",
+                    "description": "Short description or title for the work order. Typically the value of SAP KTEXT.",
+                    "dataType": "String",
+                    "notes": "Copy as-is from SAP's KTEXT; field allows more characters, but only the first 40 from SAP will be populated unless an extended text mapping is added.",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "dataType": "CHAR",
+                    "notes": "Type of the work order (e.g., PM01 for maintenance, PM02 for corrective, PM03 for preventive, as configured in SAP)",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderType",
+                    "description": "Type or category of the work order, mapped from SAP's order type code (AUART).",
+                    "dataType": "String",
+                    "notes": "Store SAP AUART code in MIMOSA. Optionally, a lookup can be provided for user-friendly names.",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "ERNAM",
+                    "description": "Created By",
+                    "dataType": "CHAR",
+                    "notes": "User SAP ID (often case-sensitive user name or personnel number) who created the work order",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "CreatorID",
+                    "description": "Identifier for the user (typically SAP user ID) that created the work order.",
+                    "dataType": "String",
+                    "notes": "Map SAP's ERNAM to CreatorID. May need cross-reference if user IDs vary between systems.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GSTRP",
+                    "description": "Basic Start Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled start date of the work order; format is YYYYMMDD in SAP",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledStartDate",
+                    "description": "Scheduled start date for the work order, typically derived from SAP's GSTRP.",
+                    "dataType": "Date",
+                    "notes": "Convert SAP date as YYYYMMDD to ISO8601 (YYYY-MM-DD) as needed by consuming system.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GLTRP",
+                    "description": "Basic Finish Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled finish date (planned end date) of the work order; format is YYYYMMDD",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledFinishDate",
+                    "description": "Scheduled finish (planned end) date for the work order, mapped from SAP GLTRP.",
+                    "dataType": "Date",
+                    "notes": "Convert SAP date as YYYYMMDD to ISO8601 (YYYY-MM-DD) for interoperability. Time component not included unless mapped separately.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "OBJNR",
+                    "description": "Object Number",
+                    "dataType": "CHAR",
+                    "notes": "Technical object (asset/equipment/functional location) related to the work order; format may prepend type, e.g., 'EQ' for Equipment, 'FL' for Functional Location.",
+                    "fieldLength": "22"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "RelatedAssetID",
+                    "description": "Identifier for the asset related to the work order. Should correspond to an asset, equipment, or location in MIMOSA.",
+                    "dataType": "String",
+                    "notes": "Maps to SAP OBJNR. To be linked to a MIMOSA Asset entity; may require additional logic to resolve to asset/equipment code if OBJNR format contains a prefix.",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-18 11:27:32"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "it does not contain all fields",
+        "prompts": null,
+        "accuracyResult": {
+            "accuracyRate": 45.07405090332031,
+            "descriptionSimilarity": 40.158592224121094,
+            "mimosaSimilarity": 20.000000000000004,
+            "sapSimilarity": 74.2857142857143,
+            "dataType": 71.42857142857142,
+            "infoOmitted": 20.000000000000004,
+            "fieldLength": 44.57142857142857
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 45.6013069152832,
+                "descriptionSimilarity": 29.607816696166992,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 49.61806869506836,
+                "descriptionSimilarity": 57.708404541015625,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 40.0
+            },
+            {
+                "accuracyRate": 47.54281234741211,
+                "descriptionSimilarity": 45.25687789916992,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 19.999999999999996
+            },
+            {
+                "accuracyRate": 41.16623306274414,
+                "descriptionSimilarity": 22.997407913208008,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 41.38527297973633,
+                "descriptionSimilarity": 48.311622619628906,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 41.948856353759766,
+                "descriptionSimilarity": 51.693153381347656,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 80.0
+            },
+            {
+                "accuracyRate": 48.25581741333008,
+                "descriptionSimilarity": 25.534889221191406,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 43.99999999999999
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUFNR",
+                    "description": "Order Number",
+                    "dataType": "CHAR",
+                    "notes": "Unique identifier for the work order in SAP (primary key for work order tables, stored as a 12-character string with possible leading zeros). Avoid removing leading zeros for referential integrity.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderID",
+                    "description": "Unique identifier for the work order, matching SAP's AUFNR. Used as primary key/reference throughout MIMOSA.",
+                    "dataType": "String",
+                    "notes": "Preserve leading zeros from SAP AUFNR. Ensure the value transferred as a string and maintain referential uniqueness across both systems. Field is case-sensitive.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "KTEXT",
+                    "description": "Order Short Description",
+                    "dataType": "CHAR",
+                    "notes": "Short, user-defined description for the work order (maximum 40 characters in SAP); special characters may be present.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ShortDescription",
+                    "description": "Short description or title for the work order, sourced from SAP KTEXT. Primarily used for quick identification and listing.",
+                    "dataType": "String",
+                    "notes": "Populate with SAP KTEXT. If a longer description is available in SAP (e.g., long text), consider mapping to a separate MIMOSA field. Truncate or pad if necessary to fit SAP's 40-character limit for this field.",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "dataType": "CHAR",
+                    "notes": "Categorization of work order (e.g., PM01 = Maintenance, PM02 = Corrective). Codes are client-configurable and stored as 4 characters.",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderType",
+                    "description": "Type/category code of the work order, mapped directly from SAP AUART. Used to manage processing logic or reporting.",
+                    "dataType": "String",
+                    "notes": "Store AUART code as-is. Optional: Maintain a lookup table in MIMOSA for expanding code into description. Validate codes against SAP config to avoid orphan values.",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "ERNAM",
+                    "description": "Created By",
+                    "dataType": "CHAR",
+                    "notes": "SAP user ID or personnel number (case-sensitive) of the creator. If personnel number is used, cross-reference to user table may be needed.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "CreatorID",
+                    "description": "Identifier for the user or originator that created the work order, typically the SAP user ID or personnel number.",
+                    "dataType": "String",
+                    "notes": "Map directly from SAP ERNAM. If a personnel number is used in SAP, provide a cross-reference to a human identifier in MIMOSA User/Person entity for linkage and clarity.",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GSTRP",
+                    "description": "Basic Start Date",
+                    "dataType": "DATS",
+                    "notes": "Planned start date of the work order. Stored in YYYYMMDD format without a time component. May not correspond to actual execution start.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledStartDate",
+                    "description": "Planned or scheduled start date for the work order, mapped from SAP GSTRP.",
+                    "dataType": "Date",
+                    "notes": "Convert SAP format YYYYMMDD to ISO8601 format YYYY-MM-DD. No time value present unless mapped from another SAP field.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "GLTRP",
+                    "description": "Basic Finish Date",
+                    "dataType": "DATS",
+                    "notes": "Planned or scheduled end date of the work order. Stored in YYYYMMDD format. Time not included; actual finish may differ based on process.",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledFinishDate",
+                    "description": "Planned or scheduled finish/end date of the work order, derived from SAP GLTRP.",
+                    "dataType": "Date",
+                    "notes": "Map and convert to ISO8601 date format (YYYY-MM-DD). No time; must be mapped from a different SAP field if needed.",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Work Order",
+                    "fieldName": "OBJNR",
+                    "description": "Object Number",
+                    "dataType": "CHAR",
+                    "notes": "Identifier for technical object (equipment/functional location) linked to the work order. Prefix indicates type (e.g., EQ for Equipment, FL for Functional Location). To relate to actual asset, parse suffix or cross-reference with asset/equipment master table.",
+                    "fieldLength": "22"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "RelatedAssetID",
+                    "description": "Identifier for the asset, equipment, or location associated with the work order. Should correspond to an Asset or Location record in MIMOSA.",
+                    "dataType": "String",
+                    "notes": "Populate from SAP OBJNR. For integration, parse or crosswalk OBJNR to resolve to the actual asset’s unique ID. Prefix (EQ, FL, etc.) may need processing for precise linkage to Asset/Location entities in MIMOSA.",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-18 11:28:55"
+    },
+    {
+        "mapID": null,
+        "LLMType": "gpt-4.1",
+        "prompt": "generate one mapping pair",
+        "prompts": null,
+        "accuracyResult": {
+            "accuracyRate": 40.310035705566406,
+            "descriptionSimilarity": 65.86021423339844,
+            "mimosaSimilarity": 20.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 36.0
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 40.310035705566406,
+                "descriptionSimilarity": 65.86021423339844,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUIPMENT",
+                    "description": "Unique identifier for equipment record",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for equipment master",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Globally unique identifier for asset",
+                    "dataType": "String",
+                    "notes": "Primary identifier in MIMOSA data model",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "timestamp": "2025-05-18 16:43:32"
     }
 ]

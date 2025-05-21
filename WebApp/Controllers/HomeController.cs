@@ -538,7 +538,7 @@ namespace SAP_MIMOSAapp.Controllers
                 }
                 // Convert to CSV
                 var csvBuilder = new StringBuilder();
-                csvBuilder.AppendLine("SAP_EntityName,SAP_FieldName,SAP_Description,SAP_DataType,SAP_FieldLength,SAP_Notes,MIMOSA_EntityName,MIMOSA_FieldName,MIMOSA_Description,MIMOSA_DataType,MIMOSA_FieldLength");
+                csvBuilder.AppendLine("SAP_EntityName,SAP_FieldName,SAP_Description,SAP_DataType,SAP_FieldLength,SAP_Notes,MIMOSA_EntityName,MIMOSA_FieldName,MIMOSA_Description,MIMOSA_DataType,MIMOSA_FieldLength, MIMOSA_Notes");
                 if (mappingDoc.mappings != null)
                 {
                     foreach (var mapping in mappingDoc.mappings)

@@ -78,16 +78,46 @@
     </div>
     @if (detail != null)
     {
-        <div class="mt-2 border-top pt-2 small accuracy-details">
-            <strong>Accuracy Details:</strong>
-            <ul class="list-unstyled mb-0">
-                <li><span class="fw-bold">Description Similarity:</span> @Html.DisplayFor(m => detail.descriptionSimilarity)%</li>
-                <li><span class="fw-bold">SAP Similarity:</span> @Html.DisplayFor(m => detail.sapSimilarity)%</li>
-                <li><span class="fw-bold">MIMOSA Similarity:</span> @Html.DisplayFor(m => detail.mimosaSimilarity)%</li>
-                <li><span class="fw-bold">Data Type:</span> @Html.DisplayFor(m => detail.dataType)%</li>
-                <li><span class="fw-bold">Missing Fields:</span> @Html.DisplayFor(m => detail.infoOmitted)%</li>
-                <li><span class="fw-bold">Field Length:</span> @Html.DisplayFor(m => detail.fieldLength)%</li>
-            </ul>
+        <div class="mt-2 pt-2 accuracy-details-metrics">
+            <div class="fw-semibold mb-2 text-primary"><i class="bi bi-bar-chart"></i> Accuracy Details</div>
+            <div class="row g-1">
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-file-earmark-text"></i> Desc. Sim.</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.descriptionSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.sapSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-diagram-3"></i> MIMOSA Sim.</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.mimosaSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.dataType)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.infoOmitted)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
+                        <span class="metric-value">@Html.DisplayFor(m => detail.fieldLength)%</span>
+                    </div>
+                </div>
+            </div>
         </div>
     }
 </div>

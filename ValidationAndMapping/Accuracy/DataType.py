@@ -1,4 +1,4 @@
-# This DataType engine compares the data type of mapped fields to compare similarity.
+# DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data.
 import re
 from ..Models import MappingEntry
 
@@ -7,13 +7,37 @@ ALIASES = {
     "SMALLINT":  "INTEGER",
     "DEC":       "DECIMAL",
     "NUM":       "NUMERIC",
+    "NumericType":"NUMERIC",
+    "cct:NumericType":"NUMERIC",
     "CHAR":      "STRING",
     "VARCHAR":   "STRING",
+    "TextType":  "STRING",
+    "cct:TextType":  "STRING",
     "TEXT":      "STRING",
     "STRING":    "STRING",
     "DATE":      "DATE",
     "DATETIME":  "DATETIME",
     "TIMESTAMP": "DATETIME",
+    "BinaryObjectType":"BOOL",
+    "cct:BinaryObjectType":"BOOL",
+    "boolean":"BOOL",
+    "xs:boolean":"BOOL",
+    "IDType":"ID",
+    "cct:IDType":"ID",
+    "UTCDateTime":"DATETIME",
+    "cct:DateTimeType":"DATETIME",
+    "DateTimeType":"DATETIME",
+    "int":"INTEGER",
+    "xs:int":"INTEGER",
+    "string":"STRING",
+    "xs:string":"STRING",
+    "anyURI":"STRING",
+    "xs:anyURI":"STRING",
+    "nonNegativeInteger":"INTEGER",
+    "xs:nonNegativeInteger":"INTEGER",
+    "language":"STRING",
+    "xs:language":"STRING"
+    
 }
 
 def normalize(dt: str) -> str:
