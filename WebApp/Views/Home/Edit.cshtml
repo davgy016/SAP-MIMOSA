@@ -5,24 +5,79 @@
 }
 @if (Model?.accuracyResult?.accuracyRate != null)
 {
-    <div class="alert alert-info mb-3">
-        Overall Accuracy: <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-            <strong>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</strong>
-        </span> <br />
-        Description Similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong> <br />
-        MIMOSA Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong><br />
-        SAP Similiraty: <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong><br />
-        Data type similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong><br />
-        Missing fields rate: <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong><br />
-        Field length similarity: <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong><br />
+    <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyResult?.accuracyRate != null) ? "block" : "none")">
+
+        @if (Model?.prompts != null && Model.prompts.Any())
+        {
+            <div class="section">
+                <h5>Prompt History</h5>
+                <ul>
+                    @foreach (var prompt in Model.prompts)
+                    {
+                        <li>@prompt</li>
+                    }
+                </ul>
+            </div>
+        }
+        <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+            <div class="card-body p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                        <div class="display-5 fw-bold text-primary">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
+                        </div>
+                        <div class="fw-semibold">Overall Accuracy</div>
+                        <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
+                            @if (Model?.accuracyResult?.accuracyRate < 35)
+                            {
+                                <i class="bi bi-emoji-frown"></i>
+                            }
+                            @if (Model?.accuracyResult?.accuracyRate >= 35 && Model?.accuracyResult?.accuracyRate < 70)
+                            {
+                                <i class="bi bi-emoji-neutral"></i>
+                            }
+                            @if (Model?.accuracyResult?.accuracyRate >= 70)
+                            {
+                                <i class="bi bi-emoji-smile"></i>
+                            }
+                            @Html.DisplayFor(m => m.accuracyResult.accuracyRate)%
+                        </span>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <div class="row g-2">
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Description Similarity</div>
+                                <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">MIMOSA Similarity</div>
+                                <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Data Type Similarity</div>
+                                <div class="metric-value"><i class="bi bi-list-check"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">SAP Similarity</div>
+                                <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Field Length Similarity</div>
+                                <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Missing Fields Rate</div>
+                                <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }
-@if (!string.IsNullOrWhiteSpace(Model?.prompt))
-{
-    <div class="alert alert-warning">
-        <strong>Prompt:</strong> @Model.prompt
-    </div>
-}
+
 <div class="container mt-4">
     <h2>Edit Mapping</h2>
 
@@ -47,8 +102,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="LLMType" class="form-label">LLM Type</label>
-                        @Html.DropDownListFor(model => model.LLMType, SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs, "Select LLM Type", new { @class = "form-select" })
-                        <span asp-validation-for="LLMType" class="text-danger"></span>
+                        <input asp-for="LLMType" class="form-control" readonly value="@Model?.LLMType" />
                     </div>
                 </div>
 
@@ -67,87 +121,17 @@
                         No mappings added yet. Click "Add Mapping" to create a mapping pair.
                     </div>
                 }
-                else
+                @if (Model.mappings != null && Model.mappings.Count > 0)
                 {
-                    <div class="alert alert-info" id="noMappingsMessage" style="display: none;">
-                        No mappings added yet. Click "Add Mapping" to create a mapping pair.
-                    </div>
-
-                    @for (int i = 0; i < Model.mappings.Count; i++)
+                    ViewData["AccuracyaccuracySingleMappingPair"] = Model.accuracySingleMappingPair;
+                    for (int i = 0; i < Model.mappings.Count; i++)
                     {
-                        <div class="mapping-pair mb-4 border rounded p-3 position-relative">
-                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
-                                <i class="bi bi-x-lg"></i> Remove
-                            </button>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5 class="text-primary">SAP Field</h5>
-                                    <div class="mb-2">
-                                        <label class="form-label">Platform</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.platform" value="@Model.mappings[i].sap.platform" readonly />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Entity Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.entityName" value="@Model.mappings[i].sap.entityName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.fieldName" value="@Model.mappings[i].sap.fieldName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="mappings[@i].sap.description" rows="2">@Model.mappings[i].sap.description</textarea>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Data Type</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.dataType" value="@Model.mappings[i].sap.dataType" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Length</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.fieldLength" value="@Model.mappings[i].sap.fieldLength" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Notes</label>
-                                        <textarea class="form-control" name="mappings[@i].sap.notes" rows="2">@Model.mappings[i].sap.notes</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <h5 class="text-success">MIMOSA Field</h5>
-                                    <div class="mb-2">
-                                        <label class="form-label">Platform</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.platform" value="@Model.mappings[i].mimosa.platform" readonly />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Entity Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.entityName" value="@Model.mappings[i].mimosa.entityName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.fieldName" value="@Model.mappings[i].mimosa.fieldName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="mappings[@i].mimosa.description" rows="2">@Model.mappings[i].mimosa.description</textarea>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Data Type</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.dataType" value="@Model.mappings[i].mimosa.dataType" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Length</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.fieldLength" value="@Model.mappings[i].mimosa.fieldLength" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Notes</label>
-                                        <textarea class="form-control" name="mappings[@i].mimosa.notes" rows="2">@Model.mappings[i].mimosa.notes</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @await Html.PartialAsync("_MappingPair", Tuple.Create(i, Model.mappings[i]), new ViewDataDictionary(ViewData))
                     }
                 }
+                <div class="alert alert-info" id="noMappingsMessage" style="display: none;">
+                    No mappings added yet. Click "Add Mapping" to create a mapping pair.
+                </div>
             </div>
         </div>
         <input type="hidden" asp-for="prompt" />
@@ -165,80 +149,9 @@
     </form>
 </div>
 
-<!-- Template for mapping pair -->
-<template id="mappingPairTemplate">
-    <div class="mapping-pair mb-4 border rounded p-3 position-relative">
-        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
-            <i class="bi bi-x-lg"></i> Remove
-        </button>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h5 class="text-primary">SAP Field</h5>
-                <div class="mb-2">
-                    <label class="form-label">Platform</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.platform" value="SAP" readonly />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Entity Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.entityName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.fieldName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" name="mappings[{index}].sap.description" rows="2"></textarea>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Data Type</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.dataType" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Length</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.fieldLength" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-control" name="mappings[{index}].sap.notes" rows="2"></textarea>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <h5 class="text-success">MIMOSA Field</h5>
-                <div class="mb-2">
-                    <label class="form-label">Platform</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.platform" value="MIMOSA" readonly />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Entity Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.entityName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.fieldName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" name="mappings[{index}].mimosa.description" rows="2"></textarea>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Data Type</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.dataType" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Length</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.fieldLength" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-control" name="mappings[{index}].mimosa.notes" rows="2"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+<script type="text/template" id="mappingPairTemplate">
+    @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
+</script>
 
 @section Scripts {
     <script>
