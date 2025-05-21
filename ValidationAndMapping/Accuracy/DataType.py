@@ -1,4 +1,4 @@
-# This DataType engine compares the data type between mapped fields to see if they are likely to be able to contain similar data.
+# DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data.
 import re
 from ..Models import MappingEntry
 
