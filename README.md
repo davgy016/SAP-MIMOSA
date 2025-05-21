@@ -35,3 +35,6 @@ The system has 3 main folders:
   - **ai_models.py**: Contains the `OpenAIModel` class, which interacts with the OpenAI API to generate and improve mappings based on user queries.
   - **Controllers**: Contains controller classes that handle specific functionalities, such as saving and loading mapping documents.
   - **Models**: Contains data models specific to the web application, including the `MappingDocument` class that represents the structure of mapping data exchanged with the frontend.
+
+  # Troubleshooting
+  - If you are unable to import 
