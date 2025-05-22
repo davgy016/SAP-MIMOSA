@@ -28,7 +28,7 @@
                             <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
                         </div>
                         <div class="fw-semibold">Overall Accuracy</div>
-                        <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
+                        <span id="accuracy-badge" class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
                             @if (Model?.accuracyResult?.accuracyRate < 35)
                             {
                                 <i class="bi bi-emoji-frown"></i>
@@ -48,27 +48,27 @@
                         <div class="row g-2">
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">Description Similarity</div>
-                                <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                                <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong data-metric="descriptionSimilarity">@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">MIMOSA Similarity</div>
-                                <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                                <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong data-metric="mimosaSimilarity">@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">Data Type Similarity</div>
-                                <div class="metric-value"><i class="bi bi-list-check"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                                <div class="metric-value"><i class="bi bi-list-check"></i> <strong data-metric="dataType">@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">SAP Similarity</div>
-                                <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                                <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong data-metric="sapSimilarity">@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">Field Length Similarity</div>
-                                <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div>
+                                <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong data-metric="fieldLength">@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <div class="metric-label">Missing Fields Rate</div>
-                                <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                                <div class="metric-label">Info Omitted</div>
+                                <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                 });
             });
 
-            
+
             document.getElementById('addMapping').addEventListener('click', function() {
                 addMappingPair();
                 renumberMappings();
@@ -220,7 +220,7 @@
                         recalculateAccuracy();
                     });
                 });
-                
+
                 if (mappingData) {
                     ["sap", "mimosa"].forEach(type => {
                         ["entityName", "fieldName", "dataType", "description", "fieldLength", "notes", "platform"].forEach(field => {
@@ -308,25 +308,55 @@
                     if (metricsAlert) {
                         metricsAlert.style.display = 'block';
                         metricsAlert.querySelector('.display-5 span').textContent = data.overall.accuracyRate + '%';
-                        const metricValues = metricsAlert.querySelectorAll('.metric-value strong');
-                        metricValues[0].textContent = data.overall.descriptionSimilarity + '%';
-                        metricValues[1].textContent = data.overall.mimosaSimilarity + '%';
-                        metricValues[2].textContent = data.overall.dataType + '%';
-                        metricValues[3].textContent = data.overall.sapSimilarity + '%';
-                        metricValues[4].textContent = data.overall.fieldLength + '%';
-                        metricValues[5].textContent = data.overall.infoOmitted + '%';
-                        const badge = metricsAlert.querySelector('.badge');
+                        // Update overall metric values using data-metric attributes
+                        const overallMetrics = [
+                            "descriptionSimilarity",
+                            "mimosaSimilarity",
+                            "dataType",
+                            "sapSimilarity",
+                            "fieldLength",
+                            "infoOmitted"
+                        ];
+                        overallMetrics.forEach(metric => {
+                            const el = metricsAlert.querySelector(`[data-metric="${metric}"]`);
+                            if (el && data.overall[metric] !== null && data.overall[metric] !== undefined) {
+                                el.textContent = data.overall[metric] + '%';
+                            }
+                        });
+                        const badge = document.getElementById('accuracy-badge');
                         badge.className = 'badge px-3 py-2 fs-6 mt-2';
+                        let badgeIcon = '';
                         if (data.overall.accuracyRate < 35) {
                             badge.classList.add('bg-danger');
-                            badge.innerHTML = '<i class="bi bi-emoji-frown"></i> ' + data.overall.accuracyRate + '%';
+                            badgeIcon = '<i class="bi bi-emoji-frown"></i>';
                         } else if (data.overall.accuracyRate < 70) {
                             badge.classList.add('bg-warning', 'text-dark');
-                            badge.innerHTML = '<i class="bi bi-emoji-neutral"></i> ' + data.overall.accuracyRate + '%';
+                            badgeIcon = '<i class="bi bi-emoji-neutral"></i>';
                         } else {
                             badge.classList.add('bg-success');
-                            badge.innerHTML = '<i class="bi bi-emoji-smile"></i> ' + data.overall.accuracyRate + '%';
+                            badgeIcon = '<i class="bi bi-emoji-smile"></i>';
                         }
+                        badge.innerHTML = `${badgeIcon} ${data.overall.accuracyRate}%`;
+                    }
+                    // Update per-mapping pair metrics dynamically
+                    if (Array.isArray(data.details)) {
+                        data.details.forEach((detail, idx) => {
+                            // For each metric in the detail object, update the corresponding span
+                            Object.entries(detail).forEach(([key, value]) => {
+                                if ([
+                                    'descriptionSimilarity',
+                                    'sapSimilarity',
+                                    'mimosaSimilarity',
+                                    'dataType',
+                                    'infoOmitted',
+                                    'fieldLength'
+                                ].includes(key)) {
+                                    const selector = `.metric-value[data-metric="${key}"][data-index="${idx}"]`;
+                                    const span = document.querySelector(selector);
+                                    if (span) span.textContent = (value !== null && value !== undefined) ? value.toFixed(2) + '%' : '';
+                                }
+                            });
+                        });
                     }
                     let accuracySingleMappingPairJson = document.getElementById('accuracySingleMappingPairJson');
                     if (!accuracySingleMappingPairJson) {
@@ -345,7 +375,7 @@
             // Add warning when navigating away with unsaved changes
             window.addEventListener('beforeunload', function(e) {
                 if (formModified) {
-                    const message = 'You have unsaved changes. Are you sure you want to leave?';                    
+                    const message = 'You have unsaved changes. Are you sure you want to leave?';
                     return message;
                 }
             });
