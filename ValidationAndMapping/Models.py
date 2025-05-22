@@ -1,6 +1,7 @@
 from pydantic import BaseModel, RootModel, Field, ConfigDict
 from typing import List, Optional
 from enum import Enum
+from datetime import datetime
 
 class FieldState(Enum):
     CORRECT = "correct"
@@ -47,6 +48,7 @@ class AccuracyResult(BaseModel):
     fieldLength: Optional[float] = None
 
 class Mapping(BaseModel):    
+    createdAt: Optional[datetime] = None
     mapID: Optional[str] = None
     LLMType: str
     prompt: Optional[str] = None

@@ -26,6 +26,8 @@ public class MappingDocument
 
     public List<string> prompts { get; set; } = new List<string>();
 
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+    public DateTime? createdAt { get; set; }
 }
 
 
