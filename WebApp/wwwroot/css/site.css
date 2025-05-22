@@ -385,10 +385,10 @@ tr:hover {
         transition: background 0.2s;
     }
 
-        .custom-navbar .navbar-brand:hover {
+/*        .custom-navbar .navbar-brand:hover {
             background: rgba(255,255,255,0.18);
             color: #fff !important;
-        }
+        }*/
 
     .custom-navbar .nav-link {
         color: #fff !important;

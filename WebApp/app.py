@@ -181,14 +181,19 @@ async def delete_workorder(map_id: str):
 from typing import List
 from ValidationAndMapping.Models import MappingEntry
 
+# Pydantic's BaseModel does not preserve the exact decimal places of floats. Roudning in ScoreManager did not work,
+# when  do round(x, 2), it stores the binary float.
+# but when serializing to JSON, it dumps the full binary float representation. 
+# Also myltiply by 100 to get the percentage
+def to_decimals(d):
+    return {k: (round(v* 100, 2) if isinstance(v, float) and v is not None else v) for k, v in d.items()}
+
 @app.post("/check_accuracy")
 async def check_accuracy(entries: List[MappingEntry]):
-    results = ScoreManager.scoreOutputWithDetails(entries)
-    # results = {"overall": AccuracyResult, "singlePairAccuracydetails": [AccuracyResult, ...]}
-    # FastAPI will serialize the AccuracyResult objects automatically
+    results = ScoreManager.scoreOutputWithDetails(entries)    
     return {
-        "overall": results["overall"],
-        "singlePairAccuracydetails": [r for r in results["singlePairAccuracydetails"]]
+        "overall": to_decimals(results["overall"].model_dump()),
+        "singlePairAccuracydetails": [to_decimals(r.model_dump()) for r in results["singlePairAccuracydetails"]]
     }
 
 def start():

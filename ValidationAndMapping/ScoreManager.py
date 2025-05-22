@@ -80,22 +80,22 @@ class ScoreManager:
             overall["InfoOmitted"] += acc["InfoOmitted"] / n
             overall["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
             singlePairAccuracydetails.append(AccuracyResult(
-                accuracyRate=acc["Accuracy"] * 100,
-                descriptionSimilarity=acc["DescriptionSimilarity"] * 100,
-                mimosaSimilarity=acc["MimosaSimilarity"] * 100,
-                sapSimilarity=acc["SAPSimilarity"] * 100,
-                dataType=acc["DataType"] * 100,
-                infoOmitted=acc["InfoOmitted"] * 100,
-                fieldLength=acc["FieldLength"] * 100
+                accuracyRate=acc["Accuracy"],
+                descriptionSimilarity=acc["DescriptionSimilarity"],
+                mimosaSimilarity=acc["MimosaSimilarity"],
+                sapSimilarity=acc["SAPSimilarity"],
+                dataType=acc["DataType"],
+                infoOmitted=acc["InfoOmitted"],
+                fieldLength=acc["FieldLength"]
             ))
         overall_result = AccuracyResult(
-            accuracyRate=overall["Accuracy"] * 100,
-            descriptionSimilarity=overall["DescriptionSimilarity"] * 100,
-            mimosaSimilarity=overall["MimosaSimilarity"] * 100,
-            sapSimilarity=overall["SAPSimilarity"] * 100,
-            dataType=overall["DataType"] * 100,
-            infoOmitted=overall["InfoOmitted"] * 100,
-            fieldLength=overall["FieldLength"] * 100
+            accuracyRate=overall["Accuracy"],
+            descriptionSimilarity=overall["DescriptionSimilarity"],
+            mimosaSimilarity=overall["MimosaSimilarity"],
+            sapSimilarity=overall["SAPSimilarity"],
+            dataType=overall["DataType"],
+            infoOmitted=overall["InfoOmitted"],
+            fieldLength=overall["FieldLength"]
         )
         return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
 
