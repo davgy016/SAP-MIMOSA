@@ -23,6 +23,28 @@ class FieldMapping(BaseModel):
     dataType: str
     notes: Optional[str] = ""
     fieldLength: Optional[str] = ""
+    
+    def __eq__(self, other):
+        if not isinstance(other, FieldMapping):
+            return False
+        return (
+            self.platform == other.platform and
+            self.entityName == other.entityName and
+            self.fieldName == other.fieldName and
+            self.description == other.description and
+            self.dataType == other.dataType and
+            self.fieldLength == other.fieldLength
+        )
+    
+    def __hash__(self):
+        return hash((
+            self.platform,
+            self.entityName,
+            self.fieldName,
+            self.description,
+            self.dataType,
+            self.fieldLength
+        ))
 
 class FieldCheck(BaseModel):
     entityName: FieldState = FieldState.UNCHECKED
@@ -36,6 +58,14 @@ class MappingEntry(BaseModel):
     mimosa: FieldMapping
     class Config:
         extra = "ignore"
+
+    def __eq__(self, other):
+        if not isinstance(other, MappingEntry):
+            return False
+        return self.sap == other.sap and self.mimosa == other.mimosa
+    
+    def __hash__(self):
+        return hash((self.sap, self.mimosa))
 
 class AccuracyResult(BaseModel):
     accuracyRate: Optional[float] = None

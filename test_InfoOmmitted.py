@@ -162,3 +162,14 @@ def test_score_overall(info_omitted, sample_mapping):
     print(f'Test overall {score}')
     assert 0 <= score <= 1
 
+def test_score_overall_with_duplicate(info_omitted, sample_mapping):
+    mappings_with_duplicate = sample_mapping.mappings
+
+    mappings_with_duplicate.append(sample_mapping.mappings[0])
+    score = info_omitted.score_overall(mappings_with_duplicate)
+
+    print(f'Test overall with a duplicate {score}')
+    assert 0 <= score <= 1
+
+
+

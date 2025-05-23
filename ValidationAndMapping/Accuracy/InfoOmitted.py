@@ -39,13 +39,13 @@ class InfoOmitted:
         }
 
     def score_overall(self, mapping: list) -> float:
-        #total number of fields mapped 
-        #TODO remove duplicates
-        countFields = len(mapping)
+        # Convert to set to remove duplicates based on FieldMapping.__eq__
+        unique_mappings = set(mapping)
+        countFields = len(unique_mappings)
 
         #a list of all the different entities
         entities = []
-        for map in mapping:
+        for map in unique_mappings:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
         
@@ -68,7 +68,7 @@ class InfoOmitted:
         countFields = 0 
         entity = map.sap.entityName.upper()
 
-        for mapping in mappings:
+        for mapping in set(mappings):
             if mapping.sap.entityName.upper() == entity:
                 countFields += 1
         
