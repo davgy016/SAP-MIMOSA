@@ -31,7 +31,6 @@ class ScoreManager:
             "Accuracy": 0,
             "DataType": 0,
             "DescriptionSimilarity": 0,
-            "FieldLength": 0,
             "SAPSimilarity": 0,
             "InfoOmitted": 0,
             "MimosaSimilarity": 0
@@ -43,7 +42,6 @@ class ScoreManager:
             acc = accuracy_scorer.calculateAccuracy(map)
             output["Accuracy"] += acc["Accuracy"] / n
             output["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            output["FieldLength"] += acc["FieldLength"] / n
             output["DataType"] += acc["DataType"] / n
             output["SAPSimilarity"] += acc["SAPSimilarity"] / n
             output["InfoOmitted"] += acc["InfoOmitted"] / n
@@ -62,7 +60,6 @@ class ScoreManager:
             "Accuracy": 0,
             "DataType": 0,
             "DescriptionSimilarity": 0,
-            "FieldLength": 0,
             "SAPSimilarity": 0,
             "InfoOmitted": 0,
             "MimosaSimilarity": 0
@@ -74,7 +71,6 @@ class ScoreManager:
             acc = accuracy_scorer.calculateAccuracy(map)
             overall["Accuracy"] += acc["Accuracy"] / n
             overall["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            overall["FieldLength"] += acc["FieldLength"] / n
             overall["DataType"] += acc["DataType"] / n
             overall["SAPSimilarity"] += acc["SAPSimilarity"] / n
             overall["InfoOmitted"] += acc["InfoOmitted"] / n
@@ -86,7 +82,6 @@ class ScoreManager:
                 sapSimilarity=acc["SAPSimilarity"],
                 dataType=acc["DataType"],
                 infoOmitted=acc["InfoOmitted"],
-                fieldLength=acc["FieldLength"]
             ))
         overall_result = AccuracyResult(
             accuracyRate=overall["Accuracy"],
@@ -95,7 +90,6 @@ class ScoreManager:
             sapSimilarity=overall["SAPSimilarity"],
             dataType=overall["DataType"],
             infoOmitted=overall["InfoOmitted"],
-            fieldLength=overall["FieldLength"]
         )
         return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
 

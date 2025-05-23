@@ -17,10 +17,8 @@ class Accuracy:
     def __init__(self):
         # instantiate once, reuse across calls
         self.description_scorer = DescriptionSimilarity()
-        self.length_scorer      = FieldLength()
         self.type_scorer        = DataType()
         self.sap_checker        = SAPChecker()
-        self.omitted_scorer     = InfoOmitted()
         self.mimosa_checker     = MimosaChecker()
     
     def calculateAccuracy(self, mapping: MappingEntry) -> dict:
@@ -33,9 +31,7 @@ class Accuracy:
         """        
         output = {}
         desc_score  = self.description_scorer.score(mapping)
-        len_score   = self.length_scorer.score(mapping)
         type_score  = self.type_scorer.score(mapping)
-        omitted_score = self.omitted_scorer.score(mapping)
 
         # SAP schema checks: get a FieldCheck per entry
         sap_field_checks = self.sap_checker.checkField(mapping.sap)
@@ -63,14 +59,13 @@ class Accuracy:
         mimosa_score = correct / total_checks if total_checks else 0.0
 
         # average all components
-        total = (desc_score + len_score + type_score + sap_score + omitted_score+ mimosa_score) / 6.0
+        total = (desc_score + type_score + sap_score + mimosa_score) / 4.0
 
         output["Accuracy"] = total
         output["DescriptionSimilarity"] = desc_score
         output["FieldLength"] = len_score
         output["DataType"] = type_score
         output["SAPSimilarity"] = sap_score
-        output["InfoOmitted"] = omitted_score
         output["MimosaSimilarity"] = mimosa_score
 
         return output
