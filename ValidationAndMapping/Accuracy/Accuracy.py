@@ -63,7 +63,6 @@ class Accuracy:
 
         output["Accuracy"] = total
         output["DescriptionSimilarity"] = desc_score
-        output["FieldLength"] = len_score
         output["DataType"] = type_score
         output["SAPSimilarity"] = sap_score
         output["MimosaSimilarity"] = mimosa_score

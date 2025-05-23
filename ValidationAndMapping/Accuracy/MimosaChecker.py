@@ -28,12 +28,6 @@ import os
 
 class MimosaChecker:
     def checkField(self, field: FieldMapping) -> FieldCheck:
-        #clean each field
-        field.entityName = field.entityName.replace(" ","").trim()
-        field.fieldName = field.fieldName.replace(" ","").trim()
-        field.description = field.description.trim()
-        field.dataType = field.dataType.replace(" ","").trim()
-
 
         self.counter = 0
         fieldCheck = FieldCheck()

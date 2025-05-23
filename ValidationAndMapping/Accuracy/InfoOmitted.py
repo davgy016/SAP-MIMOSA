@@ -38,7 +38,7 @@ class InfoOmitted:
             for field, meta in tbl_meta.items()
         }
 
-    def score(self, mapping: list) -> float:
+    def score_overall(self, mapping: list) -> float:
         #total number of fields mapped 
         #TODO remove duplicates
         countFields = len(mapping)
@@ -49,17 +49,37 @@ class InfoOmitted:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
         
-        print(f"Entites found {entities}")
-
         #a count of the number of fields across all entities
         totalFields = 0
 
         for entity in entities:
             entity = entity.upper()
             if entity in self.schema:
-                table_fields = self.schema[entity]
-                totalFields += len(table_fields)
-        print(f"Total fields found {totalFields}")
+                tableFields = self.schema[entity]
+                totalFields += len(tableFields)
+        print(f"Fields counted in overall score {countFields} for entities {entities} with total fields {totalFields}")
 
+        if totalFields == 0:
+            return 0
+
+        return countFields/totalFields
+    
+    def score_single(self, map: MappingEntry, mappings: list) -> float:
+        countFields = 0 
+        entity = map.sap.entityName.upper()
+
+        for mapping in mappings:
+            if mapping.sap.entityName.upper() == entity:
+                countFields += 1
+        
+        totalFields = 0
+        if entity in self.schema:
+            tableFields = self.schema[entity]
+            totalFields = len(tableFields)
+
+        if totalFields == 0:
+            return 0
+        
+        print(f"Fields counted in single score {countFields} for entity {entity} with total fields {totalFields}")
 
         return countFields/totalFields

@@ -8,7 +8,7 @@ from .Score import Score
 
 #Score Managers
 # from ValidationAndMapping.Quality import Quality
-from .Accuracy import Accuracy
+from .Accuracy import Accuracy, InfoOmitted
 from .Models import Mapping
 from typing import List
 from .Models import AccuracyResult
@@ -26,6 +26,7 @@ class ScoreManager:
         """
         print("Received mappings for scoring:", mappings)
         accuracy_scorer = Accuracy()
+        info_ommitted = InfoOmitted()
 
         output = {
             "Accuracy": 0,
@@ -44,7 +45,7 @@ class ScoreManager:
             output["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
             output["DataType"] += acc["DataType"] / n
             output["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            output["InfoOmitted"] += acc["InfoOmitted"] / n
+            output["InfoOmitted"] += info_ommitted.score_single(map,mappings) / n
             output["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
         return output
 
@@ -55,6 +56,8 @@ class ScoreManager:
         Returns both the overall aggregated accuracy metrics and a list of per-mapping-pair accuracy results.
         """
         accuracy_scorer = Accuracy()
+        info_ommitted = InfoOmitted()
+
         n = len(mappings)
         overall = {
             "Accuracy": 0,
@@ -73,7 +76,7 @@ class ScoreManager:
             overall["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
             overall["DataType"] += acc["DataType"] / n
             overall["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            overall["InfoOmitted"] += acc["InfoOmitted"] / n
+            overall["InfoOmitted"] += info_ommitted.score_single(map,mappings) / n
             overall["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
             singlePairAccuracydetails.append(AccuracyResult(
                 accuracyRate=acc["Accuracy"],
@@ -81,7 +84,7 @@ class ScoreManager:
                 mimosaSimilarity=acc["MimosaSimilarity"],
                 sapSimilarity=acc["SAPSimilarity"],
                 dataType=acc["DataType"],
-                infoOmitted=acc["InfoOmitted"],
+                infoOmitted=info_ommitted.score_single(map,mappings),
             ))
         overall_result = AccuracyResult(
             accuracyRate=overall["Accuracy"],
@@ -89,7 +92,7 @@ class ScoreManager:
             mimosaSimilarity=overall["MimosaSimilarity"],
             sapSimilarity=overall["SAPSimilarity"],
             dataType=overall["DataType"],
-            infoOmitted=overall["InfoOmitted"],
+            infoOmitted=info_ommitted.score_overall(mappings),
         )
         return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
 
