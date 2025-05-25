@@ -6,7 +6,7 @@ from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 from .MimosaChecker import MimosaChecker
-from .InfoOmitted import InfoOmitted
+from ..Existence          import Existence
 from .SAPChecker import SAPChecker
 from .MimosaChecker import MimosaChecker
 
@@ -20,7 +20,6 @@ class Accuracy:
         self.type_scorer        = DataType()
         self.sap_checker        = SAPChecker()
         self.mimosa_checker     = MimosaChecker()
-        self.exist_check  = InfoOmitted()
     
     def calculateAccuracy(self, entry: MappingEntry) -> dict:
         """
@@ -43,22 +42,23 @@ class Accuracy:
         scores["MIMOSASimilarity"] = mimo_score
 
         # 3) Build existence mask
-        exist = self.exist_check.existence(entry)
+        exist = Existence.fields_present(entry)
         # exist is e.g. {"description": True, "dataType": False, ...}
 
         # 4) Conditional scorers
         scores["DescriptionSimilarity"] = (
-            self.desc_scorer.score(entry) if exist["description"] else 0.0
+            self.description_scorer.score(entry) if exist["description"] else 0.0
         )
         scores["DataType"] = (
             self.type_scorer.score(entry) if exist["dataType"] else 0.0
         )
-        scores["FieldLength"] = (
-            self.len_scorer.score(entry) if exist["fieldLength"] else 0.0
-        )
+
 
         # 5) Dynamic Overall = average of whatever keys we have
         values = list(scores.values())
         scores["Accuracy"] = sum(values) / len(values) if values else 0.0
+
+        for k,v in scores.items():
+            scores[k] = max(0.0, min(v, 1.0))
 
         return scores

@@ -19,14 +19,15 @@ class ScoreManager:
     @staticmethod
     def scoreOutputWithDetails(entries: list[MappingEntry]) -> dict:
         acc = Accuracy()
+        info = InfoOmitted()
         n   = len(entries)
         keys = [
             "Accuracy",
             "DescriptionSimilarity",
-            "FieldLength",
             "DataType",
             "SAPSimilarity",
             "MIMOSASimilarity",
+            # "InfoOmitted",
         ]
 
         # zero out accumulators
@@ -39,14 +40,17 @@ class ScoreManager:
         for e in entries:
             scores = acc.calculateAccuracy(e)
 
+            # compute coverage for this entry
+            info_single = info.score_single(e, entries)
+
             # build per‐entry detail
             details.append(AccuracyResult(
-                accuracyRate          = scores["Accuracy"]          * 100,
-                descriptionSimilarity = scores["DescriptionSimilarity"] * 100,
-                fieldLength           = scores["FieldLength"]           * 100,
-                dataType              = scores["DataType"]              * 100,
-                sapSimilarity         = scores["SAPSimilarity"]         * 100,
-                mimosaSimilarity      = scores["MIMOSASimilarity"]      * 100,
+                accuracyRate          = scores["Accuracy"]          ,
+                descriptionSimilarity = scores["DescriptionSimilarity"] ,
+                dataType              = scores["DataType"]              ,
+                sapSimilarity         = scores["SAPSimilarity"]         ,
+                mimosaSimilarity      = scores["MIMOSASimilarity"]      ,
+                infoOmitted           = info_single                     ,
             ))
 
             # accumulate
@@ -55,12 +59,12 @@ class ScoreManager:
 
         # build overall result
         overall = AccuracyResult(
-          accuracyRate          = overall_sum["Accuracy"]          * 100,
-          descriptionSimilarity = overall_sum["DescriptionSimilarity"] * 100,
-          fieldLength           = overall_sum["FieldLength"]           * 100,
-          dataType              = overall_sum["DataType"]              * 100,
-          sapSimilarity         = overall_sum["SAPSimilarity"]         * 100,
-          mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      * 100,
+          accuracyRate          = overall_sum["Accuracy"]          ,
+          descriptionSimilarity = overall_sum["DescriptionSimilarity"] ,
+          dataType              = overall_sum["DataType"]              ,
+          sapSimilarity         = overall_sum["SAPSimilarity"]         ,
+          mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
+          infoOmitted           = info.score_overall(entries)         ,
         )
 
         return {
