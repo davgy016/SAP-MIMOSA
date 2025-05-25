@@ -198,9 +198,10 @@ async def get_filter_historicalData(createdDate: Optional[datetime.datetime] = Q
     data = load_data(rawDataStoragePath)
 
     if createdDate:
+        createdDateStr = createdDate.isoformat(timespec="seconds")
         result = [
             map for map in data
-            if map.get("createdAt") == createdDate
+            if map.get("createdAt") == createdDateStr
         ]
         return result
 
