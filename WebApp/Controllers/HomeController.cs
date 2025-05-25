@@ -158,7 +158,7 @@ namespace SAP_MIMOSAapp.Controllers
         public IActionResult Create(string? query = null, string? llmType = null)
         {
             // Try to load from temp file (imported CSV), then fall back to TempData
-            MappingDocument? model = LoadMappingTempFile();
+            MappingDocument? model = LoadMappingTempFile();           
             if (model == null)
             {
                 model = new MappingDocument();
@@ -196,6 +196,24 @@ namespace SAP_MIMOSAapp.Controllers
                 var promptsRaw = Request.Form["prompts"].ToString();
                 newDocument.prompts = promptsRaw.Split(',').Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
             }
+            // Handle promptHistory from hidden input - THIS IS THE KEY ADDITION
+            var promptHistoryJson = Request.Form["promptHistoryJson"];
+            if (!string.IsNullOrEmpty(promptHistoryJson))
+            {
+                try
+                {
+                newDocument.promptHistory = JsonSerializer.Deserialize<List<promptEntry>>(promptHistoryJson, new JsonSerializerOptions{PropertyNameCaseInsensitive = true});
+
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Failed to deserialize promptHistory: {ex.Message}");
+                }
+            }
+            else
+            {
+                newDocument.promptHistory = new List<promptEntry>();
+            }
 
             if (!ModelState.IsValid)
             {
@@ -223,6 +241,16 @@ namespace SAP_MIMOSAapp.Controllers
                         {
                             mapping.mimosa.platform = "MIMOSA";
                         }
+                    }
+                }
+
+                // Log promptHistory
+                Console.WriteLine($"Creating mapping with {newDocument.promptHistory?.Count ?? 0} promptHistory entries");
+                if (newDocument.promptHistory?.Any() == true)
+                {
+                    foreach (var entry in newDocument.promptHistory)
+                    {
+                        Console.WriteLine($"  - {entry.text} at {entry.createdAt}");
                     }
                 }
 
@@ -310,7 +338,7 @@ namespace SAP_MIMOSAapp.Controllers
                         }
                     }
                 }
-                
+
                 updatedDocument.prompts.Add("Modified Manually");
 
                 // Send only the updated document to the correct endpoint
@@ -387,7 +415,7 @@ namespace SAP_MIMOSAapp.Controllers
                 if (root.TryGetProperty("singlePairAccuracydetails", out var detailsProp) && detailsProp.ValueKind == JsonValueKind.Array)
                 {
                     details = JsonSerializer.Deserialize<List<AccuracyResultViewModel>>(detailsProp.GetRawText());
-                }                
+                }
                 return (overall, details);
             }
             catch (Exception ex)
@@ -436,6 +464,22 @@ namespace SAP_MIMOSAapp.Controllers
                         {
                             // Load previous prompts if any
                             parseResponse.prompts = req.prompts ?? new List<string>();
+                            if (!string.IsNullOrWhiteSpace(req.prompt) && (parseResponse.prompts.Count == 0))
+                            {
+                                parseResponse.prompts.Add(req.prompt);
+                            }
+
+                            // Manage promptHistory list
+                            parseResponse.promptHistory = req.promptHistory ?? new List<promptEntry>();
+                            if (!string.IsNullOrWhiteSpace(parseResponse.prompt) && parseResponse.createdAt.HasValue)
+                            {
+                                parseResponse.promptHistory.Add(new promptEntry
+                                {
+                                    text = parseResponse.prompt,
+                                    createdAt = parseResponse.createdAt
+                                });
+
+                            }
 
                             SaveMappingTempFile(parseResponse);
                             return Json(new { success = true, redirectUrl = Url.Action("Create") });
@@ -469,6 +513,7 @@ namespace SAP_MIMOSAapp.Controllers
             public string llmType { get; set; }
             public List<MappingPair>? mappings { get; set; }
             public List<string>? prompts { get; set; }
+            public List<promptEntry>? promptHistory { get; set; }
         }
 
 
@@ -525,8 +570,8 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
                 // Store new MappingDocument with only mappings, reset all other fields
-                var model = new MappingDocument { mappings = mappings };               
-                var (overall, details) = await CheckAccuracy(model.mappings);                
+                var model = new MappingDocument { mappings = mappings };
+                var (overall, details) = await CheckAccuracy(model.mappings);
                 model.accuracyResult = overall;
                 model.accuracySingleMappingPair = details;
                 SaveMappingTempFile(model);
@@ -603,6 +648,24 @@ namespace SAP_MIMOSAapp.Controllers
             return value;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> FetchHistoricalData(DateTime? createdDate)
+        {
+            var url = "fetchHistoricalData";
+            if (createdDate.HasValue)
+            {
+                // Format as ISO8601 for query string
+                url += $"?createdDate={createdDate.Value.ToString("o")}";
+            }
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                return Json(new { success = false, message = "Failed to fetch historical data." });
+            }
+            var json = await response.Content.ReadAsStringAsync();
+            // You may want to deserialize to List<MappingDocument> if you want strong typing
+            return Content(json, "application/json");
+        }
     }
 }
 

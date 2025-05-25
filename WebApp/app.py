@@ -11,6 +11,8 @@ from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
 from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
 from datetime import datetime
+from fastapi import Query
+
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -37,14 +39,27 @@ def load_data(file_path):
             return []
         return json.loads(content)
 
+import datetime
+
+def convert_datetimes(obj):
+    if isinstance(obj, dict):
+        return {k: convert_datetimes(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_datetimes(i) for i in obj]
+    elif isinstance(obj, datetime.datetime):
+        return obj.isoformat(timespec="seconds")
+    else:
+        return obj
+
 def save_data(data, file_path):
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "w", encoding="utf-8") as file:
+        data = convert_datetimes(data)
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 def store_raw_data_of_AI_responses(mapping_doc):	       
-    entry = mapping_doc.model_dump()
-    entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    entry = mapping_doc.model_dump(mode="json")
+    #entry["createdAt"] = mapping_doc.createdAt.strftime("%Y-%m-%d %H:%M:%S")
     try:
         data = load_data(rawDataStoragePath)           
         data.append(entry)            
@@ -99,9 +114,10 @@ async def ask_AI(request: SearchQuery):
         mapping_doc = MappingDocument(
             LLMType=llm_model,
             mappings=mapping_entries,
-            prompt=request.Query
+            prompt=request.Query,
+            createdAt=datetime.datetime.now().isoformat(timespec="seconds")
         )
-
+       
         # Call check_accuracy and set the accuracyResult and accuracy of Single MappingPair  properties
         accuracy_result = await check_accuracy(mapping_entries)
         mapping_doc.accuracyResult = accuracy_result["overall"]
@@ -177,9 +193,20 @@ async def delete_workorder(map_id: str):
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
 
 
+@app.get("/fetchHistoricalData")
+async def get_filter_historicalData(createdDate: Optional[datetime.datetime] = Query(None)):
+    data = load_data(rawDataStoragePath)
 
-from typing import List
-from ValidationAndMapping.Models import MappingEntry
+    if createdDate:
+        createdDateStr = createdDate.isoformat(timespec="seconds")
+        result = [
+            map for map in data
+            if map.get("createdAt") == createdDateStr
+        ]
+        return result
+
+    return data
+
 
 # Pydantic's BaseModel does not preserve the exact decimal places of floats. Roudning in ScoreManager did not work,
 # when  do round(x, 2), it stores the binary float.

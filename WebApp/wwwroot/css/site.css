@@ -785,3 +785,20 @@ border-color: #1976D2;
     margin-left: 0.5rem;
 }
 
+/*Historical data in Create view*/
+.toggle-heading {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+    .toggle-heading:hover {
+        background-color: cornflowerblue;
+        text-decoration: none;
+    }
+
+.toggle-heading[aria-expanded="true"] .toggle-icon {
+    transform: rotate(90deg);
+    transition: transform 0.2s ease;
+}
