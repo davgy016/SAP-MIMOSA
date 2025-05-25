@@ -54,6 +54,19 @@ class FieldCheck(BaseModel):
     dataType: FieldState = FieldState.UNCHECKED
     fieldLength: FieldState = FieldState.UNCHECKED
 
+    def to_score(self) -> float:
+        """
+        Return ( #correct ) / ( #dimensions actually checked ).
+        Unchecked dimensions (UNCHECKED) are excluded from both numerator and denominator.
+        """
+        states = list(self.model_dump().values())
+        # keep only those we did check
+        checked = [s for s in states if s is not FieldState.UNCHECKED]
+        if not checked:
+            return 0.0
+        correct = sum(1 for s in checked if s is FieldState.CORRECT)
+        return correct / len(checked)
+
 class MappingEntry(BaseModel):
     sap: FieldMapping
     mimosa: FieldMapping

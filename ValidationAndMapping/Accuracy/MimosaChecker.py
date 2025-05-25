@@ -28,6 +28,12 @@ import os
 
 class MimosaChecker:
     def checkField(self, field: FieldMapping) -> FieldCheck:
+        #clean each field
+        field.entityName = field.entityName.replace(" ","").strip()
+        field.fieldName = field.fieldName.replace(" ","").strip()
+        field.description = field.description.strip()
+        field.dataType = field.dataType.replace(" ","").strip()
+
 
         self.counter = 0
         fieldCheck = FieldCheck()
@@ -121,6 +127,13 @@ class MimosaChecker:
             return False
         
     def _checkDescription(self, element, expected):
-        if expected in self._findAnnotation(self.root,element.get("name")):
-            return True
-        return False
+        """
+        Return True if the schema’s annotation for this element
+        contains the expected description (case-insensitive).
+        """
+        annotation = self._findAnnotation(self.root, element.get("name"))
+        if not annotation:
+            return False
+
+        # compare case-insensitive, allow substring match
+        return expected.strip().lower() in annotation.strip().lower()

@@ -6,7 +6,7 @@ from .DataType import DataType
 from .DescriptionSimilarity import DescriptionSimilarity
 from .FieldLength import FieldLength
 from .MimosaChecker import MimosaChecker
-from .InfoOmitted import InfoOmitted
+from ..Existence          import Existence
 from .SAPChecker import SAPChecker
 from .MimosaChecker import MimosaChecker
 
@@ -21,7 +21,7 @@ class Accuracy:
         self.sap_checker        = SAPChecker()
         self.mimosa_checker     = MimosaChecker()
     
-    def calculateAccuracy(self, mapping: MappingEntry) -> dict:
+    def calculateAccuracy(self, entry: MappingEntry) -> dict:
         """
         Returns a dict in [0..1] by averaging:
          • description similarity
@@ -29,42 +29,36 @@ class Accuracy:
          • data-type equality
          • SAP-schema validation score
         """        
-        output = {}
-        desc_score  = self.description_scorer.score(mapping)
-        type_score  = self.type_scorer.score(mapping)
+        scores = {}
 
-        # SAP schema checks: get a FieldCheck per entry
-        sap_field_checks = self.sap_checker.checkField(mapping.sap)
+        # 1) SAP schema check - flatten to single 0..1
+        sap_fc    = self.sap_checker.checkField(entry.sap)     # returns a FieldCheck
+        sap_score = sap_fc.to_score()                           
+        scores["SAPSimilarity"] = sap_score
 
-        # flatten to a single 0..1: 1 point per CORRECT, 0 otherwise
-        total_checks = 5
-        correct = sum(
-            1
-            for fc in sap_field_checks
-            for state in fc
-            if state == FieldState.CORRECT
+        # 2) MIMOSA schema check - flatten to single 0..1
+        mimo_fc    = self.mimosa_checker.checkField(entry.mimosa)
+        mimo_score = mimo_fc.to_score()
+        scores["MIMOSASimilarity"] = mimo_score
+
+        # 3) Build existence mask
+        exist = Existence.fields_present(entry)
+        # exist is e.g. {"description": True, "dataType": False, ...}
+
+        # 4) Conditional scorers
+        scores["DescriptionSimilarity"] = (
+            self.description_scorer.score(entry) if exist["description"] else 0.0
         )
-        sap_score = correct / total_checks if total_checks else 0.0
-
-        # MIMOSA schema checks: get a FieldCheck per entry
-        mimoosa_field_checks = self.mimosa_checker.checkField(mapping.mimosa)
-
-        # flatten to a single 0..1: 1 point per CORRECT, 0 otherwise
-        correct = sum(
-            1
-            for fc in mimoosa_field_checks
-            for state in fc
-            if state == FieldState.CORRECT
+        scores["DataType"] = (
+            self.type_scorer.score(entry) if exist["dataType"] else 0.0
         )
-        mimosa_score = correct / total_checks if total_checks else 0.0
 
-        # average all components
-        total = (desc_score + type_score + sap_score + mimosa_score) / 4.0
 
-        output["Accuracy"] = total
-        output["DescriptionSimilarity"] = desc_score
-        output["DataType"] = type_score
-        output["SAPSimilarity"] = sap_score
-        output["MimosaSimilarity"] = mimosa_score
+        # 5) Dynamic Overall = average of whatever keys we have
+        values = list(scores.values())
+        scores["Accuracy"] = sum(values) / len(values) if values else 0.0
 
-        return output
+        for k,v in scores.items():
+            scores[k] = max(0.0, min(v, 1.0))
+
+        return scores

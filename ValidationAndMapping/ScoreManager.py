@@ -9,90 +9,66 @@ from .Score import Score
 #Score Managers
 # from ValidationAndMapping.Quality import Quality
 from .Accuracy import Accuracy, InfoOmitted
-from .Models import Mapping
+from .Models import MappingEntry
 from typing import List
 from .Models import AccuracyResult
 
 class ScoreManager:
-
-    @staticmethod
-    def scoreOutput(mappings: list) -> dict:
-        """
-        This method processes a list of MappingEntry objects and returns aggregated accuracy metrics.
-        Args:
-            mappings (List[MappingEntry]): A list of MappingEntry objects to score.
-        Returns:
-            dict: The computed accuracy metrics as a dictionary.
-        """
-        print("Received mappings for scoring:", mappings)
-        accuracy_scorer = Accuracy()
-        info_ommitted = InfoOmitted()
-
-        output = {
-            "Accuracy": 0,
-            "DataType": 0,
-            "DescriptionSimilarity": 0,
-            "SAPSimilarity": 0,
-            "InfoOmitted": 0,
-            "MimosaSimilarity": 0
-        }
-        n = len(mappings)
-        if n == 0:
-            return output
-        for map in mappings:
-            acc = accuracy_scorer.calculateAccuracy(map)
-            output["Accuracy"] += acc["Accuracy"] / n
-            output["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            output["DataType"] += acc["DataType"] / n
-            output["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            output["InfoOmitted"] += info_ommitted.score_single(map,mappings) / n
-            output["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
-        return output
-
+    
     # This method processes a list of MappingEntry objects and returns Overall mapping accuracy result and per mapping entry accuracy result.
     @staticmethod
-    def scoreOutputWithDetails(mappings: list) -> dict:
-        """
-        Returns both the overall aggregated accuracy metrics and a list of per-mapping-pair accuracy results.
-        """
-        accuracy_scorer = Accuracy()
-        info_ommitted = InfoOmitted()
+    def scoreOutputWithDetails(entries: list[MappingEntry]) -> dict:
+        acc = Accuracy()
+        info = InfoOmitted()
+        n   = len(entries)
+        keys = [
+            "Accuracy",
+            "DescriptionSimilarity",
+            "DataType",
+            "SAPSimilarity",
+            "MIMOSASimilarity",
+            # "InfoOmitted",
+        ]
 
-        n = len(mappings)
-        overall = {
-            "Accuracy": 0,
-            "DataType": 0,
-            "DescriptionSimilarity": 0,
-            "SAPSimilarity": 0,
-            "InfoOmitted": 0,
-            "MimosaSimilarity": 0
-        }
-        singlePairAccuracydetails = []
+        # zero out accumulators
+        overall_sum = {k: 0.0 for k in keys}
+        details     = []
+
         if n == 0:
-            return {"overall": AccuracyResult(), "details": details}
-        for map in mappings:
-            acc = accuracy_scorer.calculateAccuracy(map)
-            overall["Accuracy"] += acc["Accuracy"] / n
-            overall["DescriptionSimilarity"] += acc["DescriptionSimilarity"] / n
-            overall["DataType"] += acc["DataType"] / n
-            overall["SAPSimilarity"] += acc["SAPSimilarity"] / n
-            overall["InfoOmitted"] += info_ommitted.score_single(map,mappings) / n
-            overall["MimosaSimilarity"] += acc["MimosaSimilarity"] / n
-            singlePairAccuracydetails.append(AccuracyResult(
-                accuracyRate=acc["Accuracy"],
-                descriptionSimilarity=acc["DescriptionSimilarity"],
-                mimosaSimilarity=acc["MimosaSimilarity"],
-                sapSimilarity=acc["SAPSimilarity"],
-                dataType=acc["DataType"],
-                infoOmitted=info_ommitted.score_single(map,mappings),
+            return {"overall": AccuracyResult(), "singlePairAccuracydetails": []}
+
+        for e in entries:
+            scores = acc.calculateAccuracy(e)
+
+            # compute coverage for this entry
+            info_single = info.score_single(e, entries)
+
+            # build per‐entry detail
+            details.append(AccuracyResult(
+                accuracyRate          = scores["Accuracy"]          ,
+                descriptionSimilarity = scores["DescriptionSimilarity"] ,
+                dataType              = scores["DataType"]              ,
+                sapSimilarity         = scores["SAPSimilarity"]         ,
+                mimosaSimilarity      = scores["MIMOSASimilarity"]      ,
+                infoOmitted           = info_single                     ,
             ))
-        overall_result = AccuracyResult(
-            accuracyRate=overall["Accuracy"],
-            descriptionSimilarity=overall["DescriptionSimilarity"],
-            mimosaSimilarity=overall["MimosaSimilarity"],
-            sapSimilarity=overall["SAPSimilarity"],
-            dataType=overall["DataType"],
-            infoOmitted=info_ommitted.score_overall(mappings),
+
+            # accumulate
+            for k in keys:
+                overall_sum[k] += scores[k] / n
+
+        # build overall result
+        overall = AccuracyResult(
+          accuracyRate          = overall_sum["Accuracy"]          ,
+          descriptionSimilarity = overall_sum["DescriptionSimilarity"] ,
+          dataType              = overall_sum["DataType"]              ,
+          sapSimilarity         = overall_sum["SAPSimilarity"]         ,
+          mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
+          infoOmitted           = info.score_overall(entries)         ,
         )
-        return {"overall": overall_result, "singlePairAccuracydetails": singlePairAccuracydetails}      
+
+        return {
+            "overall": overall,
+            "singlePairAccuracydetails": details
+        }
 

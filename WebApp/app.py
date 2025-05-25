@@ -5,7 +5,7 @@ from openai import OpenAI
 import json
 import os
 import uvicorn
-from WebApp.ai_models import OpenAIModel
+from .ai_models import OpenAIModel
 from typing import List, Optional
 from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
