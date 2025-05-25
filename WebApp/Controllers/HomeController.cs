@@ -196,6 +196,24 @@ namespace SAP_MIMOSAapp.Controllers
                 var promptsRaw = Request.Form["prompts"].ToString();
                 newDocument.prompts = promptsRaw.Split(',').Where(p => !string.IsNullOrWhiteSpace(p)).ToList();
             }
+            // Handle promptHistory from hidden input - THIS IS THE KEY ADDITION
+            var promptHistoryJson = Request.Form["promptHistoryJson"];
+            if (!string.IsNullOrEmpty(promptHistoryJson))
+            {
+                try
+                {
+                newDocument.promptHistory = JsonSerializer.Deserialize<List<promptEntry>>(promptHistoryJson, new JsonSerializerOptions{PropertyNameCaseInsensitive = true});
+
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Failed to deserialize promptHistory: {ex.Message}");
+                }
+            }
+            else
+            {
+                newDocument.promptHistory = new List<promptEntry>();
+            }
 
             if (!ModelState.IsValid)
             {
@@ -223,6 +241,16 @@ namespace SAP_MIMOSAapp.Controllers
                         {
                             mapping.mimosa.platform = "MIMOSA";
                         }
+                    }
+                }
+
+                // Log promptHistory
+                Console.WriteLine($"Creating mapping with {newDocument.promptHistory?.Count ?? 0} promptHistory entries");
+                if (newDocument.promptHistory?.Any() == true)
+                {
+                    foreach (var entry in newDocument.promptHistory)
+                    {
+                        Console.WriteLine($"  - {entry.text} at {entry.createdAt}");
                     }
                 }
 
@@ -443,12 +471,12 @@ namespace SAP_MIMOSAapp.Controllers
 
                             // Manage promptHistory list
                             parseResponse.promptHistory = req.promptHistory ?? new List<promptEntry>();
-                            if (!string.IsNullOrWhiteSpace(parseResponse.prompt))
+                            if (!string.IsNullOrWhiteSpace(parseResponse.prompt) && parseResponse.createdAt.HasValue)
                             {
                                 parseResponse.promptHistory.Add(new promptEntry
                                 {
-                                    Text = parseResponse.prompt,
-                                    CreatedAt = parseResponse.createdAt
+                                    text = parseResponse.prompt,
+                                    createdAt = parseResponse.createdAt
                                 });
 
                             }

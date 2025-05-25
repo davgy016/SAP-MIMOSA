@@ -2041,5 +2041,129 @@
                 }
             }
         ]
+    },
+    {
+        "createdAt": "2025-05-25T17:19:39",
+        "mapID": "031",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate one mapping field of asset",
+            "improve mapping pair"
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier assigned by SAP to each individual physical asset in the system.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for the equipment (asset) master record in the SAP Plant Maintenance (PM) module. Used for maintenance, tracking, and integration purposes.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for an asset in the MIMOSA Common Data Model. Can contain source system identifiers for asset interoperability.",
+                    "dataType": "String",
+                    "notes": "Intended to store a unique asset reference that may include the SAP EQUNR value. When integrating, the SAP equipment number (EQUNR) should populate AssetIdentifier, potentially with additional system context for global uniqueness.",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "improve mapping pair",
+        "accuracyResult": {
+            "accuracyRate": 48.88,
+            "descriptionSimilarity": 57.29,
+            "mimosaSimilarity": 20.0,
+            "sapSimilarity": 60.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 36.0
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 48.88,
+                "descriptionSimilarity": 57.29,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            }
+        ],
+        "promptHistory": [
+            {
+                "text": "generate one mapping field of asset",
+                "createdAt": "2025-05-25T17:19:19"
+            },
+            {
+                "text": "improve mapping pair",
+                "createdAt": "2025-05-25T17:19:39"
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-05-25T17:26:27",
+        "mapID": "032",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate one mapping field of asset",
+            "improve mapping pair"
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset Master Record",
+                    "fieldName": "ASSET_NO",
+                    "description": "Unique identifier assigned internally by SAP to each fixed asset. Used to track asset records throughout their lifecycle in SAP systems.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key field 'ANLN1' in the ANLA (Asset Master Record Segment) table for asset master data in SAP ERP. Typically combined with company code ('BUKRS') for global uniqueness.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Universally unique identifier (UUID/GUID) for the asset, as per MIMOSA specifications. Used to uniquely reference an asset across systems and organizational boundaries.",
+                    "dataType": "String",
+                    "notes": "Primary key for the Asset entity in the MIMOSA data model. Typically a 36-character UUID (with hyphens). Mapping from SAP ASSET_NO may require additional context (e.g., company code) or translation to conform to MIMOSA's uniqueness requirements.",
+                    "fieldLength": "36"
+                }
+            }
+        ],
+        "prompt": "improve mapping pair",
+        "accuracyResult": {
+            "accuracyRate": 39.23,
+            "descriptionSimilarity": 62.02,
+            "mimosaSimilarity": 20.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 33.33
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 39.23,
+                "descriptionSimilarity": 62.02,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 33.33
+            }
+        ],
+        "promptHistory": [
+            {
+                "text": "generate one mapping field of asset",
+                "createdAt": "2025-05-25T17:25:59"
+            },
+            {
+                "text": "improve mapping pair",
+                "createdAt": "2025-05-25T17:26:27"
+            }
+        ]
     }
 ]

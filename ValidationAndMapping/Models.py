@@ -47,15 +47,20 @@ class AccuracyResult(BaseModel):
     infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
 
+class promptEntry(BaseModel):
+    text: Optional[str] = ""
+    createdAt: Optional[datetime] = None
+
 class Mapping(BaseModel):    
     createdAt: Optional[datetime] = None
     mapID: Optional[str] = None
-    LLMType: str
-    prompt: Optional[str] = None
-    prompts: Optional[List[str]] = None
+    LLMType: str = ""
+    prompts: List[str] = []
+    promptHistory: List[promptEntry] = []
+    mappings: List[MappingEntry] = []
+    prompt: Optional[str] = ""
     accuracyResult: Optional[AccuracyResult] = None
     accuracySingleMappingPair: Optional[List[AccuracyResult]] = None
-    mappings: List[MappingEntry]
 
     model_config = ConfigDict(validate_by_name=True)
 

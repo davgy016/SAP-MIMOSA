@@ -11,6 +11,7 @@ public class MappingDocument
 
     [JsonPropertyName("LLMType")]
     public string LLMType { get; set; } = string.Empty;
+    public List<promptEntry>? promptHistory { get; set; } = new List<promptEntry>();
 
     [JsonPropertyName("mappings")]
     public List<MappingPair> mappings { get; set; } = new List<MappingPair>();
@@ -29,14 +30,13 @@ public class MappingDocument
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
     public DateTime? createdAt { get; set; }
 
-    public List<promptEntry>? promptHistory { get; set; } = new List<promptEntry>();
 }
 
 public class promptEntry
 {
-    public string? Text { get; set; } = string.Empty;
+    public string? text { get; set; } = string.Empty;
 
    
-    public DateTime? CreatedAt { get; set; }
+    public DateTime? createdAt { get; set; }
 }
 

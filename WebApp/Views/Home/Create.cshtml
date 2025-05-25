@@ -102,13 +102,33 @@
                     </div>
                 </div>
 
-                <ul>
-                    @foreach (var prompt in Model.prompts)
-                    {
-                        <li>@prompt</li>
-                        <li>@Model.createdAt?.ToString("yyyy-MM-dd HH:mm:ss")</li>
-                    }
-                </ul>
+                @if (Model?.promptHistory != null && Model.promptHistory.Any())
+                {
+                    <ul>
+                        @foreach (var entry in Model.promptHistory)
+                        {
+                            <li>
+                                <strong>@entry.text</strong>
+                                <small class="text-muted">(@entry.createdAt?.ToString("yyyy-MM-dd HH:mm:ss"))</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No prompt history available.</p>
+                }
+            </div>
+            <div class="alert alert-info">
+                <strong>Debug Info:</strong><br>
+                promptHistory count: @(Model?.promptHistory?.Count ?? 0)<br>
+                prompts count: @(Model?.prompts?.Count ?? 0)<br>
+                @if (Model?.promptHistory != null)
+                {
+                    <small>
+                        promptHistory JSON: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.promptHistory))
+                    </small>
+                }
             </div>
             @* } *@
 
@@ -194,11 +214,7 @@
                         }
                     }
                 </div>
-            }
-            @{
-                var accuracySingleMappingPairJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>());
-            }
-            <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@accuracySingleMappingPairJson' />
+            }           
         </div>
 
         @* <input type="hidden" asp-for="prompt" /> *@
@@ -212,11 +228,18 @@
         <input type="hidden" asp-for="accuracyResult.fieldLength" />
         <input type="hidden" asp-for="accuracyResult.infoOmitted" />
         <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
-        @* @for (int i = 0; i < Model?.promptHistory?.Count; i++) *@
-        @* { *@
-        @*     <input type="hidden" asp-for="promptHistory[@i].Text" value="@Model.promptHistory[i].Text" /> *@
-        @*     <input type="hidden" asp-for="promptHistory[@i].CreatedAt" value="@Model.promptHistory[i].CreatedAt" /> *@
-        @* } *@
+        
+        <!-- Hidden promptHistory -->
+        @{
+            var promptHistoryJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.promptHistory ?? new List<SAP_MIMOSAapp.Models.promptEntry>());
+        }
+        <input type="hidden" id="promptHistoryJson" name="promptHistoryJson" value='@promptHistoryJson' />
+
+        <!-- Hidden accuracySingleMappingPair -->
+        @{
+            var accuracySingleMappingPairJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>());
+        }
+        <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@accuracySingleMappingPairJson' />
 
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
@@ -268,6 +291,18 @@
 
                 const requestBody = { prompt, llmType };
 
+                // Always collect existing promptHistory from the current model (whether reusing or not)
+                const promptHistoryInput = document.getElementById('promptHistoryJson');
+                let existingPromptHistory = [];
+                if (promptHistoryInput && promptHistoryInput.value) {
+                    try {
+                        existingPromptHistory = JSON.parse(promptHistoryInput.value);
+                    } catch (e) {
+                        console.warn('Failed to parse existing promptHistory:', e);
+                        existingPromptHistory = [];
+                    }
+                }
+
                 // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request
                 if (useExisting) {
                     const mappings = [];
@@ -297,7 +332,10 @@
                     });
 
                     requestBody.mappings = mappings;
+                    requestBody.promptHistory = existingPromptHistory;
 
+                }else{
+                    requestBody.promptHistory = [];
                 }
 
                 // Read existing prompts from hidden input
