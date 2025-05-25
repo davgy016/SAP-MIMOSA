@@ -11,6 +11,8 @@ from uuid import uuid4
 from ValidationAndMapping.ScoreManager import ScoreManager
 from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
 from datetime import datetime
+from fastapi import Query
+
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -45,7 +47,7 @@ def convert_datetimes(obj):
     elif isinstance(obj, list):
         return [convert_datetimes(i) for i in obj]
     elif isinstance(obj, datetime.datetime):
-        return obj.strftime("%Y-%m-%d %H:%M:%S")
+        return obj.isoformat(timespec="seconds")
     else:
         return obj
 
@@ -113,7 +115,7 @@ async def ask_AI(request: SearchQuery):
             LLMType=llm_model,
             mappings=mapping_entries,
             prompt=request.Query,
-            createdAt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            createdAt=datetime.datetime.now().isoformat(timespec="seconds")
         )
        
         # Call check_accuracy and set the accuracyResult and accuracy of Single MappingPair  properties
@@ -191,9 +193,19 @@ async def delete_workorder(map_id: str):
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
 
 
+@app.get("/fetchHistoricalData")
+async def get_filter_historicalData(createdDate: Optional[datetime.datetime] = Query(None)):
+    data = load_data(rawDataStoragePath)
 
-from typing import List
-from ValidationAndMapping.Models import MappingEntry
+    if createdDate:
+        result = [
+            map for map in data
+            if map.get("createdAt") == createdDate
+        ]
+        return result
+
+    return data
+
 
 # Pydantic's BaseModel does not preserve the exact decimal places of floats. Roudning in ScoreManager did not work,
 # when  do round(x, 2), it stores the binary float.

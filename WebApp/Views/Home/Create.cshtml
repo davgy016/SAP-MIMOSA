@@ -14,8 +14,8 @@
         </div>
     }
 
-
-
+    
+    
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
         {
@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="ai-mapping-search-area mb-4">
                         @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
-                        <div class="search-bar-container d-flex  align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
+                        <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
                             <i class="bi bi-search fs-4 text-primary"></i>
                             <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" />
                             <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
@@ -44,7 +44,7 @@
                             <div class="vr mx-4 d-none d-md-block" style="height: 2.5rem;"></div>
                             <div class="d-flex align-items-center gap-2 ms-auto upload-section">
                                 <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">
-                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary  align-items-center gap-1 mb-0 rounded-pill px-3 py-2" style="background: linear-gradient(90deg,#fff 60%,#00e6a6 100%); border: 1.5px solid #00e6a6; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary align-items-center gap-1 mb-0 rounded-pill px-3 py-2" style="background: linear-gradient(90deg,#fff 60%,#00e6a6 100%); border: 1.5px solid #00e6a6; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     <i class="bi bi-upload"></i>
                                     <span id="csvLabelText" style="display: inline-block; vertical-align: middle;">Choose CSV</span>
                                 </label>
@@ -84,52 +84,23 @@
                             <i class="bi bi-clock-fill fs-5 text-warning position-absolute bottom-0 end-0" style="z-index:3; transform:translate(25%,-25%);"></i>
                         </span>
                     </button>
+                </h5>
 
-                    <!-- Historical Data Modal -->
-                    <div class="modal fade" id="historicalDataModal" tabindex="-1" aria-labelledby="historicalDataModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="historicalDataModalLabel">Historical Data Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Placeholder for historical data details -->
-                                    <div id="historicalDataDetails">
-                                        @if (Model?.prompts != null && Model.prompts.Any())
-                                        {
-                                            <div>
-                                                <ul>
-                                                    @foreach (var prompt in Model.prompts)
-                                                    {
-                                                        <li>@prompt</li>
-                                                    }
-                                                </ul>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="text-center text-muted py-4">
-                                                <i class="bi bi-clock-history fs-1 text-primary mb-2"></i>
-                                                <div>No historical data to display yet.</div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
+                <!-- Historical Data Modal -->
+                <div class="modal fade" id="historicalDataModal" tabindex="-1" aria-labelledby="historicalDataModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="historicalDataModalLabel">Historical Data Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">                                
+                                <div id="historicalDataDetails"></div>
+                                <!-- Historical data modal script in Scripts section below -->
                             </div>
                         </div>
                     </div>
-                    <script>
-                        document.getElementById('historicalData').addEventListener('click', function(e) {
-                            e.preventDefault();
-                            var modal = new bootstrap.Modal(document.getElementById('historicalDataModal'));
-                            modal.show();
-                        });
-                    </script>
-                </h5>
+                </div>
 
                 <ul>
                     @foreach (var prompt in Model.prompts)
@@ -241,6 +212,12 @@
         <input type="hidden" asp-for="accuracyResult.fieldLength" />
         <input type="hidden" asp-for="accuracyResult.infoOmitted" />
         <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
+        @* @for (int i = 0; i < Model?.promptHistory?.Count; i++) *@
+        @* { *@
+        @*     <input type="hidden" asp-for="promptHistory[@i].Text" value="@Model.promptHistory[i].Text" /> *@
+        @*     <input type="hidden" asp-for="promptHistory[@i].CreatedAt" value="@Model.promptHistory[i].CreatedAt" /> *@
+        @* } *@
+
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "")>Create</button>
@@ -338,6 +315,22 @@
                     hiddenPromptInput.value = existingPrompts.join('\n');
                 }
                 requestBody.prompts = existingPrompts;
+
+                // Helper function to collect previous prompt history from hidden inputs
+                // function getPromptHistoryFromInputs() {
+                //     const history = [];
+                //     document.querySelectorAll('input[name^="promptHistory"][name$=".Text"]').forEach((input, idx) => {
+                //         const text = input.value;
+                //         const createdAtInput = document.querySelector(`input[name="promptHistory[${idx}].CreatedAt"]`);
+                //         const createdAt = createdAtInput ? createdAtInput.value : null;
+                //         history.push({ Text: text, CreatedAt: createdAt });
+                //     });
+                //     return history;
+                // }
+
+                // Collect all previous prompt entries only (controller will append latest)
+                // const promptHistory = getPromptHistoryFromInputs();
+                // requestBody.promptHistory = promptHistory;
 
                 // Send request to AI
                 aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
@@ -454,6 +447,224 @@
                     labelSpan.textContent = "Choose CSV";
                 }
             });
+        });
+    </script>
+
+    <!-- Historical data modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Historical Data Modal: show and fetch logic
+            const historicalDataModal = document.getElementById('historicalDataModal');
+            if (historicalDataModal) {
+                historicalDataModal.addEventListener('show.bs.modal', async function () {
+                    const detailsDiv = document.getElementById('historicalDataDetails');
+                    detailsDiv.innerHTML = '<div class="text-center text-muted py-4">Loading...</div>';
+                    try {
+                        const resp = await fetch('/Home/FetchHistoricalData');
+                        const data = await resp.json();
+                        if (!data || data.length === 0) {
+                            detailsDiv.innerHTML = `
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-clock-history fs-1 text-primary mb-2"></i>
+                                    <div>No historical data to display yet.</div>
+                                </div>`;
+                            return;
+                        }
+                        // Sort newest first by createdAt
+                        data.sort((a, b) => {
+                            const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+                            const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+                            return dateB - dateA;
+                        });
+                        let html = '';
+                        data.forEach((entry, i) => {
+                            const collapseId = `systemMappingContent${i}`;
+                            
+                            let badgeClass = 'bg-success';
+                            let emoji = '<i class="bi bi-emoji-smile"></i>';
+                            if (entry.accuracyRate < 35) {
+                                badgeClass = 'bg-danger';
+                                emoji = '<i class="bi bi-emoji-frown"></i>';
+                            } else if (entry.accuracyRate < 70) {
+                                badgeClass = 'bg-warning text-dark';
+                                emoji = '<i class="bi bi-emoji-neutral"></i>';
+                            }
+                            html += `
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-1 d-flex justify-content-between align-items-center toggle-heading" 
+                                        data-bs-toggle="collapse"
+                                        href="#${collapseId}"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="${collapseId}">                                        
+                                        <span class="d-flex align-items-center">
+                                            <i class="bi bi-chevron-right me-2 toggle-icon"></i>
+                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
+                                            <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}" 
+                                                style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
+                                            </span>
+                                        </span>
+                                        <span class="d-flex align-items-center px-2 py-1 rounded bg-light border" style="font-size:0.95em;">
+                                            <small class="text-secondary">${entry.createdAt ? new Date(entry.createdAt).toLocaleString() : 'N/A'}</small>
+                                            <span class="mx-1 text-secondary">|</span>
+                                            <small class="text-secondary">${entry.LLMType || ''}</small>
+                                        </span>
+                                    </h6>
+
+
+                                    <div class="collapse" id="${collapseId}">
+                                        <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+                                            <div class="card-body p-3">
+                                                <div class="row g-3 align-items-center">
+                                                    <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                                                        <div class="display-5 fw-bold text-primary">
+                                                            <i class="bi bi-graph-up-arrow"></i>
+                                                            <span>${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%</span>
+                                                        </div>
+                                                        <div class="fw-semibold">Overall Accuracy</div>
+                                                        <span class="badge ${badgeClass} px-3 py-2 fs-6 mt-2">
+                                                            ${emoji}
+                                                            ${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-12 col-md-8">
+                                                        <div class="row g-2">
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Description Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>${entry.accuracyResult && entry.accuracyResult.descriptionSimilarity !== undefined && entry.accuracyResult.descriptionSimilarity !== null ? entry.accuracyResult.descriptionSimilarity : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">MIMOSA Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>${entry.accuracyResult && entry.accuracyResult.mimosaSimilarity !== undefined && entry.accuracyResult.mimosaSimilarity !== null ? entry.accuracyResult.mimosaSimilarity : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Data Type Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-list-check"></i> <strong>${entry.accuracyResult && entry.accuracyResult.dataType !== undefined && entry.accuracyResult.dataType !== null ? entry.accuracyResult.dataType : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">SAP Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>${entry.accuracyResult && entry.accuracyResult.sapSimilarity !== undefined && entry.accuracyResult.sapSimilarity !== null ? entry.accuracyResult.sapSimilarity : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Field Length Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>${entry.accuracyResult && entry.accuracyResult.fieldLength !== undefined && entry.accuracyResult.fieldLength !== null ? entry.accuracyResult.fieldLength : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Missing Fields Rate</div>
+                                                                <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>${entry.accuracyResult && entry.accuracyResult.infoOmitted !== undefined && entry.accuracyResult.infoOmitted !== null ? entry.accuracyResult.infoOmitted : 'N/A'}%</strong></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h5>Mapping Pairs</h5>
+                                            </div>
+                                            ${Array.isArray(entry.mappings) && entry.mappings.length > 0 ?
+                                                `<div class="card-body" style="max-height: 800px; overflow-y: auto;">` +
+                                                entry.mappings.map((m, idx) => {
+                                                    let pairAcc = (entry.accuracySingleMappingPair && entry.accuracySingleMappingPair[idx]) || null;
+                                                    return `
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6 border-end">
+                                                                        <h6 class="fw-bold text-primary mb-2">SAP</h6>
+                                                                        <div><strong>Entity:</strong> ${m.sap.entityName || ''}</div>
+                                                                        <div><strong>Field:</strong> ${m.sap.fieldName || ''}</div>
+                                                                        <div><strong>Description:</strong> ${m.sap.description || ''}</div>
+                                                                        <div><strong>Type:</strong> ${m.sap.dataType || ''}</div>
+                                                                        <div><strong>Length:</strong> ${m.sap.fieldLength || ''}</div>
+                                                                        <div><strong>Notes:</strong> ${m.sap.notes || ''}</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <h6 class="fw-bold text-success mb-2">MIMOSA</h6>
+                                                                        <div><strong>Entity:</strong> ${m.mimosa.entityName || ''}</div>
+                                                                        <div><strong>Field:</strong> ${m.mimosa.fieldName || ''}</div>
+                                                                        <div><strong>Description:</strong> ${m.mimosa.description || ''}</div>
+                                                                        <div><strong>Type:</strong> ${m.mimosa.dataType || ''}</div>
+                                                                        <div><strong>Length:</strong> ${m.mimosa.fieldLength || ''}</div>
+                                                                        <div><strong>Notes:</strong> ${m.mimosa.notes || ''}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mt-3">
+                                                                    <div class="col-12">
+                                                                        <div class="bg-light rounded p-2">
+                                                                            <span class="fw-semibold">Pair Accuracy Metrics:</span><br>
+                                                                            ${pairAcc ? `
+                                                                                <div class="mt-2 pt-2 accuracy-details-metrics">
+                                                                                    <div class="row g-1">
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-file-earmark-text"></i> Desc. Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.descriptionSimilarity !== undefined && pairAcc.descriptionSimilarity !== null ? pairAcc.descriptionSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.sapSimilarity !== undefined && pairAcc.sapSimilarity !== null ? pairAcc.sapSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-3"></i> MIMOSA Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.mimosaSimilarity !== undefined && pairAcc.mimosaSimilarity !== null ? pairAcc.mimosaSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
+                                                                                                <span class="metric-value">${pairAcc.dataType !== undefined && pairAcc.dataType !== null ? pairAcc.dataType : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
+                                                                                                <span class="metric-value">${pairAcc.infoOmitted !== undefined && pairAcc.infoOmitted !== null ? pairAcc.infoOmitted : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
+                                                                                                <span class="metric-value">${pairAcc.fieldLength !== undefined && pairAcc.fieldLength !== null ? pairAcc.fieldLength : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ` : '<span class="text-muted">No pair accuracy results.</span>'}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }).join('') +
+                                                `</div>` :
+                                                `<div class="text-center text-muted">No mappings available.</div>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                        detailsDiv.innerHTML = html;
+                    } catch (e) {
+                        detailsDiv.innerHTML = `<div class="alert alert-danger">Failed to load historical data.</div>`;
+                    }
+                });
+            }
+            // Historical data Modal open handler
+            const historicalDataBtn = document.getElementById('historicalData');
+            if (historicalDataBtn) {
+                historicalDataBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var modal = new bootstrap.Modal(document.getElementById('historicalDataModal'));
+                    modal.show();
+                });
+            }
         });
     </script>
 }

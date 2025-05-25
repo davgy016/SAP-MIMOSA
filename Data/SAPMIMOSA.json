@@ -1961,5 +1961,85 @@
                 }
             }
         ]
+    },
+    {
+        "createdAt": "2025-05-25T15:14:14",
+        "mapID": "030",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate two mapping field of asset",
+        "prompts": [
+            "generate two mapping field of asset"
+        ],
+        "accuracyResult": {
+            "accuracyRate": 44.1,
+            "descriptionSimilarity": 80.09,
+            "mimosaSimilarity": 40.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 24.5
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 40.8,
+                "descriptionSimilarity": 80.79,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 47.4,
+                "descriptionSimilarity": 79.4,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 25.0
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ANLN1",
+                    "description": "Main Asset Number (unique identification of asset)",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for asset in SAP Asset Accounting (FI-AA)",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for the asset",
+                    "dataType": "String",
+                    "notes": "Serves as the primary identifier in MIMOSA data model",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ANLKL",
+                    "description": "Asset Class (categorizes the asset according to financial/statutory requirements)",
+                    "dataType": "CHAR",
+                    "notes": "Defines how the asset is managed and reported in SAP",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetType",
+                    "description": "Type or class of the asset",
+                    "dataType": "String",
+                    "notes": "Used to classify assets in the MIMOSA model",
+                    "fieldLength": "32"
+                }
+            }
+        ]
     }
 ]

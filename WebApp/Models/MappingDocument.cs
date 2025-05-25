@@ -28,6 +28,15 @@ public class MappingDocument
 
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
     public DateTime? createdAt { get; set; }
+
+    public List<promptEntry>? promptHistory { get; set; } = new List<promptEntry>();
 }
 
+public class promptEntry
+{
+    public string? Text { get; set; } = string.Empty;
+
+   
+    public DateTime? CreatedAt { get; set; }
+}
 
