@@ -2,7 +2,7 @@
 
 
 <div class="container py-4">
-    <h1 class="mb-4">Generate Mapping Between SAP PM & MIMOSA</h1>    
+    <h1 class="mb-4">Generate Mapping Between SAP PM & MIMOSA</h1>
 
     <div class="section">
         <div class="row">
@@ -11,16 +11,17 @@
                 <div class="card search-card p-0 overflow-hidden border-0 shadow-lg">
                     <div class="card-header bg-gradient text-white d-flex align-items-center" style="background: linear-gradient(90deg, #4CAF50 60%, #00e6a6 100%); box-shadow: 0 4px 24px 0 #00e6a6a0;">
                         <i class="bi bi-search me-2 fs-3"></i>
-                        <h4 class="mb-0 flex-grow-1">Search Mappings
-                       
-                        @if (TempData["SuccessMessage"] != null)
-                        {
-                            <span id="success-message" class="m-5 alert alert-success" role="alert">
-                                @TempData["SuccessMessage"]
-                            </span>
-                        }
+                        <h4 class="mb-0 flex-grow-1">
+                            Search Mappings
+
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <span id="success-message" class="m-5 alert alert-success" role="alert">
+                                    @TempData["SuccessMessage"]
+                                </span>
+                            }
                         </h4>
-                       
+
                         <a href="@Url.Action("Create", "Home")" class="btn btn-floating-create ms-auto d-none d-md-inline-block" title="Create New Mapping">
                             <i class="bi bi-plus-lg"></i>
                         </a>
@@ -52,7 +53,7 @@
                                         <div class="form-check form-check-inline search-radio">
                                             <input class="form-check-input" type="radio" name="SearchType" id="searchLLMType" value="LLMType" @(!string.IsNullOrEmpty(Model.SearchByLLM) ? "checked" : "")>
                                             <label class="form-check-label" for="searchLLMType"><i class="bi bi-cpu"></i> LLM Type</label>
-                                        </div>                                       
+                                        </div>
                                     </div>
                                     @if (!string.IsNullOrEmpty(Model.SearchByEntityName) || !string.IsNullOrEmpty(Model.SearchByLLM))
                                     {
@@ -71,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
@@ -154,12 +155,20 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3 border-end">
                                                     <h5 class="mb-3"><i class="bi bi-chat-text me-2"></i>Prompt History</h5>
-                                                    @if (document.prompts != null && document.prompts.Any())
+                                                    @if (document.promptHistory != null && document.promptHistory.Any())
                                                     {
                                                         <ul class="list-group list-group-flush">
-                                                            @foreach (var prompt in document.prompts)
+                                                            @foreach (var prompt in document.promptHistory)
                                                             {
-                                                                <li class="list-group-item bg-transparent">@prompt</li>
+                                                                <li class="list-group-item bg-transparent prompt-history-item d-flex justify-content-between align-items-center py-2 px-2"
+                                                                    data-createdat="@prompt.createdAt?.ToString("o")"
+                                                                    style="cursor:pointer; border-radius: 0.4rem; transition: background 0.15s; color:#0d6efd;">
+                                                                    <span class="d-flex align-items-center">
+                                                                        <i class="bi bi-chat-left-text me-2 text-primary"></i>
+                                                                        <span class="fw-semibold fs-6 text-decoration-underline">@prompt.text</span>
+                                                                    </span>
+                                                                    <span class="text-muted small ms-2">@prompt.createdAt?.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                                                </li>
                                                             }
                                                         </ul>
                                                     }
@@ -396,6 +405,23 @@
                                         }
                                     </div>
                                 </div>
+                                <div class="my-3">
+                                    <button class="btn btn-link d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#notesCollapse" aria-expanded="false" aria-controls="notesCollapse" style="text-decoration:none;">
+                                        <span class="fw-bold">Note</span>
+                                        <span class="ms-2">
+                                            <i class="bi bi-chevron-down" id="notesArrow" style="transition: transform 0.3s;"></i>
+                                        </span>
+                                    </button>
+                                    <div class="collapse" id="notesCollapse">
+                                        @{
+                                            var allNotes = string.Join(
+                                            "\n---\n", // separator between mappings for clarity
+                                            document.mappings.Select(m => (m.sap.notes ?? "") + (string.IsNullOrWhiteSpace(m.sap.notes) || string.IsNullOrWhiteSpace(m.mimosa.notes) ? "" : "\n") + (m.mimosa.notes ?? ""))
+                                            );
+                                        }
+                                        <textarea class="form-control mt-2" rows="10" readonly>@allNotes</textarea>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
 
@@ -442,6 +468,24 @@
     </ol>
 </div>
 
+
+<!-- Modal for displaying historical data -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyModalLabel">Prompt History Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="historyModalBody">
+                Loading...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -560,6 +604,229 @@
                     alert('Error deleting mapping: ' + err);
                 });
             });
+        });
+    </script>
+
+    <!-- Showing mapping note with notes of all mapping pairs  -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var collapseEl = document.getElementById('notesCollapse');
+            var arrow = document.getElementById('notesArrow');
+            if (collapseEl && arrow) {
+                collapseEl.addEventListener('show.bs.collapse', function () {
+                    arrow.style.transform = 'rotate(180deg)';
+                });
+                collapseEl.addEventListener('hide.bs.collapse', function () {
+                    arrow.style.transform = 'rotate(0deg)';
+                });
+            }
+        });
+    </script>
+
+    <!-- Displaying historical data -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.prompt-history-item').forEach(function(item) {
+                item.addEventListener('click', async function() {
+                    const createdAt = this.getAttribute('data-createdat');
+                    if (!createdAt) return;
+                    const modal = new bootstrap.Modal(document.getElementById('historyModal'));
+                    document.getElementById('historyModalBody').innerHTML = 'Loading...';
+                    modal.show();
+                    try {
+                        const resp = await fetch(`/Home/FetchHistoricalData?createdDate=${encodeURIComponent(createdAt)}`);
+                        if (resp.ok) {
+                            const data = await resp.json();
+                            document.getElementById('historyModalBody').innerHTML = renderHistoricalCardView(data);
+                        } else {
+                            document.getElementById('historyModalBody').innerHTML = 'Failed to fetch historical data.';
+                        }
+                    } catch (e) {
+                        document.getElementById('historyModalBody').innerHTML = 'Error fetching data: ' + e;
+                    }
+                });
+            });
+
+            // Render mapping details
+            function renderMappingDetails(labelMap) {
+                return Object.entries(labelMap).map(([label, value]) =>
+                    `<div class="mapping-item"><div class="mapping-label">${label}:</div><div class="mapping-value">${value ?? ''}</div></div>`
+                ).join('');
+            }
+
+            // Render accuracy metrics
+            function renderAccuracyMetrics(acc, title = '') {
+            if (!acc) return '';
+            function getBadgeCls(rate) {
+                if (rate < 35) return "bg-danger";
+                if (rate < 70) return "bg-warning text-dark";
+                return "bg-success";
+            }
+            const badgeCls = getBadgeCls(acc.accuracyRate);
+            title = acc.prompt;
+            return `
+                <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+                    <div class="card-body p-3">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                                <div class="display-5 fw-bold text-primary">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    <span>${acc.accuracyRate ?? 0}%</span>
+                                </div>
+                                <div class="fw-semibold">Overall Accuracy</div>
+                                <span class="badge ${badgeCls} px-3 py-2 fs-6 mt-2">
+                                    ${acc.accuracyRate ?? 0}%
+                                </span>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">Description Similarity</div>
+                                        <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>${acc.descriptionSimilarity ?? 0}%</strong></div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">MIMOSA Similarity</div>
+                                        <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>${acc.mimosaSimilarity ?? 0}%</strong></div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">Data Type Similarity</div>
+                                        <div class="metric-value"><i class="bi bi-list-check"></i> <strong>${acc.dataType ?? 0}%</strong></div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">SAP Similarity</div>
+                                        <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>${acc.sapSimilarity ?? 0}%</strong></div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">Field Length Similarity</div>
+                                        <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>${acc.fieldLength ?? 0}%</strong></div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="metric-label">Missing Fields Rate</div>
+                                        <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>${acc.infoOmitted ?? 0}%</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+            // Render single mapping pair accuracy metrics
+            function renderSingleMappingPairAccuracy(acc) {
+                if (!acc) return '';
+                return `
+                    <div class="mt-2 pt-2 accuracy-details-metrics">
+                        <div class="fw-semibold mb-2 text-primary"><i class="bi bi-bar-chart"></i> Accuracy Details</div>
+                        <div class="row g-1">
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-file-earmark-text"></i> Desc. Sim.</span>
+                                    <span class="metric-value">${acc.descriptionSimilarity ?? 0}%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>
+                                    <span class="metric-value">${acc.sapSimilarity ?? 0}%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-diagram-3"></i> MIMOSA Sim.</span>
+                                    <span class="metric-value">${acc.mimosaSimilarity ?? 0}%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
+                                    <span class="metric-value">${acc.dataType ?? 0}%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
+                                    <span class="metric-value">${acc.infoOmitted ?? 0}%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 mb-1">
+                                <div class="accuracy-metric-box">
+                                    <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
+                                    <span class="metric-value">${acc.fieldLength ?? 0}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Main render function
+            function renderHistoricalCardView(dataArr) {
+                if (!Array.isArray(dataArr) || dataArr.length === 0) {
+                    return '<div class="alert alert-warning">No historical data found for this prompt.</div>';
+                }
+                const doc = dataArr[0];
+                let html = '';
+
+                // Overall accuracy
+                html += renderAccuracyMetrics(doc.accuracyResult, 'Overall Accuracy Metrics');
+
+                // Mapping pairs
+                if (doc.mappings && Array.isArray(doc.mappings)) {
+                    html += `<div class="row">` +
+                        doc.mappings.map((mapping, idx) => `
+                            <div class="col-12 mb-3">
+                                <div class="card mapping-pair-card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Mapping Pair ${idx + 1}</h6>
+                                        <div class="badge bg-light text-dark">Field Mapping</div>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="row g-0">
+                                            <div class="col-md-6 sap-side">
+                                                <div class="p-3 h-100 border-end-md">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <div class="sap-indicator me-2"></div>
+                                                        <h6 class="mb-0">SAP</h6>
+                                                    </div>
+                                                    <div class="mapping-details">
+                                                        ${renderMappingDetails({
+                                                            'Table': mapping.sap.entityName,
+                                                            'Field': `<span class=\"fw-semibold\">${mapping.sap.fieldName}</span>`,
+                                                            'Description': mapping.sap.description,
+                                                            'Data Type': mapping.sap.dataType,
+                                                            'Length': mapping.sap.fieldLength
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mimosa-side">
+                                                <div class="p-3 h-100">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <div class="mimosa-indicator me-2"></div>
+                                                        <h6 class="mb-0">MIMOSA</h6>
+                                                    </div>
+                                                    <div class="mapping-details">
+                                                        ${renderMappingDetails({
+                                                            'Table': mapping.mimosa.entityName,
+                                                            'Field': `<span class=\"fw-semibold\">${mapping.mimosa.fieldName}</span>`,
+                                                            'Description': mapping.mimosa.description,
+                                                            'Data Type': mapping.mimosa.dataType,
+                                                            'Length': mapping.mimosa.fieldLength
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                ${renderSingleMappingPairAccuracy(doc.accuracySingleMappingPair?.[idx])}
+                            </div>
+                        `).join('') +
+                    `</div>`;
+                }
+                return html;
+            }
         });
     </script>
 }

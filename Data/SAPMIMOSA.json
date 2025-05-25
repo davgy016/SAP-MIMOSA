@@ -1961,5 +1961,512 @@
                 }
             }
         ]
+    },
+    {
+        "createdAt": "2025-05-25T15:14:14",
+        "mapID": "030",
+        "LLMType": "gpt-4.1",
+        "prompt": "generate two mapping field of asset",
+        "prompts": [
+            "generate two mapping field of asset"
+        ],
+        "accuracyResult": {
+            "accuracyRate": 44.1,
+            "descriptionSimilarity": 80.09,
+            "mimosaSimilarity": 40.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 24.5
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 40.8,
+                "descriptionSimilarity": 80.79,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 24.0
+            },
+            {
+                "accuracyRate": 47.4,
+                "descriptionSimilarity": 79.4,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 25.0
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ANLN1",
+                    "description": "Main Asset Number (unique identification of asset)",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for asset in SAP Asset Accounting (FI-AA)",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Unique identifier for the asset",
+                    "dataType": "String",
+                    "notes": "Serves as the primary identifier in MIMOSA data model",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ANLKL",
+                    "description": "Asset Class (categorizes the asset according to financial/statutory requirements)",
+                    "dataType": "CHAR",
+                    "notes": "Defines how the asset is managed and reported in SAP",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetType",
+                    "description": "Type or class of the asset",
+                    "dataType": "String",
+                    "notes": "Used to classify assets in the MIMOSA model",
+                    "fieldLength": "32"
+                }
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-05-25T17:19:39",
+        "mapID": "031",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate one mapping field of asset",
+            "improve mapping pair"
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number - unique identifier assigned by SAP to each individual physical asset in the system.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for the equipment (asset) master record in the SAP Plant Maintenance (PM) module. Used for maintenance, tracking, and integration purposes.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetIdentifier",
+                    "description": "Globally unique identifier for an asset in the MIMOSA Common Data Model. Can contain source system identifiers for asset interoperability.",
+                    "dataType": "String",
+                    "notes": "Intended to store a unique asset reference that may include the SAP EQUNR value. When integrating, the SAP equipment number (EQUNR) should populate AssetIdentifier, potentially with additional system context for global uniqueness.",
+                    "fieldLength": "50"
+                }
+            }
+        ],
+        "prompt": "improve mapping pair",
+        "accuracyResult": {
+            "accuracyRate": 48.88,
+            "descriptionSimilarity": 57.29,
+            "mimosaSimilarity": 20.0,
+            "sapSimilarity": 60.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 36.0
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 48.88,
+                "descriptionSimilarity": 57.29,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            }
+        ],
+        "promptHistory": [
+            {
+                "text": "generate one mapping field of asset",
+                "createdAt": "2025-05-25T17:19:19"
+            },
+            {
+                "text": "improve mapping pair",
+                "createdAt": "2025-05-25T17:19:39"
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-05-25T17:26:27",
+        "mapID": "032",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate one mapping field of asset",
+            "improve mapping pair"
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset Master Record",
+                    "fieldName": "ASSET_NO",
+                    "description": "Unique identifier assigned internally by SAP to each fixed asset. Used to track asset records throughout their lifecycle in SAP systems.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key field 'ANLN1' in the ANLA (Asset Master Record Segment) table for asset master data in SAP ERP. Typically combined with company code ('BUKRS') for global uniqueness.",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Universally unique identifier (UUID/GUID) for the asset, as per MIMOSA specifications. Used to uniquely reference an asset across systems and organizational boundaries.",
+                    "dataType": "String",
+                    "notes": "Primary key for the Asset entity in the MIMOSA data model. Typically a 36-character UUID (with hyphens). Mapping from SAP ASSET_NO may require additional context (e.g., company code) or translation to conform to MIMOSA's uniqueness requirements.",
+                    "fieldLength": "36"
+                }
+            }
+        ],
+        "prompt": "improve mapping pair",
+        "accuracyResult": {
+            "accuracyRate": 39.23,
+            "descriptionSimilarity": 62.02,
+            "mimosaSimilarity": 20.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 33.33
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 39.23,
+                "descriptionSimilarity": 62.02,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 33.33
+            }
+        ],
+        "promptHistory": [
+            {
+                "text": "generate one mapping field of asset",
+                "createdAt": "2025-05-25T17:25:59"
+            },
+            {
+                "text": "improve mapping pair",
+                "createdAt": "2025-05-25T17:26:27"
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-05-25T18:49:21",
+        "mapID": "033",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate 4 mapping field of asset",
+            "improve mappings"
+        ],
+        "promptHistory": [
+            {
+                "text": "generate 4 mapping field of asset",
+                "createdAt": "2025-05-25T18:48:46"
+            },
+            {
+                "text": "improve mappings",
+                "createdAt": "2025-05-25T18:49:21"
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQUNR",
+                    "description": "Equipment Number – unique identifier for an equipment master record.",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for SAP equipment asset; static identifier used throughout lifecycle.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Globally unique identifier for the asset, persistent across all systems.",
+                    "dataType": "String",
+                    "notes": "Primary key for asset instance in MIMOSA; can map directly from SAP EQUNR if no duplication.",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQKTU",
+                    "description": "Short Text – brief and concise description of the equipment.",
+                    "dataType": "CHAR",
+                    "notes": "Limited to 40 characters; used as a label or summary in SAP equipment tables.",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetShortDescription",
+                    "description": "Concise textual summary describing the asset (short name or label).",
+                    "dataType": "String",
+                    "notes": "May map directly from SAP EQKTU, padding or truncating as needed. Maximum length in MIMOSA is 128 characters.",
+                    "fieldLength": "128"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "EQTYP",
+                    "description": "Equipment Category – 1-character code signifying the generalized type or category of the equipment (e.g. 'M' for machines, 'V' for vehicles).",
+                    "dataType": "CHAR",
+                    "notes": "Coded value defined in SAP customizing. Typically must be mapped to corresponding controlled vocabulary or enumerated value in target system.",
+                    "fieldLength": "1"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetClass",
+                    "description": "Classification or category of the asset (should reference a standardized asset class, e.g. taxonomy or code list).",
+                    "dataType": "String",
+                    "notes": "Map SAP's EQTYP code to a MIMOSA-recognized AssetClass value. May require cross-reference table/logic. Up to 32 characters.",
+                    "fieldLength": "32"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "SERIALNO",
+                    "description": "Serial Number – unique manufacturer-assigned identifier for the physical equipment item.",
+                    "dataType": "CHAR",
+                    "notes": "If available, allows distinction of unique physical instances; not always required or present for all equipment records.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Manufacturer-assigned unique serial number for the specific asset instance.",
+                    "dataType": "String",
+                    "notes": "Direct mapping; serial numbers may be padded/truncated. Required for physical traceability in MIMOSA.",
+                    "fieldLength": "64"
+                }
+            }
+        ],
+        "prompt": "improve mappings",
+        "accuracyResult": {
+            "accuracyRate": 46.08,
+            "descriptionSimilarity": 58.85,
+            "mimosaSimilarity": 30.0,
+            "sapSimilarity": 45.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 22.66
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 46.34,
+                "descriptionSimilarity": 49.92,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 28.12
+            },
+            {
+                "accuracyRate": 47.31,
+                "descriptionSimilarity": 52.58,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 31.25
+            },
+            {
+                "accuracyRate": 42.41,
+                "descriptionSimilarity": 51.34,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 60.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 3.12
+            },
+            {
+                "accuracyRate": 48.28,
+                "descriptionSimilarity": 81.55,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 28.12
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-05-25T19:55:51",
+        "mapID": "034",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate 4 mapping field of asset",
+            "improve mapping pairs",
+            "improve mapping pairs"
+        ],
+        "promptHistory": [
+            {
+                "text": "generate 4 mapping field of asset",
+                "createdAt": "2025-05-25T19:54:54"
+            },
+            {
+                "text": "improve mapping pairs",
+                "createdAt": "2025-05-25T19:55:30"
+            },
+            {
+                "text": "improve mapping pairs",
+                "createdAt": "2025-05-25T19:55:51"
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Number",
+                    "description": "System-assigned unique identifier for each equipment or asset record in SAP Plant Maintenance (PM).",
+                    "dataType": "CHAR",
+                    "notes": "Technical field name: EQUNR; the primary key in SAP equipment master (EQUI) table. Leading zeros are typically used; always store and transmit all digits including leading zeros for data integrity and to ensure referential accuracy.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Globally unique identifier for an asset within MIMOSA systems. May originate from internal generation or be mapped from authoritative external systems such as SAP.",
+                    "dataType": "String",
+                    "notes": "Map SAP EQUNR directly into AssetID, preserving leading zeros and source formatting. Ensure global uniqueness for each AssetID, including source context if possible (e.g., prefix/EQUNR or composite keys if integrating multiple source systems).",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Equipment Description",
+                    "description": "User-supplied short text providing a concise description or name for the equipment or asset. Used for human recognition and display.",
+                    "dataType": "CHAR",
+                    "notes": "Technical field: EQKTX in SAP EQUI table. Not guaranteed to be unique; used for user interface display and quick identification. Consider character set compatibility (UTF-8).",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetDescription",
+                    "description": "Primary descriptive text for the asset, typically used as a display name or label in user interfaces.",
+                    "dataType": "String",
+                    "notes": "Populate from SAP Equipment Description (EQKTX). If necessary, enhance with further details for uniqueness, ensuring the field is not truncated when mapping to MIMOSA’s larger length (255). Handle encoding and special characters.",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Serial Number",
+                    "description": "Manufacturer-assigned serial number associated with the physical asset, used for asset lifecycle tracking and traceability.",
+                    "dataType": "CHAR",
+                    "notes": "Technical field: SERNR. May be blank if the asset is not serialized. Always preserve formatting, including leading zeros or mixed case. Apply the mapping only for assets where SERNR is populated.",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Manufacturer’s serial number for the asset, supporting precise asset identification and traceability across systems.",
+                    "dataType": "String",
+                    "notes": "Map directly from SAP SERNR where present. Support alphanumeric, special characters, and leading zeros. Leave blank in MIMOSA if SERNR is missing in SAP. Validate length and format where possible.",
+                    "fieldLength": "64"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Equipment",
+                    "fieldName": "Manufacturer",
+                    "description": "Name of the organization or entity that produced, supplied, or branded the asset or equipment, as recorded in SAP.",
+                    "dataType": "CHAR",
+                    "notes": "Technical field: HERST. Free-text entry; may vary in case, spelling, or abbreviation. Consider harmonizing/correcting entries for master data consistency across integrated systems.",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "Manufacturer",
+                    "description": "Full, normalized name of the asset’s manufacturer or supplier. Used for reporting, analytics, and part master linkage.",
+                    "dataType": "String",
+                    "notes": "Populate from SAP HERST; normalize for case (e.g., 'SIEMENS' vs 'Siemens'), spelling, and abbreviations (e.g., 'GE' vs 'General Electric'). Remove extraneous characters. Consider referencing a controlled vocabulary or manufacturer master for standardization in MIMOSA.",
+                    "fieldLength": "128"
+                }
+            }
+        ],
+        "prompt": "improve mapping pairs",
+        "accuracyResult": {
+            "accuracyRate": 42.19,
+            "descriptionSimilarity": 69.32,
+            "mimosaSimilarity": 40.0,
+            "sapSimilarity": 0.0,
+            "dataType": 100.0,
+            "infoOmitted": 20.0,
+            "fieldLength": 23.84
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 39.07,
+                "descriptionSimilarity": 66.31,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 28.12
+            },
+            {
+                "accuracyRate": 36.57,
+                "descriptionSimilarity": 63.75,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 15.69
+            },
+            {
+                "accuracyRate": 49.18,
+                "descriptionSimilarity": 86.93,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 28.12
+            },
+            {
+                "accuracyRate": 43.95,
+                "descriptionSimilarity": 60.28,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 23.44
+            }
+        ]
     }
 ]

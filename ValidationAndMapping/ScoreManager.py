@@ -8,7 +8,7 @@ from .Score import Score
 
 #Score Managers
 # from ValidationAndMapping.Quality import Quality
-from .Accuracy import Accuracy
+from .Accuracy import Accuracy, InfoOmitted
 from .Models import MappingEntry
 from typing import List
 from .Models import AccuracyResult

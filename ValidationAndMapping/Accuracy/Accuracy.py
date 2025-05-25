@@ -17,7 +17,6 @@ class Accuracy:
     def __init__(self):
         # instantiate once, reuse across calls
         self.description_scorer = DescriptionSimilarity()
-        self.length_scorer      = FieldLength()
         self.type_scorer        = DataType()
         self.sap_checker        = SAPChecker()
         self.mimosa_checker     = MimosaChecker()

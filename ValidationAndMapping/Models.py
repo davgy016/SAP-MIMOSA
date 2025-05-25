@@ -1,6 +1,7 @@
 from pydantic import BaseModel, RootModel, Field, ConfigDict
 from typing import List, Optional
 from enum import Enum
+from datetime import datetime
 
 class FieldState(Enum):
     CORRECT = "correct"
@@ -23,6 +24,28 @@ class FieldMapping(BaseModel):
     dataType: str
     notes: Optional[str] = ""
     fieldLength: Optional[str] = ""
+    
+    def __eq__(self, other):
+        if not isinstance(other, FieldMapping):
+            return False
+        return (
+            self.platform == other.platform and
+            self.entityName == other.entityName and
+            self.fieldName == other.fieldName and
+            self.description == other.description and
+            self.dataType == other.dataType and
+            self.fieldLength == other.fieldLength
+        )
+    
+    def __hash__(self):
+        return hash((
+            self.platform,
+            self.entityName,
+            self.fieldName,
+            self.description,
+            self.dataType,
+            self.fieldLength
+        ))
 
 class FieldCheck(BaseModel):
     entityName: FieldState = FieldState.UNCHECKED
@@ -42,6 +65,14 @@ class MappingEntry(BaseModel):
     class Config:
         extra = "ignore"
 
+    def __eq__(self, other):
+        if not isinstance(other, MappingEntry):
+            return False
+        return self.sap == other.sap and self.mimosa == other.mimosa
+    
+    def __hash__(self):
+        return hash((self.sap, self.mimosa))
+
 class AccuracyResult(BaseModel):
     accuracyRate: Optional[float] = None
     descriptionSimilarity: Optional[float] = None
@@ -51,14 +82,20 @@ class AccuracyResult(BaseModel):
     infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
 
+class promptEntry(BaseModel):
+    text: Optional[str] = ""
+    createdAt: Optional[datetime] = None
+
 class Mapping(BaseModel):    
+    createdAt: Optional[datetime] = None
     mapID: Optional[str] = None
-    LLMType: str
-    prompt: Optional[str] = None
-    prompts: Optional[List[str]] = None
+    LLMType: str = ""
+    prompts: List[str] = []
+    promptHistory: List[promptEntry] = []
+    mappings: List[MappingEntry] = []
+    prompt: Optional[str] = ""
     accuracyResult: Optional[AccuracyResult] = None
     accuracySingleMappingPair: Optional[List[AccuracyResult]] = None
-    mappings: List[MappingEntry]
 
     model_config = ConfigDict(validate_by_name=True)
 
