@@ -48,18 +48,18 @@ class Accuracy:
         # exist is e.g. {"description": True, "dataType": False, ...}
 
         # 4) Conditional scorers
-        if exist["description"]:
-            scores["DescriptionSimilarity"] = self.description_scorer.score(entry)
-
-        if exist["dataType"]:
-            scores["DataType"]    = self.type_scorer.score(entry)
-
-        if exist["fieldLength"]:
-            scores["FieldLength"] = self.length_scorer.score(entry)
+        scores["DescriptionSimilarity"] = (
+            self.desc_scorer.score(entry) if exist["description"] else 0.0
+        )
+        scores["DataType"] = (
+            self.type_scorer.score(entry) if exist["dataType"] else 0.0
+        )
+        scores["FieldLength"] = (
+            self.len_scorer.score(entry) if exist["fieldLength"] else 0.0
+        )
 
         # 5) Dynamic Overall = average of whatever keys we have
         values = list(scores.values())
-        overall = sum(values) / len(values) if values else 0.0
-        scores["Accuracy"] = overall
+        scores["Accuracy"] = sum(values) / len(values) if values else 0.0
 
         return scores

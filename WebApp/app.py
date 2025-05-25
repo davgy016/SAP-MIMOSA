@@ -188,7 +188,7 @@ async def check_accuracy(entries: List[MappingEntry]):
     # FastAPI will serialize the AccuracyResult objects automatically
     return {
         "overall": results["overall"],
-        "details": results["details"],
+        "singlePairAccuracydetails": [r for r in results["singlePairAccuracydetails"]]
     }
 
 def start():
