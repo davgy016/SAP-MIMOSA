@@ -184,7 +184,11 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Overall Accuracy Rate</span>
+                                                                <span class="fw-medium">
+                                                                    Overall Accuracy Rate
+                                                                    <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip"
+                                                                       title="Overall accuracy rate of the mapping"></i>
+                                                                </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
                                                             </div>
                                                             <div class="progress">
@@ -196,8 +200,13 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Description Similarity</span>
-                                                                <span>@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%</span>
+                                                                <span class="fw-medium">Description Similarity
+                                                                    <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
+                                                                       title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i>
+                                                                </span>
+                                                                <span>@Html.DisplayFor(m => document.accuracyResult.descriptionSimilarity)%
+                                                                   
+                                                                </span>
                                                             </div>
                                                             <div class="progress">
                                                                 <div class="progress-bar bg-primary" role="progressbar"
@@ -208,7 +217,10 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Mimosa Similarity</span>
+                                                                <span class="fw-medium">Mimosa Similarity
+                                                                    <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
+                                                                       title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                                                </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.mimosaSimilarity)%</span>
                                                             </div>
                                                             <div class="progress">
@@ -220,7 +232,10 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">SAP Similarity</span>
+                                                                <span class="fw-medium">SAP Similarity
+                                                                    <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
+                                                                       title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                                                </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.sapSimilarity)%</span>
                                                             </div>
                                                             <div class="progress">
@@ -232,7 +247,10 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Data Type Similarity</span>
+                                                                <span class="fw-medium">Data Type Similarity
+                                                                    <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
+                                                                       title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                                                </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.dataType)%</span>
                                                             </div>
                                                             <div class="progress">
@@ -244,7 +262,10 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Missing Fields Rate</span>
+                                                                <span class="fw-medium">Missing Fields Rate
+                                                                    <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
+                                                                       title="InfoOmitted checks if there is any missing fields/mapping pair in the mapping."></i>
+                                                                </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
                                                             </div>
                                                             <div class="progress">
@@ -254,17 +275,17 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3">
-                                                            <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Field Length Similarity</span>
-                                                                <span>@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div class="progress-bar bg-success" role="progressbar"
-                                                                     style="width: @(document.accuracyResult.fieldLength)%"
-                                                                     aria-valuenow="@document.accuracyResult.fieldLength" aria-valuemin="0" aria-valuemax="100"></div>
-                                                            </div>
-                                                        </div>
+                                                        @* <div class="mb-3"> *@
+                                                        @*     <div class="d-flex justify-content-between mb-1"> *@
+                                                        @*         <span class="fw-medium">Field Length Similarity</span> *@
+                                                        @*         <span>@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span> *@
+                                                        @*     </div> *@
+                                                        @*     <div class="progress"> *@
+                                                        @*         <div class="progress-bar bg-success" role="progressbar" *@
+                                                        @*              style="width: @(document.accuracyResult.fieldLength)%" *@
+                                                        @*              aria-valuenow="@document.accuracyResult.fieldLength" aria-valuemin="0" aria-valuemax="100"></div> *@
+                                                        @*     </div> *@
+                                                        @* </div> *@
                                                     }
                                                     else
                                                     {
@@ -421,7 +442,7 @@
                                         }
                                         <textarea class="form-control mt-2" rows="10" readonly>@allNotes</textarea>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
 
@@ -621,7 +642,7 @@
                 });
             }
         });
-    </script>
+    </script>    
 
     <!-- Displaying historical data -->
     <script>
