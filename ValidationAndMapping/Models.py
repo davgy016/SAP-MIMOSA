@@ -11,6 +11,7 @@ class FieldState(Enum):
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
+    system_prompt: Optional[str] = Field(None, alias="system_prompt")
     llm_model: Optional[str] = Field(None, alias="llm_model")
     mappings:  Optional[List["MappingEntry"]]
     model_config = ConfigDict(validate_by_name=True)

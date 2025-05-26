@@ -96,14 +96,14 @@ namespace SAP_MIMOSAapp.Controllers
         }
 
         //AI Search Method
-        private async Task<string> GetAIResponse(string query, string llmModel, List<MappingPair>? mappings)
+        private async Task<string> GetAIResponse(string query, string llmModel, List<MappingPair>? mappings = null, string? systemPrompt = null)
         {
             try
             {
-                Console.WriteLine($"GetAIResponse called with query: {query}");
+                //Console.WriteLine($"GetAIResponse called with query: {query} {systemPrompt}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query, llm_model = llmModel, mappings = mappings ?? new List<MappingPair>() };
+                var request = new { query = query, llm_model = llmModel, mappings = mappings ?? new List<MappingPair>(), system_prompt = systemPrompt };
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
@@ -454,7 +454,8 @@ namespace SAP_MIMOSAapp.Controllers
                 {
                     Console.WriteLine("no mappings passed");
                 }
-                var aiResponse = await GetAIResponse(req.prompt, req.llmType, req.mappings);
+                
+                var aiResponse = await GetAIResponse(req.prompt, req.llmType, req.mappings, req.systemPrompt);
                 if (!string.IsNullOrWhiteSpace(aiResponse))
                 {
                     try
@@ -510,6 +511,7 @@ namespace SAP_MIMOSAapp.Controllers
         public class AskAIRequest
         {
             public string prompt { get; set; }
+            public string systemPrompt { get; set; }
             public string llmType { get; set; }
             public List<MappingPair>? mappings { get; set; }
             public List<string>? prompts { get; set; }
