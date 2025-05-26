@@ -67,11 +67,72 @@ def sample_mapping():
         notes="Identifier for maintenance plan in MIMOSA",
         fieldLength="12"
     )
+    # Third mapping entry - Maintenance Plan
+    sap_field4 = FieldMapping(
+        platform="SAP PM",
+        entityName="NOT REAL",
+        fieldName="PLNNR",
+        description="Maintenance Plan Number",
+        dataType="CHAR(12)",
+        notes="Identifier for maintenance plan",
+        fieldLength="12"
+    )
+
+    mimosa_field4 = FieldMapping(
+        platform="MIMOSA CCOM",
+        entityName="AUFK",
+        fieldName="MaintenancePlan.PlanID",
+        description="Maintenance Plan Identifier",
+        dataType="CHAR(12)",
+        notes="Identifier for maintenance plan in MIMOSA",
+        fieldLength="12"
+    )
+    sap_field5 = FieldMapping(
+        platform="SAP PM",
+        entityName="NOT REAL",
+        fieldName="EQUNR",
+        description="Equipment Number",
+        dataType="CHAR(18)",
+        notes="Unique identifier for equipment in SAP PM",
+        fieldLength="18"
+    )
+
+    mimosa_field5 = FieldMapping(
+        platform="MIMOSA CCOM",
+        entityName="Asset",
+        fieldName="Asset.AssetID",
+        description="Asset Identifier",
+        dataType="CHAR(18)",
+        notes="Unique identifier for asset in MIMOSA",
+        fieldLength="18"
+    )
+    sap_field6 = FieldMapping(
+        platform="SAP PM",
+        entityName="NOT REAL",
+        fieldName="EQU",
+        description="Equipment Number",
+        dataType="CHAR(18)",
+        notes="Unique identifier for equipment in SAP PM",
+        fieldLength="18"
+    )
+
+    mimosa_field6 = FieldMapping(
+        platform="MIMOSA CCOM",
+        entityName="Asset",
+        fieldName="Asset.AssetID",
+        description="Asset Identifier",
+        dataType="CHAR(18)",
+        notes="Unique identifier for asset in MIMOSA",
+        fieldLength="18"
+    )
 
     mapping_entries = [
         MappingEntry(sap=sap_field1, mimosa=mimosa_field1),
         MappingEntry(sap=sap_field2, mimosa=mimosa_field2),
-        MappingEntry(sap=sap_field3, mimosa=mimosa_field3)
+        MappingEntry(sap=sap_field3, mimosa=mimosa_field3),
+        MappingEntry(sap=sap_field4, mimosa=mimosa_field4),
+        MappingEntry(sap=sap_field5, mimosa=mimosa_field5),
+        MappingEntry(sap=sap_field6, mimosa=mimosa_field6)
     ]
 
     mapping = Mapping(
@@ -170,6 +231,3 @@ def test_score_overall_with_duplicate(info_omitted, sample_mapping):
 
     print(f'Test overall with a duplicate {score}')
     assert 0 <= score <= 1
-
-
-
