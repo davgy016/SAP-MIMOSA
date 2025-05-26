@@ -108,7 +108,7 @@ def sample_mapping():
     )
     sap_field6 = FieldMapping(
         platform="SAP PM",
-        entityName="NOT REAL",
+        entityName="AUFK (ORder number)",
         fieldName="EQU",
         description="Equipment Number",
         dataType="CHAR(18)",
