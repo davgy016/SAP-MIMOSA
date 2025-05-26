@@ -31,7 +31,53 @@
                         @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
                         <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
                             <i class="bi bi-search fs-4 text-primary"></i>
-                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" />
+                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" readonly data-bs-toggle="modal" data-bs-target="#promptModal" />
+
+                            <!-- Prompt Modal -->
+                            <div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="promptModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="promptModalLabel">Enter Prompt</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <textarea id="modalPromptInput" class="form-control" rows="5" placeholder="Enter prompt to generate initial mapping" style="resize:vertical;"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" id="savePromptBtn">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    var aiPrompt = document.getElementById('aiPrompt');
+                                    var modalPromptInput = document.getElementById('modalPromptInput');
+                                    var savePromptBtn = document.getElementById('savePromptBtn');
+                                    var promptModal = document.getElementById('promptModal');
+
+                                    // When modal opens, set value to current input
+                                    promptModal.addEventListener('show.bs.modal', function () {
+                                        modalPromptInput.value = aiPrompt.value;
+                                        setTimeout(function() { modalPromptInput.focus(); }, 300);
+                                    });
+                                    // Save button updates the main input
+                                    savePromptBtn.addEventListener('click', function () {
+                                        aiPrompt.value = modalPromptInput.value;
+                                        var modal = bootstrap.Modal.getInstance(promptModal);
+                                        modal.hide();
+                                    });
+                                    // Allow pressing Enter in modal input to save
+                                    modalPromptInput.addEventListener('keydown', function(e) {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            savePromptBtn.click();
+                                        }
+                                    });
+                                });
+                            </script>
                             <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
                                 @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
                                 {
@@ -118,7 +164,7 @@
                     {
                         <p class="text-muted">No prompt history available.</p>
                     }
-                </div>                
+                </div>
             }
 
             <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
@@ -152,8 +198,8 @@
                                     <div class="metric-label">Description Similarity</div>
                                     <div class="metric-value">
                                         <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip"
-                                           title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i> 
-                                           <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong>
+                                           title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
@@ -161,7 +207,8 @@
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-3" data-bs-toggle="tooltip"
                                            title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
-                                        <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">Data Type Similarity</div>
@@ -176,7 +223,8 @@
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-2" data-bs-toggle="tooltip"
                                            title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
-                                        <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
+                                    </div>
                                 </div>
                                 @* <div class="col-12 col-sm-6"> *@
                                 @*     <div class="metric-label">Field Length Similarity</div> *@
@@ -187,7 +235,8 @@
                                     <div class="metric-value">
                                         <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip"
                                            title="InfoOmitted checks if there is any missing fields/mapping pair in the mapping."></i>
-                                        <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -528,7 +577,7 @@
                                         aria-controls="${collapseId}">
                                         <span class="d-flex align-items-center">
                                             <i class="bi bi-chevron-right me-2 toggle-icon"></i>
-                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>                                         
+                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
                                             <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
                                                 style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
                                             </span>

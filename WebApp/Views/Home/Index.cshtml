@@ -738,7 +738,7 @@
                 if (!acc) return '';
                 return `
                     <div class="mt-2 pt-2 accuracy-details-metrics">
-                        <div class="fw-semibold mb-2 text-primary"><i class="bi bi-bar-chart"></i> Accuracy Details</div>
+                        <div class="fw-semibold mb-2 text-primary"><i class="bi bi-bar-chart"></i>Mapping Pair Accuracy Details</div>
                         <div class="row g-1">
                             <div class="col-6 col-md-4 mb-1">
                                 <div class="accuracy-metric-box">
@@ -839,9 +839,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        ${renderSingleMappingPairAccuracy(doc.accuracySingleMappingPair?.[idx])}
                                     </div>
                                 </div>
-                                ${renderSingleMappingPairAccuracy(doc.accuracySingleMappingPair?.[idx])}
                             </div>
                         `).join('') +
                     `</div>`;
