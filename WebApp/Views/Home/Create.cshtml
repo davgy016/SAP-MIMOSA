@@ -59,8 +59,8 @@
                                 </div>
                             </div>
                             <!-- Hidden system prompt input, gets value from Prompt Modal and added in request body. check script below -->
-                            <input type="hidden" name="system_prompt" id="systemPromptHidden" />                                               
-                           
+                            <input type="hidden" name="system_prompt" id="systemPromptHidden" />
+
                             <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
                                 @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
                                 {
@@ -208,12 +208,8 @@
                                            title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
                                     </div>
-                                </div>
-                                @* <div class="col-12 col-sm-6"> *@
-                                @*     <div class="metric-label">Field Length Similarity</div> *@
-                                @*     <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div> *@
-                                @* </div> *@
-                                <div class="col-12 col-sm-6">
+                                </div>                               
+                                <div class="col-12 col-sm-6 ms-auto">
                                     <div class="metric-label">Missing Fields Rate</div>
                                     <div class="metric-value">
                                         <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip"
@@ -231,7 +227,12 @@
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Mapping Pairs <small class=" text-muted fs-5 p-2"><i>(Found @(Model?.mappings.Count >0 ? Model.mappings.Count : "")) </i></small></h5>
+                <h5>
+                    Mapping Pairs
+                    @if(Model?.mappings.Count > 0){
+                        <small class=" text-muted fs-5 p-2"><i>(Total: @Model?.mappings.Count) </i></small>
+                    }
+                </h5>
                 <div class="d-flex align-items-center gap-2">
 
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
@@ -393,10 +394,10 @@
                 requestBody.prompts = existingPrompts;
 
 
-                // Read system prompt from hidden input and include in requestBody. Fetching script of system prompt check bellow 
+                // Read system prompt from hidden input and include in requestBody. Fetching script of system prompt check bellow
                 const systemPromptHidden = document.getElementById('systemPromptHidden');
                 requestBody.systemPrompt = systemPromptHidden ? systemPromptHidden.value : '';
-                
+
                 // Send request to AI
                 aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
                 try {
@@ -633,11 +634,7 @@
                                                             <i class="bi bi-graph-up-arrow"></i>
                                                             <span>${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%</span>
                                                         </div>
-                                                        <div class="fw-semibold">Overall Accuracy</div>
-                                                        <span class="badge ${badgeClass} px-3 py-2 fs-6 mt-2">
-                                                            ${emoji}
-                                                            ${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%
-                                                        </span>
+                                                        <div class="fw-semibold">Overall Accuracy</div>                                                        
                                                     </div>
                                                     <div class="col-12 col-md-8">
                                                         <div class="row g-2">
@@ -656,12 +653,8 @@
                                                             <div class="col-12 col-sm-6">
                                                                 <div class="metric-label">SAP Similarity</div>
                                                                 <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>${entry.accuracyResult && entry.accuracyResult.sapSimilarity !== undefined && entry.accuracyResult.sapSimilarity !== null ? entry.accuracyResult.sapSimilarity : 'N/A'}%</strong></div>
-                                                            </div>
-                                                            <div class="col-12 col-sm-6">
-                                                                <div class="metric-label">Field Length Similarity</div>
-                                                                <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>${entry.accuracyResult && entry.accuracyResult.fieldLength !== undefined && entry.accuracyResult.fieldLength !== null ? entry.accuracyResult.fieldLength : 'N/A'}%</strong></div>
-                                                            </div>
-                                                            <div class="col-12 col-sm-6">
+                                                            </div>                                                            
+                                                            <div class="col-12 col-sm-6 ms-auto">
                                                                 <div class="metric-label">Missing Fields Rate</div>
                                                                 <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>${entry.accuracyResult && entry.accuracyResult.infoOmitted !== undefined && entry.accuracyResult.infoOmitted !== null ? entry.accuracyResult.infoOmitted : 'N/A'}%</strong></div>
                                                             </div>
@@ -726,24 +719,19 @@
                                                                                                 <span class="metric-value">${pairAcc.mimosaSimilarity !== undefined && pairAcc.mimosaSimilarity !== null ? pairAcc.mimosaSimilarity : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                        <div class="col-6 col-md-6 mb-1">
                                                                                             <div class="accuracy-metric-box">
                                                                                                 <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
                                                                                                 <span class="metric-value">${pairAcc.dataType !== undefined && pairAcc.dataType !== null ? pairAcc.dataType : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                        <div class="col-6 col-md-6 mb-1">
                                                                                             <div class="accuracy-metric-box">
                                                                                                 <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
                                                                                                 <span class="metric-value">${pairAcc.infoOmitted !== undefined && pairAcc.infoOmitted !== null ? pairAcc.infoOmitted : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-6 col-md-4 mb-1">
-                                                                                            <div class="accuracy-metric-box">
-                                                                                                <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
-                                                                                                <span class="metric-value">${pairAcc.fieldLength !== undefined && pairAcc.fieldLength !== null ? pairAcc.fieldLength : 'N/A'}%</span>
-                                                                                            </div>
-                                                                                        </div>
+                                                                                       
                                                                                     </div>
                                                                                 </div>
                                                                             ` : '<span class="text-muted">No pair accuracy results.</span>'}

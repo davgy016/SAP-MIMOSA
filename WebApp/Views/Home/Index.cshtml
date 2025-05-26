@@ -716,12 +716,8 @@
                                     <div class="col-12 col-sm-6">
                                         <div class="metric-label">SAP Similarity</div>
                                         <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>${acc.sapSimilarity ?? 0}%</strong></div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="metric-label">Field Length Similarity</div>
-                                        <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>${acc.fieldLength ?? 0}%</strong></div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
+                                    </div>                                    
+                                    <div class="col-12 col-sm-6 ms-auto">
                                         <div class="metric-label">Missing Fields Rate</div>
                                         <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>${acc.infoOmitted ?? 0}%</strong></div>
                                     </div>
@@ -758,24 +754,19 @@
                                     <span class="metric-value">${acc.mimosaSimilarity ?? 0}%</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-4 mb-1">
+                            <div class="col-6 col-md-6 mb-1">
                                 <div class="accuracy-metric-box">
                                     <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
                                     <span class="metric-value">${acc.dataType ?? 0}%</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-4 mb-1">
+                            <div class="col-6 col-md-6 mb-1">
                                 <div class="accuracy-metric-box">
                                     <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
                                     <span class="metric-value">${acc.infoOmitted ?? 0}%</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-4 mb-1">
-                                <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
-                                    <span class="metric-value">${acc.fieldLength ?? 0}%</span>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
                 `;

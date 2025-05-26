@@ -99,24 +99,18 @@
                         <span class="metric-value" data-metric="mimosaSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.mimosaSimilarity)%</span>
                     </div>
                 </div>
-                <div class="col-6 col-md-4 mb-1">
+                <div class="col-6 col-md-6 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
                         <span class="metric-value" data-metric="dataType" data-index="@Model.Item1">@Html.DisplayFor(m => detail.dataType)%</span>
                     </div>
                 </div>
-                <div class="col-6 col-md-4 mb-1">
+                <div class="col-6 col-md-6 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
                         <span class="metric-value" data-metric="infoOmitted" data-index="@Model.Item1">@Html.DisplayFor(m => detail.infoOmitted)%</span>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 mb-1">
-                    <div class="accuracy-metric-box">
-                        <span class="metric-label"><i class="bi bi-arrows-expand"></i> Field Len.</span>
-                        <span class="metric-value" data-metric="fieldLength" data-index="@Model.Item1">@Html.DisplayFor(m => detail.fieldLength)%</span>
-                    </div>
-                </div>
+                </div>               
             </div>
         </div>
     }
