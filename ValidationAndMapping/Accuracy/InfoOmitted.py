@@ -45,6 +45,7 @@ class InfoOmitted:
 
         #a list of all the different entities
         entities = []
+        notRealEntities = []
         for map in unique_mappings:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
@@ -57,6 +58,12 @@ class InfoOmitted:
             if entity in self.schema:
                 tableFields = self.schema[entity]
                 totalFields += len(tableFields)
+            else:
+                notRealEntities.append(entity)
+
+        for map in unique_mappings:
+            if map.sap.entityName in notRealEntities:
+                countFields -= 1
         print(f"Fields counted in overall score {countFields} for entities {entities} with total fields {totalFields}")
 
         if totalFields == 0:
