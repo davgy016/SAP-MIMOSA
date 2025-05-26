@@ -2468,5 +2468,357 @@
                 "fieldLength": 23.44
             }
         ]
+    },
+    {
+        "createdAt": "2025-05-26T16:09:40",
+        "mapID": "035",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate 1 mapping",
+            "improve mapping pair"
+        ],
+        "promptHistory": [
+            {
+                "text": "generate 1 mapping",
+                "createdAt": "2025-05-26T15:54:01"
+            },
+            {
+                "text": "improve mapping pair",
+                "createdAt": "2025-05-26T16:09:40"
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier for the asset",
+                    "dataType": "NUMERIC",
+                    "notes": "Primary Key in SAP asset table",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetUniqueIdentifier",
+                    "description": "Globally unique identifier for the asset",
+                    "dataType": "STRING",
+                    "notes": "Primary Key following MIMOSA standards",
+                    "fieldLength": "36"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "AssetType",
+                    "description": "Type classification for the asset",
+                    "dataType": "STRING",
+                    "notes": "Often references equipment or location class",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetType",
+                    "description": "Defines the type or class of asset",
+                    "dataType": "STRING",
+                    "notes": "Typically uses a controlled vocabulary",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "Description",
+                    "description": "Textual description of the asset",
+                    "dataType": "STRING",
+                    "notes": "Often used for display in lists and forms",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetName",
+                    "description": "Name or description of asset",
+                    "dataType": "STRING",
+                    "notes": "Human-readable asset name",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Manufacturer serial number of the asset",
+                    "dataType": "STRING",
+                    "notes": "Used to identify unique physical pieces of equipment",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "SerialNumber",
+                    "description": "Serial number assigned by manufacturer",
+                    "dataType": "STRING",
+                    "notes": "Critical for individual asset tracking",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "Manufacturer",
+                    "description": "Name of the asset's manufacturer",
+                    "dataType": "STRING",
+                    "notes": "Sourced from material master or direct input",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ManufacturerName",
+                    "description": "Manufacturer of the asset",
+                    "dataType": "STRING",
+                    "notes": "Linked to a reference-party entity in MIMOSA",
+                    "fieldLength": "100"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ModelNumber",
+                    "description": "Asset's model number from manufacturer",
+                    "dataType": "STRING",
+                    "notes": "Specific to manufacturer's catalog",
+                    "fieldLength": "20"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ModelNumber",
+                    "description": "Model number as supplied by manufacturer",
+                    "dataType": "STRING",
+                    "notes": "May be referenced in various standards",
+                    "fieldLength": "40"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "Location",
+                    "description": "Asset's technical or physical location",
+                    "dataType": "STRING",
+                    "notes": "Often references functional locations (IFLO table)",
+                    "fieldLength": "30"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetLocationCode",
+                    "description": "Code designating asset's location",
+                    "dataType": "STRING",
+                    "notes": "Links to a location entity or code list",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "StartUpDate",
+                    "description": "Date asset was first commissioned or operational",
+                    "dataType": "DATE",
+                    "notes": "Relevant for warranty and lifecycle tracking",
+                    "fieldLength": "10"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "CommissionDate",
+                    "description": "Date asset was brought into service",
+                    "dataType": "DATE",
+                    "notes": "Critical for lifecycle management",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "AcquisitionCost",
+                    "description": "Acquisition or purchase cost of the asset",
+                    "dataType": "DECIMAL",
+                    "notes": "Valuation field in asset accounting",
+                    "fieldLength": "15,2"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AcquisitionValue",
+                    "description": "Purchase or acquisition value assigned to asset",
+                    "dataType": "DECIMAL",
+                    "notes": "Used for financial reporting and analytics",
+                    "fieldLength": "18,2"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "Status",
+                    "description": "Operational or lifecycle status of asset",
+                    "dataType": "STRING",
+                    "notes": "Can reference user or system status fields (e.g., INACTIVE, OPERATIONAL)",
+                    "fieldLength": "20"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "AssetStatus",
+                    "description": "Indicates current status of asset",
+                    "dataType": "STRING",
+                    "notes": "Aligned with ISO 14224 status codes in MIMOSA",
+                    "fieldLength": "30"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "Asset",
+                    "fieldName": "ParentAssetID",
+                    "description": "Reference to parent asset (hierarchy/structure)",
+                    "dataType": "NUMERIC",
+                    "notes": "Used in building asset structures/BOMs",
+                    "fieldLength": "18"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "Asset",
+                    "fieldName": "ParentAssetIdentifier",
+                    "description": "Links asset to a parent asset in hierarchy",
+                    "dataType": "STRING",
+                    "notes": "Supports hierarchical asset management",
+                    "fieldLength": "36"
+                }
+            }
+        ],
+        "prompt": "improve mapping pair",
+        "accuracyResult": {
+            "accuracyRate": 44.04,
+            "descriptionSimilarity": 81.66,
+            "mimosaSimilarity": 27.27,
+            "sapSimilarity": 7.27,
+            "dataType": 81.82,
+            "infoOmitted": 20.0,
+            "fieldLength": 46.21
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 30.79,
+                "descriptionSimilarity": 94.76,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 50.0
+            },
+            {
+                "accuracyRate": 51.8,
+                "descriptionSimilarity": 80.8,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 50.0
+            },
+            {
+                "accuracyRate": 46.55,
+                "descriptionSimilarity": 83.59,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 40.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 15.69
+            },
+            {
+                "accuracyRate": 49.66,
+                "descriptionSimilarity": 81.95,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 36.0
+            },
+            {
+                "accuracyRate": 43.72,
+                "descriptionSimilarity": 92.34,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 30.0
+            },
+            {
+                "accuracyRate": 44.83,
+                "descriptionSimilarity": 78.97,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 50.0
+            },
+            {
+                "accuracyRate": 48.8,
+                "descriptionSimilarity": 72.78,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 20.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 60.0
+            },
+            {
+                "accuracyRate": 51.94,
+                "descriptionSimilarity": 71.63,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 100.0
+            },
+            {
+                "accuracyRate": 37.28,
+                "descriptionSimilarity": 83.66,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 0.0
+            },
+            {
+                "accuracyRate": 50.28,
+                "descriptionSimilarity": 75.0,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 20.0,
+                "dataType": 100.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 66.67
+            },
+            {
+                "accuracyRate": 28.81,
+                "descriptionSimilarity": 82.84,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 0.0,
+                "dataType": 0.0,
+                "infoOmitted": 20.0,
+                "fieldLength": 50.0
+            }
+        ]
     }
 ]

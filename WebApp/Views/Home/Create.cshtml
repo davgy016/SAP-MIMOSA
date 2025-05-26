@@ -31,7 +31,36 @@
                         @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
                         <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
                             <i class="bi bi-search fs-4 text-primary"></i>
-                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" />
+                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" readonly data-bs-toggle="modal" data-bs-target="#promptModal" />
+
+                            <!-- Prompt Modal -->
+                            <div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="promptModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="border: 2px solid #00e6a6; background-color: #00e6a6; box-shadow: 0 4px 32px 10px #00e6a6aa;">
+                                            <h5 class="modal-title" id="promptModalLabel">Enter Prompt</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="modalSystemPrompt" class="form-label fw-bold">System Prompt (default, you can edit):</label>
+                                            <textarea id="modalSystemPrompt" class="form-control mb-3" rows="20" style="resize:vertical;"></textarea>
+                                            <label for="modalPromptInput" class="form-label fw-bold">Your User Prompt:</label>
+                                            <textarea id="modalPromptInput" class="form-control" rows="3" placeholder="Enter your prompt to generate  mapping" style="resize:vertical;"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4 py-2 d-flex align-items-center gap-2 fw-semibold" data-bs-dismiss="modal" style="border: 2px solid #00e6a6; background: #fff; color: #1976D2; box-shadow: 0 2px 10px 0 #00e6a622;">
+                                                <i class="bi bi-x-circle fs-5"></i> Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-gradient-glow rounded-pill px-4 py-2 d-flex align-items-center gap-2 fw-bold" id="savePromptBtn" style="background: linear-gradient(90deg,#00e6a6 60%,#1976D2 100%); color: #fff; border: none; box-shadow: 0 0 18px 2px #00e6a6cc, 0 0 8px 2px #1976D2aa;">
+                                                <i class="bi bi-save fs-5"></i> Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden system prompt input, gets value from Prompt Modal and added in request body. check script below -->
+                            <input type="hidden" name="system_prompt" id="systemPromptHidden" />                                               
+                           
                             <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
                                 @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
                                 {
@@ -118,7 +147,7 @@
                     {
                         <p class="text-muted">No prompt history available.</p>
                     }
-                </div>                
+                </div>
             }
 
             <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
@@ -150,27 +179,47 @@
                             <div class="row g-2">
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">Description Similarity</div>
-                                    <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip"
+                                           title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">MIMOSA Similarity</div>
-                                    <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-diagram-3" data-bs-toggle="tooltip"
+                                           title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">Data Type Similarity</div>
-                                    <div class="metric-value"><i class="bi bi-list-check"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-list-check" data-bs-toggle="tooltip"
+                                           title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">SAP Similarity</div>
-                                    <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-diagram-2" data-bs-toggle="tooltip"
+                                           title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
+                                    </div>
                                 </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="metric-label">Field Length Similarity</div>
-                                    <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div>
-                                </div>
+                                @* <div class="col-12 col-sm-6"> *@
+                                @*     <div class="metric-label">Field Length Similarity</div> *@
+                                @*     <div class="metric-value"><i class="bi bi-arrows-expand"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.fieldLength)%</strong></div> *@
+                                @* </div> *@
                                 <div class="col-12 col-sm-6">
                                     <div class="metric-label">Missing Fields Rate</div>
-                                    <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip"
+                                           title="InfoOmitted checks if there is any missing fields/mapping pair in the mapping."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +231,7 @@
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Mapping Pairs</h5>
+                <h5>Mapping Pairs <small class=" text-muted fs-5 p-2"><i>(Found @(Model?.mappings.Count >0 ? Model.mappings.Count : "")) </i></small></h5>
                 <div class="d-flex align-items-center gap-2">
 
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
@@ -344,6 +393,10 @@
                 requestBody.prompts = existingPrompts;
 
 
+                // Read system prompt from hidden input and include in requestBody. Fetching script of system prompt check bellow 
+                const systemPromptHidden = document.getElementById('systemPromptHidden');
+                requestBody.systemPrompt = systemPromptHidden ? systemPromptHidden.value : '';
+                
                 // Send request to AI
                 aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
                 try {
@@ -462,6 +515,53 @@
         });
     </script>
 
+
+    <!-- Display/fetch system prompt and assign to hidden input -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var aiPrompt = document.getElementById('aiPrompt');
+            var modalPromptInput = document.getElementById('modalPromptInput');
+            var modalSystemPrompt = document.getElementById('modalSystemPrompt');
+            var savePromptBtn = document.getElementById('savePromptBtn');
+            var promptModal = document.getElementById('promptModal');
+            var systemPromptHidden = document.getElementById('systemPromptHidden');
+
+            // When modal opens, set value to current input
+            promptModal.addEventListener('show.bs.modal', function () {
+                console.log("Modal opening: fetching system message...");
+                fetch('http://127.0.0.1:8000/api/system-message')
+                    .then(response => {
+                        console.log("API response status:", response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("System message from API:", data.system_message);
+                        if (modalSystemPrompt) {
+                            modalSystemPrompt.value = data.system_message;
+                            console.log("Assigned value to modalSystemPrompt:", modalSystemPrompt.value);
+                        } else {
+                            console.error("modalSystemPrompt is null");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Fetch error:", err);
+                    });
+                modalPromptInput.value = aiPrompt.value;
+                setTimeout(function() { modalPromptInput.focus(); }, 300);
+            });
+            // Save button: assign user/system prompts to fields only
+            savePromptBtn.addEventListener('click', function () {
+                aiPrompt.value = modalPromptInput.value;
+                systemPromptHidden.value = modalSystemPrompt.value;
+                var modal = bootstrap.Modal.getInstance(promptModal);
+                modal.hide();
+            });
+
+        });
+    </script>
+
+
+
     <!-- Historical data modal -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -511,7 +611,7 @@
                                         aria-controls="${collapseId}">
                                         <span class="d-flex align-items-center">
                                             <i class="bi bi-chevron-right me-2 toggle-icon"></i>
-                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>                                         
+                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
                                             <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
                                                 style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
                                             </span>

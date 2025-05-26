@@ -12,6 +12,7 @@ from ValidationAndMapping.ScoreManager import ScoreManager
 from ValidationAndMapping.Models import MappingQuery, SearchQuery, MappingEntry, Mapping as MappingDocument
 from datetime import datetime
 from fastapi import Query
+from fastapi.responses import JSONResponse
 
 
 # Initialize OpenAI client
@@ -24,6 +25,14 @@ app = FastAPI()
 storagePath = "Data/SAPMIMOSA.json"
 # JSON Raw-Data file path
 rawDataStoragePath = "Data/rawDataOfAIResponses.json"
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://localhost:7090"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # JSON file operations
 def load_data(file_path):
@@ -83,15 +92,32 @@ def extract_json_from_response(response_text):
         return match.group(1)
     raise ValueError("No JSON found in AI response")
 
+
+
+@app.get("/api/system-message")
+def get_system_message():
+    # For initial mapping (no mappings)
+    system_message = OpenAIModel.get_generate_mapping_message()
+    # For improving mappings, pass mappings to get_improve_mappings_message
+    # system_message = OpenAIModel.get_improve_mappings_message(mappings)
+    return JSONResponse(content={"system_message": system_message})
+
 # OpenAI endpoint
 @app.post("/ask_AI")
 async def ask_AI(request: SearchQuery):
     try:
-        llm_model = request.llm_model 
-        #print("Received MappingsPPPPPP: ", request.mappings)
+        llm_model = request.llm_model
+        system_prompt = request.system_prompt
+        #print(f"system prompt 11111111111111: {system_prompt}")
+        # Use the provided system prompt if available, otherwise use the default
+        if system_prompt:
+            system_message = {"role": "system", "content": system_prompt}
+        else:
+            system_message = {"role": "system", "content": OpenAIModel.get_generate_mapping_message()}
 
-        #Call OpenAIModel and pass user query and selected LLM model
-        ai_model = OpenAIModel(request.Query, llm_model, request.mappings)
+        user_message = {"role": "user", "content": request.Query}
+        # Pass system_message, user_message, llm_model, and mappings to OpenAIModel
+        ai_model = OpenAIModel(request.Query, llm_model, request.mappings, system_message=system_message)
         response = ai_model.chat()
         
         result = response.choices[0].message.content
