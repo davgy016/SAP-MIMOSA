@@ -41,7 +41,7 @@ class InfoOmitted:
     def score_overall(self, mapping: list) -> float:
         # Convert to set to remove duplicates based on FieldMapping.__eq__
         unique_mappings = set(mapping)
-        countFields = len(unique_mappings)
+        countFields = 0
 
         #a list of all the different entities
         entities = []
@@ -62,8 +62,8 @@ class InfoOmitted:
                 notRealEntities.append(entity)
 
         for map in unique_mappings:
-            if map.sap.entityName in notRealEntities:
-                countFields -= 1
+            if map.sap.entityName not in notRealEntities:
+                countFields += 1
         print(f"Fields counted in overall score {countFields} for entities {entities} with total fields {totalFields}")
 
         if totalFields == 0:
