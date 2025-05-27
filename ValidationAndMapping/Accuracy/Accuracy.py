@@ -46,19 +46,30 @@ class Accuracy:
         # exist is e.g. {"description": True, "dataType": False, ...}
 
         # 4) Conditional scorers
-        scores["DescriptionSimilarity"] = (
-            self.description_scorer.score(entry) if exist["description"] else 0.0
-        )
+        if exist["description"]:
+            scores["DescriptionSimilarity"] = self.description_scorer.score(entry)
+        else:
+            scores["DescriptionSimilarity"] = None
+
         scores["DataType"] = (
             self.type_scorer.score(entry) if exist["dataType"] else 0.0
         )
+        if exist["dataType"]:
+            scores["DataType"] = self.description_scorer.score(entry)
+        else:
+            scores["DataType"] = None        
 
+        # 5) Dynamic Overall 
+        real_values = [v for v in scores.values() if isinstance(v, float)]
+        if real_values:
+            dynamic_avg = sum(real_values) / len(real_values)
+        else:
+            dynamic_avg = None
 
-        # 5) Dynamic Overall = average of whatever keys we have
-        values = list(scores.values())
-        scores["Accuracy"] = sum(values) / len(values) if values else 0.0
+        scores["Accuracy"] = dynamic_avg
 
         for k,v in scores.items():
-            scores[k] = max(0.0, min(v, 1.0))
+            if isinstance(v, float):
+                scores[k] = max(0.0, min(v, 1.0))
 
         return scores

@@ -20,52 +20,56 @@ class ScoreManager:
     def scoreOutputWithDetails(entries: list[MappingEntry]) -> dict:
         acc = Accuracy()
         info = InfoOmitted()
-        n   = len(entries)
-        keys = [
-            "Accuracy",
-            "DescriptionSimilarity",
-            "DataType",
+
+        # only the Accuracy.calculateAccuracy keys
+        core_metrics = [
             "SAPSimilarity",
             "MIMOSASimilarity",
-            # "InfoOmitted",
+            "DescriptionSimilarity",
+            "DataType",
+            "Accuracy",
         ]
 
-        # zero out accumulators
-        overall_sum = {k: 0.0 for k in keys}
-        details     = []
-
-        if n == 0:
-            return {"overall": AccuracyResult(), "singlePairAccuracydetails": []}
+        # prepare accumulators for those five metrics
+        overall_sums = {m: 0.0 for m in core_metrics}
+        counts       = {m: 0   for m in core_metrics}
+        details      = []
 
         for e in entries:
+            # get 0..1 scores from Accuracy
             scores = acc.calculateAccuracy(e)
 
-            # compute coverage for this entry
-            info_single = info.score_single(e, entries)
+            # override/add the per-entry InfoOmitted
+            scores["InfoOmitted"] = info.score_single(e, entries)
 
-            # build per‐entry detail
+            # record the detail row 
             details.append(AccuracyResult(
-                accuracyRate          = scores["Accuracy"]          ,
+                sapSimilarity         = scores["SAPSimilarity"]    ,
+                mimosaSimilarity      = scores["MIMOSASimilarity"] ,
                 descriptionSimilarity = scores["DescriptionSimilarity"] ,
-                dataType              = scores["DataType"]              ,
-                sapSimilarity         = scores["SAPSimilarity"]         ,
-                mimosaSimilarity      = scores["MIMOSASimilarity"]      ,
-                infoOmitted           = info_single                     ,
+                dataType              = scores["DataType"]             ,
+                accuracyRate          = scores["Accuracy"]            ,
+                infoOmitted           = scores["InfoOmitted"]         ,
             ))
 
-            # accumulate
-            for k in keys:
-                overall_sum[k] += scores[k] / n
+            # accumulate only the *core* metrics
+            for m in core_metrics:
+                val = scores.get(m)
+                if val is None:
+                    continue
+                overall_sums[m] += scores[m]
+                counts[m]       += 1
 
-        # build overall result
+        # compute overall averages for core metrics
         overall = AccuracyResult(
-          accuracyRate          = overall_sum["Accuracy"]          ,
-          descriptionSimilarity = overall_sum["DescriptionSimilarity"] ,
-          dataType              = overall_sum["DataType"]              ,
-          sapSimilarity         = overall_sum["SAPSimilarity"]         ,
-          mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
-          infoOmitted           = info.score_overall(entries)         ,
+            sapSimilarity         = (overall_sums["SAPSimilarity"]    / counts["SAPSimilarity"])     if counts["SAPSimilarity"]    else None,
+            mimosaSimilarity      = (overall_sums["MIMOSASimilarity"] / counts["MIMOSASimilarity"])  if counts["MIMOSASimilarity"] else None,
+            descriptionSimilarity = (overall_sums["DescriptionSimilarity"] / counts["DescriptionSimilarity"])  if counts["DescriptionSimilarity"] else None,
+            dataType              = (overall_sums["DataType"]              / counts["DataType"])               if counts["DataType"]              else None,
+            accuracyRate          = (overall_sums["Accuracy"]              / counts["Accuracy"])               if counts["Accuracy"]              else None,
+            infoOmitted           = info.score_overall(entries)        ,
         )
+        
 
         return {
             "overall": overall,
