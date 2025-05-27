@@ -187,7 +187,7 @@
                                                                 <span class="fw-medium">
                                                                     Overall Accuracy Rate
                                                                     <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip"
-                                                                       title="Overall accuracy rate of the mapping"></i>
+                                                                       title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
                                                                 </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.accuracyRate)%</span>
                                                             </div>
@@ -262,9 +262,9 @@
 
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between mb-1">
-                                                                <span class="fw-medium">Missing Fields Rate
+                                                                <span class="fw-medium">Table Coverage
                                                                     <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip"
-                                                                       title="InfoOmitted checks if there is any missing fields/mapping pair in the mapping."></i>
+                                                                       title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
                                                                 </span>
                                                                 <span>@Html.DisplayFor(m => document.accuracyResult.infoOmitted)%</span>
                                                             </div>
@@ -274,18 +274,6 @@
                                                                      aria-valuenow="@document.accuracyResult.infoOmitted" aria-valuemin="0" aria-valuemax="100"></div>
                                                             </div>
                                                         </div>
-
-                                                        @* <div class="mb-3"> *@
-                                                        @*     <div class="d-flex justify-content-between mb-1"> *@
-                                                        @*         <span class="fw-medium">Field Length Similarity</span> *@
-                                                        @*         <span>@Html.DisplayFor(m => document.accuracyResult.fieldLength)%</span> *@
-                                                        @*     </div> *@
-                                                        @*     <div class="progress"> *@
-                                                        @*         <div class="progress-bar bg-success" role="progressbar" *@
-                                                        @*              style="width: @(document.accuracyResult.fieldLength)%" *@
-                                                        @*              aria-valuenow="@document.accuracyResult.fieldLength" aria-valuemin="0" aria-valuemax="100"></div> *@
-                                                        @*     </div> *@
-                                                        @* </div> *@
                                                     }
                                                     else
                                                     {
@@ -694,7 +682,7 @@
                                     <i class="bi bi-graph-up-arrow"></i>
                                     <span>${acc.accuracyRate ?? 0}%</span>
                                 </div>
-                                <div class="fw-semibold">Overall Accuracy</div>
+                                <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
                                 <span class="badge ${badgeCls} px-3 py-2 fs-6 mt-2">
                                     ${acc.accuracyRate ?? 0}%
                                 </span>
@@ -703,23 +691,23 @@
                                 <div class="row g-2">
                                     <div class="col-12 col-sm-6">
                                         <div class="metric-label">Description Similarity</div>
-                                        <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong>${acc.descriptionSimilarity ?? 0}%</strong></div>
+                                        <div class="metric-value"><i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i> <strong>${acc.descriptionSimilarity ?? 0}%</strong></div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="metric-label">MIMOSA Similarity</div>
-                                        <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong>${acc.mimosaSimilarity ?? 0}%</strong></div>
+                                        <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> <strong>${acc.mimosaSimilarity ?? 0}%</strong></div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="metric-label">Data Type Similarity</div>
-                                        <div class="metric-value"><i class="bi bi-list-check"></i> <strong>${acc.dataType ?? 0}%</strong></div>
+                                        <div class="metric-value"><i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i> <strong>${acc.dataType ?? 0}%</strong></div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="metric-label">SAP Similarity</div>
-                                        <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong>${acc.sapSimilarity ?? 0}%</strong></div>
+                                        <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> <strong>${acc.sapSimilarity ?? 0}%</strong></div>
                                     </div>                                    
                                     <div class="col-12 col-sm-6 ms-auto">
-                                        <div class="metric-label">Missing Fields Rate</div>
-                                        <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong>${acc.infoOmitted ?? 0}%</strong></div>
+                                        <div class="metric-label">Table Coverage</div>
+                                        <div class="metric-value"><i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i> <strong>${acc.infoOmitted ?? 0}%</strong></div>
                                     </div>
                                 </div>
                             </div>
@@ -738,31 +726,31 @@
                         <div class="row g-1">
                             <div class="col-6 col-md-4 mb-1">
                                 <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-file-earmark-text"></i> Desc. Sim.</span>
+                                    <span class="metric-label"><i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i> Desc. Sim.</span>
                                     <span class="metric-value">${acc.descriptionSimilarity ?? 0}%</span>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4 mb-1">
                                 <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>
+                                    <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
                                     <span class="metric-value">${acc.sapSimilarity ?? 0}%</span>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4 mb-1">
                                 <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-diagram-3"></i> MIMOSA Sim.</span>
+                                    <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
                                     <span class="metric-value">${acc.mimosaSimilarity ?? 0}%</span>
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 mb-1">
                                 <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
+                                    <span class="metric-label"><i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i> Data Type</span>
                                     <span class="metric-value">${acc.dataType ?? 0}%</span>
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 mb-1">
                                 <div class="accuracy-metric-box">
-                                    <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
+                                    <span class="metric-label"><i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title=" At an single mapping level it performs same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric."></i> Table Coverage</span>
                                     <span class="metric-value">${acc.infoOmitted ?? 0}%</span>
                                 </div>
                             </div>
