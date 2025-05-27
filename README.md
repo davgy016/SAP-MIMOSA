@@ -230,7 +230,17 @@ Content-Type: application/json
 - **CSV Import Issues:**
    - If you are unable to import a CSV file, double-check the header names and file formatting, it should match following header names: MIMOSA_EntityName, MIMOSA_FieldName, MIMOSA_DataType, MIMOSA_FieldLength, MIMOSA_Description, SAP_EntityName, SAP_Description, SAP_DataType, SAP_FieldLength, SAP_FieldName
 - **Similarity Score Issues:**
-   - If you are getting very low similarity scores, check that your field descriptions are detailed and accurate, and that the correct models are being used for embedding and comparison.
+   - If you are getting very low similarity scores, check that your field descriptions are detailed and accurate, that the correct models are being used for embedding and comparison and that you are using technical names for the table and field names i.e AUFK instead of order master data and AUFNR instead of order number.
+
+---
+
+## Validation criteria
+- **Accuracy:** A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores. 
+- **SAP Similarity:** SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field. It does this by comparing the fields generated to a json file containing all of the SAP PM tables and fields.
+- **MIMOSA Similarity:** MIMOSA similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field. It does this by comparing the fields against the xsd schema to find if entites exist and that all the fields are contained in the entities they are listed under, it then validates the data type and description against the stored values.
+- **Description Similarity:** Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information. It uses a language model to convert each description to a number that represents its meaning and compares these number to see how simmilar they are in meaning.
+- **Data type Similarity:** DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data. It does this by converting all know data types across SAP and MIMOSA schema to their base type i.e cct:TextType from MIMOSA is converted to a string. These base types are then compared to each other to see if they are the same i.e to prevent a number from matching to a string. 
+- **Table Coverage:** Table coverage is a measure of how much of the base tables are covered by the the current mappings. At an overall level it gets the total number of fields that have a valid table name and the total number of fields for each valid table found and calculates a score with (total number of fields mapped/number of fields found across all tables found). At an single mapping level it performs this same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric. 
 
 ---
 
@@ -241,3 +251,4 @@ Content-Type: application/json
 - **Per-Mapping AI Assistance:** Each mapping pair section can have its own AI assistant to improve individual mapping fields.
 - **Semantic Search Validation:** Use semantic search algorithms for better mapping content validation.
 - **Model Fine-Tuning:** Tune the generative AI model specifically for SAP and MIMOSA CCOM data models for more accurate responses.
+- **Model Expansion:** Add more models to choose from.
