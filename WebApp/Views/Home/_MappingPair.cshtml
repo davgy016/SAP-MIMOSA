@@ -84,31 +84,69 @@
                 <div class="col-6 col-md-4 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-file-earmark-text"></i> Desc. Sim.</span>
-                        <span class="metric-value" data-metric="descriptionSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.descriptionSimilarity)%</span>
+                        @{
+                            var ds = detail?.descriptionSimilarity;
+                        }
+                        <span class="metric-value" data-metric="descriptionSimilarity" data-index="@Model.Item1">
+                            @(ds.HasValue
+                                ? ds.Value.ToString("F2") + "%"
+                                : "N/A")
+                        </span>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 mb-1">
                     <div class="accuracy-metric-box">
-                        <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>
-                        <span class="metric-value" data-metric="sapSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.sapSimilarity)%</span>
+                        <span class="metric-label"><i class="bi bi-diagram-2"></i> SAP Sim.</span>                        
+                        @{
+                            var ss = detail?.sapSimilarity;
+                        }
+                        <span class="metric-value" data-metric="sapSimilarity" data-index="@Model.Item1">
+                            @(ss.HasValue
+                                ? ss.Value.ToString("F2") + "%"
+                                : "N/A")
+                        </span>                        
                     </div>
                 </div>
                 <div class="col-6 col-md-4 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-diagram-3"></i> MIMOSA Sim.</span>
-                        <span class="metric-value" data-metric="mimosaSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.mimosaSimilarity)%</span>
+                        @{
+                            var ms = detail?.mimosaSimilarity;
+                        }
+                        <span class="metric-value" data-metric="mimosaSimilarity" data-index="@Model.Item1">
+                            @(ms.HasValue
+                                ? ms.Value.ToString("F2") + "%"
+                                : "N/A")
+                        </span>
+
                     </div>
                 </div>
                 <div class="col-6 col-md-6 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-list-check"></i> Data Type</span>
-                        <span class="metric-value" data-metric="dataType" data-index="@Model.Item1">@Html.DisplayFor(m => detail.dataType)%</span>
+                        @{
+                            var dt = detail?.dataType;
+                        }
+                        <span class="metric-value" data-metric="dataType" data-index="@Model.Item1">
+                            @(dt.HasValue
+                                ? dt.Value.ToString("F2") + "%"
+                                : "N/A")
+                        </span>
+
                     </div>
                 </div>
                 <div class="col-6 col-md-6 mb-1">
                     <div class="accuracy-metric-box">
                         <span class="metric-label"><i class="bi bi-exclamation-circle"></i> Mis. Field</span>
-                        <span class="metric-value" data-metric="infoOmitted" data-index="@Model.Item1">@Html.DisplayFor(m => detail.infoOmitted)%</span>
+                        @{
+                            var io = detail?.infoOmitted;
+                        }
+                        <span class="metric-value" data-metric="infoOmitted" data-index="@Model.Item1">
+                            @(io.HasValue
+                                ? io.Value.ToString("F2") + "%"
+                                : "N/A")
+                        </span>
+
                     </div>
                 </div>               
             </div>
