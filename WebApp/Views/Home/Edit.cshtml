@@ -27,7 +27,9 @@
                             <i class="bi bi-graph-up-arrow"></i>
                             <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
                         </div>
-                        <div class="fw-semibold">Overall Accuracy</div>
+                        <div class="fw-semibold">
+                            Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                    </div>
                         <span id="accuracy-badge" class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
                             @if (Model?.accuracyResult?.accuracyRate < 35)
                             {
@@ -48,24 +50,34 @@
                         <div class="row g-2">
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">Description Similarity</div>
-                                <div class="metric-value"><i class="bi bi-file-earmark-text"></i> <strong data-metric="descriptionSimilarity">@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                                <div class="metric-value">
+                                    <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"> </i>
+                                    <strong data-metric="descriptionSimilarity">@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">MIMOSA Similarity</div>
-                                <div class="metric-value"><i class="bi bi-diagram-3"></i> <strong data-metric="mimosaSimilarity">@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                                <div class="metric-value">
+                                    <i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                    <strong data-metric="mimosaSimilarity">@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">Data Type Similarity</div>
-                                <div class="metric-value"><i class="bi bi-list-check"></i> <strong data-metric="dataType">@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                                <div class="metric-value">
+                                    <i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                    <strong data-metric="dataType">@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="metric-label">SAP Similarity</div>
-                                <div class="metric-value"><i class="bi bi-diagram-2"></i> <strong data-metric="sapSimilarity">@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                                <div class="metric-value">
+                                    <i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                    <strong data-metric="sapSimilarity">@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
                             </div>
                            
                             <div class="col-12 col-sm-6 ms-auto">
-                                <div class="metric-label">Info Omitted</div>
-                                <div class="metric-value"><i class="bi bi-exclamation-circle"></i> <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                                <div class="metric-label">Table Coverage</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
+                                    <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
                             </div>
                         </div>
                     </div>
