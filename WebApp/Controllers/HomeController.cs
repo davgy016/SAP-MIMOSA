@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using SAP_MIMOSAapp.Models;
 using System.Net.Http.Json;
+using System;
 
 namespace SAP_MIMOSAapp.Controllers
 {
@@ -338,8 +339,10 @@ namespace SAP_MIMOSAapp.Controllers
                         }
                     }
                 }
-
+                                
                 updatedDocument.prompts.Add("Modified Manually");
+                updatedDocument.createdAt = DateTime.Now;
+                updatedDocument.promptHistory?.Add(new promptEntry { text = "Modified Manually", createdAt = DateTime.Now });
 
                 // Send only the updated document to the correct endpoint
                 var json = JsonSerializer.Serialize(updatedDocument);

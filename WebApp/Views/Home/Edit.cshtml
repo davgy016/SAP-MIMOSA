@@ -143,7 +143,27 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
+        @if (Model?.prompts != null && Model.prompts.Any())
+        {
+            <div>
+                <h5>Prompt History</h5>
+                <ul>
+                    @for (int i = 0; i < Model.prompts.Count; i++)
+                    {
+                        <li>@Model.prompts[i]</li>
+                        <input type="hidden" name="prompts[@i]" value="@Model.prompts[i]" />
+                    }
+                </ul>
+            </div>
+        }
+        @if (Model?.promptHistory != null && Model.promptHistory.Any())
+        {
+            @for (int i = 0; i < Model.promptHistory.Count; i++)
+            {
+                <input type="hidden" name="promptHistory[@i].text" value="@Model.promptHistory[i].text" />
+                <input type="hidden" name="promptHistory[@i].createdAt" value="@Model.promptHistory[i].createdAt?.ToString("yyyy-MM-dd'T'HH:mm:ss")" />
+            }
+        }
         <input type="hidden" asp-for="accuracyResult.accuracyRate" />
         <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
         <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
