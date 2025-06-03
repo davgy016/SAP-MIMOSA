@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using SAP_MIMOSAapp.Models;
 using System.Net.Http.Json;
+using System;
 
 namespace SAP_MIMOSAapp.Controllers
 {
@@ -69,6 +70,18 @@ namespace SAP_MIMOSAapp.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMappingById(string mapID)
+        {
+            if (string.IsNullOrEmpty(mapID))
+                return BadRequest("mapID is required");
+            var response = await _httpClient.GetAsync($"http://127.0.0.1:8000/workorders/{mapID}");
+            if (!response.IsSuccessStatusCode)
+                return NotFound();
+            var json = await response.Content.ReadAsStringAsync();
+            return Content(json, "application/json");
         }
 
         // Save MappingDocument to temp file
@@ -338,8 +351,10 @@ namespace SAP_MIMOSAapp.Controllers
                         }
                     }
                 }
-
+                                
                 updatedDocument.prompts.Add("Modified Manually");
+                updatedDocument.createdAt = DateTime.Now;
+                updatedDocument.promptHistory?.Add(new promptEntry { text = "Modified Manually", createdAt = DateTime.Now });
 
                 // Send only the updated document to the correct endpoint
                 var json = JsonSerializer.Serialize(updatedDocument);
@@ -664,8 +679,7 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 return Json(new { success = false, message = "Failed to fetch historical data." });
             }
-            var json = await response.Content.ReadAsStringAsync();
-            // You may want to deserialize to List<MappingDocument> if you want strong typing
+            var json = await response.Content.ReadAsStringAsync();          
             return Content(json, "application/json");
         }
     }
