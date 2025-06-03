@@ -121,7 +121,8 @@ class MimosaChecker:
 
     
     def _checkDataType(self, element, expected):
-        if expected in element.get("type"):
+        field_type = element.get("type")
+        if field_type is not None and expected in field_type:
             return True
         else:
             return False
