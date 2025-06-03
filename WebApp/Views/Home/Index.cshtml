@@ -420,17 +420,32 @@
                                     <button class="btn btn-link d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#notesCollapse" aria-expanded="false" aria-controls="notesCollapse" style="text-decoration:none;">
                                         <span class="fw-bold">Note</span>
                                         <span class="ms-2">
-                                            <i class="bi bi-chevron-down" id="notesArrow" style="transition: transform 0.3s;"></i>
+                                            <i class="bi bi-chevron-right" id="notesArrow" style="transition: transform 0.3s;"></i>
                                         </span>
                                     </button>
                                     <div class="collapse" id="notesCollapse">
-                                        @{
-                                            var allNotes = string.Join(
-                                            "\n---\n",
-                                            document.mappings.Select(m => (m.sap.notes ?? "") + (string.IsNullOrWhiteSpace(m.sap.notes) || string.IsNullOrWhiteSpace(m.mimosa.notes) ? "" : "\n") + (m.mimosa.notes ?? ""))
-                                            );
+                                        @{                                           
+                                            var notesList = new System.Text.StringBuilder();
+                                            int idx = 1;
+                                            foreach (var m in document.mappings)
+                                            {
+                                                var sapField = m.sap?.fieldName ?? "";
+                                                var mimosaField = m.mimosa?.fieldName ?? "";
+                                                var sapNotes = m.sap?.notes;
+                                                var mimosaNotes = m.mimosa?.notes;
+                                                if (!string.IsNullOrWhiteSpace(sapNotes) || !string.IsNullOrWhiteSpace(mimosaNotes))
+                                                {
+                                                    notesList.AppendLine($"Mapping Pair {idx}: SAP Field: {sapField} | MIMOSA Field: {mimosaField}");
+                                                    if (!string.IsNullOrWhiteSpace(sapNotes))
+                                                        notesList.AppendLine($"  SAP Notes: {sapNotes}");
+                                                    if (!string.IsNullOrWhiteSpace(mimosaNotes))
+                                                        notesList.AppendLine($"  MIMOSA Notes: {mimosaNotes}");
+                                                    notesList.AppendLine("---");
+                                                }
+                                                idx++;
+                                            }
                                         }
-                                        <textarea class="form-control mt-2" rows="10" readonly>@allNotes</textarea>
+                                        <textarea class="form-control mt-2" rows="10" readonly>@notesList</textarea>
                                     </div>
                                 </div>
                             </div>
