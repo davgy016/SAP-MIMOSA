@@ -29,7 +29,7 @@
                     <div class="card-body bg-glassmorph">
                         <div class="row align-items-end g-3">
                             <div class="col-md-7">
-                                <form id="mappingSearchForm" method="get" action="@Url.Action("Index", "Home")">
+                                <form id="mappingSearchForm" method="get" asp-action="Index">
                                     <div class="d-flex align-items-center mb-4 gap-3">
                                         <div class="position-relative flex-grow-1">
                                             <input type="text" id="searchInput" name="SearchInput" class="form-control search-input px-4 py-3 shadow-sm pe-5" placeholder="" value="@(string.IsNullOrEmpty(Model.SearchByLLM) ? Model.SearchByEntityName : Model.SearchByLLM)" />
@@ -162,6 +162,8 @@
                                                             {
                                                                 <li class="list-group-item bg-transparent prompt-history-item d-flex justify-content-between align-items-center py-2 px-2"
                                                                     data-createdat="@prompt.createdAt?.ToString("o")"
+                                                                    data-mapid="@document.mapID"
+                                                                    data-source="@((prompt.text == "Modified Manually") ? "sapmimosa" : "raw")"
                                                                     style="cursor:pointer; border-radius: 0.4rem; transition: background 0.15s; color:#0d6efd;">
                                                                     <span class="d-flex align-items-center">
                                                                         <i class="bi bi-chat-left-text me-2 text-primary"></i>
@@ -638,12 +640,18 @@
             document.querySelectorAll('.prompt-history-item').forEach(function(item) {
                 item.addEventListener('click', async function() {
                     const createdAt = this.getAttribute('data-createdat');
+                    const mapID = this.getAttribute('data-mapid');
                     if (!createdAt) return;
                     const modal = new bootstrap.Modal(document.getElementById('historyModal'));
                     document.getElementById('historyModalBody').innerHTML = 'Loading...';
                     modal.show();
                     try {
-                        const resp = await fetch(`/Home/FetchHistoricalData?createdDate=${encodeURIComponent(createdAt)}`);
+                        let resp;
+                        if (mapID) {
+                            resp = await fetch(`/Home/GetMappingById?mapID=${mapID}`);
+                        } else {
+                            resp = await fetch(`/Home/FetchHistoricalData?createdDate=${encodeURIComponent(createdAt)}`);
+                        }
                         if (resp.ok) {
                             const data = await resp.json();
                             document.getElementById('historyModalBody').innerHTML = renderHistoricalCardView(data);
@@ -762,14 +770,23 @@
 
             // Main render function
             function renderHistoricalCardView(dataArr) {
-                if (!Array.isArray(dataArr) || dataArr.length === 0) {
+                let doc;
+                if (Array.isArray(dataArr)) {
+                    if (dataArr.length === 0) {
+                        return '<div class="alert alert-warning">No historical data found for this prompt.</div>';
+                    }
+                    doc = dataArr[0];
+                } else if (typeof dataArr === 'object' && dataArr !== null) {
+                    doc = dataArr;
+                } else {
                     return '<div class="alert alert-warning">No historical data found for this prompt.</div>';
                 }
-                const doc = dataArr[0];
                 let html = '';
 
                 // Overall accuracy
-                html += renderAccuracyMetrics(doc.accuracyResult, 'Overall Accuracy Metrics');
+                if (doc.accuracyResult) {
+                    html += renderAccuracyMetrics(doc.accuracyResult, 'Overall Accuracy Metrics');
+                }               
 
                 // Mapping pairs
                 if (doc.mappings && Array.isArray(doc.mappings)) {
