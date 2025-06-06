@@ -38,7 +38,7 @@ class InfoOmitted:
             for field, meta in tbl_meta.items()
         }
 
-    def score_overall(self, mapping: list) -> float:
+    def score_overall(self, mapping: list) -> dict:
         # Convert to set to remove duplicates based on FieldMapping.__eq__
         unique_mappings = set(mapping)
         countFields = 0
@@ -46,19 +46,31 @@ class InfoOmitted:
         #a list of all the different entities
         entities = []
         realEntities = []
+        fields = []
         for map in unique_mappings:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
+                fields.append(map.sap.fieldName)
         
         #a count of the number of fields across all entities
         totalFields = 0
 
+        entityOutput = {}
         for entity in entities:
             entity = entity.upper()
             if entity in self.schema:
                 tableFields = self.schema[entity]
                 realEntities.append(entity)
                 totalFields += len(tableFields)
+                entityOutput[entity] = []
+                # get all of the tables that aren't covered and add them to entityOutput
+                for field in tableFields:
+                    if field not in fields:
+                        fieldInfo = {"FieldName":field}
+                        for col in tableFields[field]:
+                            fieldInfo[col] = tableFields[field][col]
+                        entityOutput[entity].append(fieldInfo)
+
 
         for map in unique_mappings:
             if map.sap.entityName in realEntities:
@@ -67,10 +79,12 @@ class InfoOmitted:
 
         if totalFields == 0:
             return 0
-
-        return countFields/totalFields
+        
+            
+        output = {"Score":countFields/totalFields,"Tables":entityOutput}
+        return output
     
-    def score_single(self, map: MappingEntry, mappings: list) -> float:
+    def score_single(self, map: MappingEntry, mappings: list) -> dict:
         countFields = 0 
         entity = map.sap.entityName.upper()
 
@@ -88,4 +102,4 @@ class InfoOmitted:
         
         print(f"Fields counted in single score {countFields} for entity {entity} with total fields {totalFields}")
 
-        return countFields/totalFields
+        return {"Score":countFields/totalFields}

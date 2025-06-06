@@ -89,7 +89,7 @@ class AccuracyResult(BaseModel):
     sapSimilarity: Optional[float] = None
     dataType: Optional[float] = None
     infoOmitted: Optional[float] = None
-    fieldLength: Optional[float] = None
+    fieldLength: Optional[dict] = None
 
 class promptEntry(BaseModel):
     text: Optional[str] = ""
@@ -110,3 +110,4 @@ class Mapping(BaseModel):
 
 class MappingQuery(RootModel[List[Mapping]]):
     pass
+
