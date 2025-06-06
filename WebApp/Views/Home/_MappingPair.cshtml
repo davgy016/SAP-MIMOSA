@@ -1,5 +1,14 @@
 @model Tuple<int, SAP_MIMOSAapp.Models.MappingPair>
 <div class="mapping-pair mb-4 border rounded p-3 position-relative">
+    @{
+        var accuracyDetails = ViewData["AccuracyaccuracySingleMappingPair"] as List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>;
+        int idx = Model.Item1;
+        SAP_MIMOSAapp.Models.AccuracyResultViewModel? detail = null;
+        if (accuracyDetails != null && idx >= 0 && idx < accuracyDetails.Count)
+        {
+            detail = accuracyDetails[idx];
+        }
+    }
     <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
         <i class="bi bi-x-lg"></i> Remove
     </button>
@@ -32,7 +41,7 @@
             </div>
             <div class="mb-2">
                 <label class="form-label">Notes</label>
-                <textarea class="form-control" name="mappings[@Model.Item1].sap.notes" required rows="2">@Model.Item2?.sap?.notes</textarea>
+                <textarea class="form-control" name="mappings[@Model.Item1].sap.notes" rows="2">@Model.Item2?.sap?.notes</textarea>
             </div>
         </div>
         <div class="col-md-6">
@@ -59,12 +68,58 @@
             </div>
             <div class="mb-2">
                 <label class="form-label">Field Length</label>
-                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.fieldLength" required value="@Model.Item2?.mimosa?.fieldLength" />
+                <input type="text" class="form-control" name="mappings[@Model.Item1].mimosa.fieldLength" value="@Model.Item2?.mimosa?.fieldLength" />
             </div>
             <div class="mb-2">
                 <label class="form-label">Notes</label>
-                <textarea class="form-control" name="mappings[@Model.Item1].mimosa.notes" required rows="2">@Model.Item2?.mimosa?.notes</textarea>
+                <textarea class="form-control" name="mappings[@Model.Item1].mimosa.notes" rows="2">@Model.Item2?.mimosa?.notes</textarea>
             </div>
         </div>
     </div>
+    @if (detail != null)
+    {
+        <div class="mt-2 pt-2 accuracy-details-metrics">
+            <div class="fw-semibold mb-2 text-primary"><i class="bi bi-bar-chart"></i> Mapping Pair Accuracy Details</div>
+            <div class="row g-1">
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label">
+                            <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i> Desc. Sim.
+                        </span>
+                        <span class="metric-value" data-metric="descriptionSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.descriptionSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label">
+                            <i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.
+                        </span>
+                        <span class="metric-value" data-metric="sapSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.sapSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label">
+                            <i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.
+                        </span>
+                        <span class="metric-value" data-metric="mimosaSimilarity" data-index="@Model.Item1">@Html.DisplayFor(m => detail.mimosaSimilarity)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-6 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label">
+                            <i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i> Data Type
+                        </span>
+                        <span class="metric-value" data-metric="dataType" data-index="@Model.Item1">@Html.DisplayFor(m => detail.dataType)%</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-6 mb-1">
+                    <div class="accuracy-metric-box">
+                        <span class="metric-label"><i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title=" At an single mapping level it performs same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric."></i> Table Coverage</span>
+                        <span class="metric-value" data-metric="infoOmitted" data-index="@Model.Item1">@Html.DisplayFor(m => detail.infoOmitted)%</span>
+                    </div>
+                </div>               
+            </div>
+        </div>
+    }
 </div>

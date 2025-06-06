@@ -14,7 +14,7 @@
         </div>
     }
 
-    
+
 
     <form asp-action="Create" method="post">
         @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
@@ -27,48 +27,215 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <input asp-for="prompt" type="text" id="aiPrompt" class="form-control" placeholder="Enter for initial mapping" style="max-width: 450px;" />
-                        <select asp-for="LLMType" id="aiLLMType" class="form-select" style="max-width: 150px;">
-                            @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button type="button" class="btn  btn-primary" id="askAiBtn">Ask AI</button>
-                        <div class="d-flex align-items-center gap-2 ms-auto">
-                            <div class="input-group input-group-sm" style="width: auto;">
-                                <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">
-                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary d-flex align-items-center gap-1 mb-0">
-                                    <i class="bi bi-upload"></i> <span>Choose CSV</span>
-                                </label>
-                            </div>
+                    <div class="ai-mapping-search-area mb-4">
+                        @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
+                        <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
+                            <i class="bi bi-search fs-4 text-primary"></i>
+                            <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" readonly data-bs-toggle="modal" data-bs-target="#promptModal" />
 
-                            <button type="button" class="btn btn-success d-flex align-items-center gap-1" id="importCsvBtn">Import</button>
+                            <!-- Prompt Modal -->
+                            <div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="promptModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="border: 2px solid #00e6a6; background-color: #00e6a6; box-shadow: 0 4px 32px 10px #00e6a6aa;">
+                                            <h5 class="modal-title" id="promptModalLabel">Enter Prompt</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="modalSystemPrompt" class="form-label fw-bold">System Prompt (default, you can edit):</label>
+                                            <textarea id="modalSystemPrompt" class="form-control mb-3" rows="20" style="resize:vertical;"></textarea>
+                                            <label for="modalPromptInput" class="form-label fw-bold">Your User Prompt:</label>
+                                            <textarea id="modalPromptInput" class="form-control" rows="3" placeholder="Enter your prompt to generate  mapping" style="resize:vertical;"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4 py-2 d-flex align-items-center gap-2 fw-semibold" data-bs-dismiss="modal" style="border: 2px solid #00e6a6; background: #fff; color: #1976D2; box-shadow: 0 2px 10px 0 #00e6a622;">
+                                                <i class="bi bi-x-circle fs-5"></i> Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-gradient-glow rounded-pill px-4 py-2 d-flex align-items-center gap-2 fw-bold" id="savePromptBtn" style="background: linear-gradient(90deg,#00e6a6 60%,#1976D2 100%); color: #fff; border: none; box-shadow: 0 0 18px 2px #00e6a6cc, 0 0 8px 2px #1976D2aa;">
+                                                <i class="bi bi-save fs-5"></i> Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden system prompt input, gets value from Prompt Modal and added in request body. check script below -->
+                            <input type="hidden" name="system_prompt" id="systemPromptHidden" />
+
+                            <select asp-for="LLMType" id="aiLLMType" class="form-select border-0 bg-transparent fs-6 px-2" style="margin-left: 1.5rem; max-width: 120px; background: none; box-shadow: none; outline: none;">
+                                @foreach (var item in SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-gradient-glow d-flex align-items-center gap-1 px-4 py-2 fw-bold fs-5" id="askAiBtn" style="margin-left: 0.8rem; box-shadow: 0 0 18px 2px #00e6a6cc, 0 0 8px 2px #1976D2aa; border-radius: 2rem; background: linear-gradient(90deg,#00e6a6 60%,#1976D2 100%); color: #fff; border: none;">
+                                <i class="bi bi-stars"></i> Ask AI
+                            </button>
+                            <div class="vr mx-4 d-none d-md-block" style="height: 2.5rem;"></div>
+                            <div class="d-flex align-items-center gap-2 ms-auto upload-section">
+                                <input type="file" class="form-control d-none" id="csvFileInput" accept=".csv">
+                                <label for="csvFileInput" id="csvLabel" class="btn btn-outline-secondary align-items-center gap-1 mb-0 rounded-pill px-3 py-2" style="background: linear-gradient(90deg,#fff 60%,#00e6a6 100%); border: 1.5px solid #00e6a6; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <i class="bi bi-upload"></i>
+                                    <span id="csvLabelText" style="display: inline-block; vertical-align: middle;">Choose CSV</span>
+                                </label>
+                                <button type="button" class="btn btn-success d-flex align-items-center gap-1 rounded-pill px-4 py-2 fw-bold" id="importCsvBtn" style="box-shadow: 0 0 10px 2px #00e6a6aa;">
+                                    <i class="bi bi-box-arrow-in-down"></i> Import
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="d-flex ms-auto">
                         <label class="small text-muted">
-                            <input type="checkbox" name="checkBx" id="checkBx" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "") /> Use Existing Mapping
+                            <input type="checkbox" name="checkBx" id="checkBx" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "") /> Re-use Existing Mapping
                         </label>
+                        <a href="@Url.Action("Create", "Home")" class="btn btn-outline-danger ms-auto  d-flex align-items-center gap-1 px-4 py-2 fw-bold fs-5 rounded-pill ms-2" id="clearPageBtn" style="border-width: 2px;">
+                            <i class="bi bi-eraser fs-4"></i> Clear
+                        </a>
                     </div>
                     <span asp-validation-for="LLMType" class="text-danger mt-1 d-block"></span>
-                    <div id="aiResponseArea" class="mb-2"></div>
+                    <div>
+                        <div id="aiResponseArea" class="mb-2"></div>
+                        <div id="importLoading" class=" mb-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
         @* Metrics alert is always present but hidden if no metrics *@
-        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null) ? "block" : "none")">
-            <div class="section"><strong>Prompt:</strong> @Model?.prompt</div>
-            Accuracy: <span class="badge @(Model?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success"))">
-                <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong></span> <br />
-            Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-            Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+        <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyResult?.accuracyRate != null) ? "block" : "none")">
+
+            @if (Model?.prompts != null && Model.prompts.Any())
+            {
+                <div class="section">
+                    <h5>
+                        Prompt History
+                        <button type="button" id="historicalData" class="btn btn-link p-0 ms-3" title="View Historical Data" data-bs-toggle="tooltip" style="border:none; background:none;">
+                            <span style="display:inline-block; background: linear-gradient(135deg, #6f42c1 30%, #0d6efd 100%); border-radius:50%; box-shadow:0 0 16px 4px #0d6efd77; width:40px; height:40px; position:relative; transition:box-shadow 0.3s;">
+                                <i class="bi bi-file-earmark-text fs-3 text-white position-absolute top-50 start-50 translate-middle"></i>
+                                <i class="bi bi-clock-fill fs-5 text-warning position-absolute bottom-0 end-0" style="z-index:3; transform:translate(25%,-25%);"></i>
+                            </span>
+                        </button>
+                    </h5>
+
+                    <!-- Historical Data Modal -->
+                    <div class="modal fade" id="historicalDataModal" tabindex="-1" aria-labelledby="historicalDataModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="historicalDataModalLabel">Historical Data Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="historicalDataDetails"></div>
+                                    <!-- Historical data modal script in Scripts section below -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model?.promptHistory != null && Model.promptHistory.Any())
+                    {
+                        <ul>
+                            @foreach (var entry in Model.promptHistory)
+                            {
+                                <li>
+                                    <strong>@entry.text</strong>
+                                    <small class="text-muted">(@entry.createdAt?.ToString("yyyy-MM-dd HH:mm:ss"))</small>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No prompt history available.</p>
+                    }
+                </div>
+            }
+
+            <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+                <div class="card-body p-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                            <div class="display-5 fw-bold text-primary">
+                                <i class="bi bi-graph-up-arrow"></i>
+                                <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
+                            </div>
+                            <div class="fw-semibold">
+                                Overall Accuracy  
+                                <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                            </div>
+                            <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
+                                @if (Model?.accuracyResult?.accuracyRate < 35)
+                                {
+                                    <i class="bi bi-emoji-frown"></i>
+                                }
+                                @if (Model?.accuracyResult?.accuracyRate >= 35 && Model?.accuracyResult?.accuracyRate < 70)
+                                {
+                                    <i class="bi bi-emoji-neutral"></i>
+                                }
+                                @if (Model?.accuracyResult?.accuracyRate >= 70)
+                                {
+                                    <i class="bi bi-emoji-smile"></i>
+                                }
+                                @Html.DisplayFor(m => m.accuracyResult.accuracyRate)%
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <div class="row g-2">
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Description Similarity</div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip"
+                                           title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">MIMOSA Similarity</div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-diagram-3" data-bs-toggle="tooltip"
+                                           title="MIMOSA similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">Data Type Similarity</div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-list-check" data-bs-toggle="tooltip"
+                                           title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="metric-label">SAP Similarity</div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-diagram-2" data-bs-toggle="tooltip"
+                                           title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
+                                    </div>
+                                </div>                               
+                                <div class="col-12 col-sm-6 ms-auto">
+                                    <div class="metric-label">Table Coverage</div>
+                                    <div class="metric-value">
+                                        <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip"
+                                           title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
+                                        <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        
+
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Mapping Pairs</h5>
+                <h5>
+                    Mapping Pairs
+                    @if(Model?.mappings.Count > 0){
+                        <small class=" text-muted fs-5 p-2"><i>(Total: @Model?.mappings.Count) </i></small>
+                    }
+                </h5>
                 <div class="d-flex align-items-center gap-2">
 
                     <button type="button" class="btn btn-sm btn-primary" id="addMapping">Add Mapping</button>
@@ -80,11 +247,11 @@
                 <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
                     @{
                         var mappingIndex = 0;
+                        // Pass accuracySingleMappingPair to the partial via ViewData
+                        ViewData["AccuracyaccuracySingleMappingPair"] = Model.accuracySingleMappingPair;
                         foreach (var mapping in Model.mappings)
                         {
-                            // Render all existing mappings when the page loads,
-                            // such as when editing or after a failed form submission.
-                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping))
+                            @await Html.PartialAsync("_MappingPair", Tuple.Create(mappingIndex, mapping), new ViewDataDictionary(ViewData))
                             mappingIndex++;
                         }
                     }
@@ -94,12 +261,31 @@
 
         @* <input type="hidden" asp-for="prompt" /> *@
         @* <input type="hidden" asp-for="LLMType" /> *@
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        <input type="hidden" asp-for="createdAt" />
+        <input type="hidden" asp-for="accuracyResult.accuracyRate" />
+        <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.sapSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.dataType" />
+        <input type="hidden" asp-for="accuracyResult.fieldLength" />
+        <input type="hidden" asp-for="accuracyResult.infoOmitted" />
+        <input type="hidden" id="prompts" asp-for="prompts" value="@(Model?.prompts != null ? string.Join(",", Model.prompts) : "")" />
+
+        <!-- Hidden promptHistory -->
+        @{
+            var promptHistoryJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.promptHistory ?? new List<SAP_MIMOSAapp.Models.promptEntry>());
+        }
+        <input type="hidden" id="promptHistoryJson" name="promptHistoryJson" value='@promptHistoryJson' />
+
+        <!-- Hidden accuracySingleMappingPair -->
+        @{
+            var accuracySingleMappingPairJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>());
+        }
+        <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@accuracySingleMappingPairJson' />
+
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary" @(Model?.mappings == null || Model.mappings.Count == 0 ? "disabled" : "")>Create</button>
         </div>
     </form>
 </div>
@@ -118,7 +304,7 @@
         const aiPrompt = document.getElementById('aiPrompt');
 
         mappingCheckBx.addEventListener('change', () => {
-            aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter for initial mapping";
+            aiPrompt.placeholder = mappingCheckBx.checked ? "Provide feedback to improve existing mapping" : "Enter prompt to generate initial mapping";
         });
 
 
@@ -129,6 +315,7 @@
             const askAiBtn = document.getElementById('askAiBtn');
             const aiResponseArea = document.getElementById('aiResponseArea');
 
+
             // Ask AI button
             askAiBtn?.addEventListener('click', async () => {
                 aiResponseArea.innerHTML = '';
@@ -136,46 +323,86 @@
                 const llmType = aiLLMType.value;
                 const useExisting = document.getElementById('checkBx').checked;
 
-                if (!prompt) {
-                    aiResponseArea.innerHTML = '<div class="alert alert-warning">Please enter a prompt for the AI.</div>';
+                // Alert when click AskAI btn and  llmtype and prompt are empty
+                if (!prompt || !llmType) {
+                    aiResponseArea.innerHTML = `<div class="alert alert-danger">${!prompt ? 'Please enter a prompt.' : ''}
+                    ${!prompt && !llmType ? '<br>' : ''}${!llmType ? 'Please select a model.' : ''}</div>`;
                     return;
                 }
 
+
                 const requestBody = { prompt, llmType };
+
+                // Always collect existing promptHistory from the current model (whether reusing or not)
+                const promptHistoryInput = document.getElementById('promptHistoryJson');
+                let existingPromptHistory = [];
+                if (promptHistoryInput && promptHistoryInput.value) {
+                    try {
+                        existingPromptHistory = JSON.parse(promptHistoryInput.value);
+                    } catch (e) {
+                        console.warn('Failed to parse existing promptHistory:', e);
+                        existingPromptHistory = [];
+                    }
+                }
 
                 // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request
                 if (useExisting) {
                     const mappings = [];
                     document.querySelectorAll('.mapping-pair').forEach(pair => {
-                        const mapping = {
+                        const getValue = name => pair.querySelector(`[name*="${name}"]`)?.value || "";
+
+                        mappings.push({
                             sap: {
-                                // Operator '*' means contains, finding elements whose names might include some prefix/suffix, not just exact matching
-                                platform: pair.querySelector('[name*="sap.platform"]').value,
-                                entityName: pair.querySelector('[name*="sap.entityName"]').value,
-                                fieldName: pair.querySelector('[name*="sap.fieldName"]').value,
-                                description: pair.querySelector('[name*="sap.description"]').value,
-                                dataType: pair.querySelector('[name*="sap.dataType"]').value,
-                                notes: pair.querySelector('[name*="sap.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="sap.fieldLength"]').value
+                                platform: getValue('sap.platform'),
+                                entityName: getValue('sap.entityName'),
+                                fieldName: getValue('sap.fieldName'),
+                                description: getValue('sap.description'),
+                                dataType: getValue('sap.dataType'),
+                                notes: getValue('sap.notes'),
+                                fieldLength: getValue('sap.fieldLength'),
                             },
                             mimosa: {
-                                platform: pair.querySelector('[name*="mimosa.platform"]').value,
-                                entityName: pair.querySelector('[name*="mimosa.entityName"]').value,
-                                fieldName: pair.querySelector('[name*="mimosa.fieldName"]').value,
-                                description: pair.querySelector('[name*="mimosa.description"]').value,
-                                dataType: pair.querySelector('[name*="mimosa.dataType"]').value,
-                                notes: pair.querySelector('[name*="mimosa.notes"]').value,
-                                fieldLength: pair.querySelector('[name*="mimosa.fieldLength"]').value
+                                platform: getValue('mimosa.platform'),
+                                entityName: getValue('mimosa.entityName'),
+                                fieldName: getValue('mimosa.fieldName'),
+                                description: getValue('mimosa.description'),
+                                dataType: getValue('mimosa.dataType'),
+                                notes: getValue('mimosa.notes'),
+                                fieldLength: getValue('mimosa.fieldLength'),
                             }
-                        };
-                        mappings.push(mapping);
+                        });
                     });
 
                     requestBody.mappings = mappings;
+                    requestBody.promptHistory = existingPromptHistory;
+
+                }else{
+                    requestBody.promptHistory = [];
                 }
 
+                // Read existing prompts from hidden input
+                const hiddenPromptInput = document.getElementById('prompts');
+                let existingPrompts = hiddenPromptInput?.value?.split('\n').filter(p => p.trim()) || [];
+
+                // Add the new prompt to history if improving existing mapping
+                if (useExisting) {
+                    existingPrompts.push(prompt);
+                } else {
+                    existingPrompts = [prompt];
+                }
+                // Update the hidden input value
+                if (hiddenPromptInput) {
+                    hiddenPromptInput.value = existingPrompts.join('\n');
+                }
+                requestBody.prompts = existingPrompts;
+
+
+                // Read system prompt from hidden input and include in requestBody. Fetching script of system prompt check bellow
+                const systemPromptHidden = document.getElementById('systemPromptHidden');
+                requestBody.systemPrompt = systemPromptHidden ? systemPromptHidden.value : '';
+
                 // Send request to AI
-                aiResponseArea.innerHTML = '<div class="text-danger">Mapping Loading...</div>';
+                aiResponseArea.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden"></span></div>';
                 try {
                     const resp = await fetch('/Home/AskAI', {
                         method: 'POST',
@@ -261,9 +488,10 @@
             document.getElementById('importCsvBtn')?.addEventListener('click', event => {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
-                if (!fileInput.files.length) return alert('Please select a CSV file.');
+                if (!fileInput.files.length) {return importLoading.innerHTML = '<div class="alert alert-danger">Please select a CSV file.</div>';}
                 const formData = new FormData();
                 formData.append('csvFile', fileInput.files[0]);
+                importLoading.innerHTML = '<div class="spinner-border text-success" role="status"><span class="visually-hidden"></span></div>';
                 fetch('/Home/ImportCsv', { method: 'POST', body: formData })
                     .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to import CSV.'))
                     .then(data => {
@@ -283,10 +511,268 @@
             fileInput.addEventListener('change', function () {
                 if (this.files.length > 0) {
                     labelSpan.textContent = this.files[0].name;
+                    labelSpan.title = this.files[0].name;
                 } else {
                     labelSpan.textContent = "Choose CSV";
                 }
             });
+        });
+    </script>
+
+
+    <!-- Display/fetch system prompt and assign to hidden input -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var aiPrompt = document.getElementById('aiPrompt');
+            var modalPromptInput = document.getElementById('modalPromptInput');
+            var modalSystemPrompt = document.getElementById('modalSystemPrompt');
+            var savePromptBtn = document.getElementById('savePromptBtn');
+            var promptModal = document.getElementById('promptModal');
+            var systemPromptHidden = document.getElementById('systemPromptHidden');
+
+            // When modal opens, set value to current input
+            promptModal.addEventListener('show.bs.modal', function () {
+                console.log("Modal opening: fetching system message...");
+                fetch('http://127.0.0.1:8000/api/system-message')
+                    .then(response => {
+                        console.log("API response status:", response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("System message from API:", data.system_message);
+                        if (modalSystemPrompt) {
+                            modalSystemPrompt.value = data.system_message;
+                            console.log("Assigned value to modalSystemPrompt:", modalSystemPrompt.value);
+                        } else {
+                            console.error("modalSystemPrompt is null");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Fetch error:", err);
+                    });
+                modalPromptInput.value = aiPrompt.value;
+                setTimeout(function() { modalPromptInput.focus(); }, 300);
+            });
+            // Save button: assign user/system prompts to fields only
+            savePromptBtn.addEventListener('click', function () {
+                aiPrompt.value = modalPromptInput.value;
+                systemPromptHidden.value = modalSystemPrompt.value;
+                var modal = bootstrap.Modal.getInstance(promptModal);
+                modal.hide();
+            });
+
+        });
+    </script>
+
+
+
+    <!-- Historical data modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Historical Data Modal: show and fetch logic
+            const historicalDataModal = document.getElementById('historicalDataModal');
+            if (historicalDataModal) {
+                historicalDataModal.addEventListener('show.bs.modal', async function () {
+                    const detailsDiv = document.getElementById('historicalDataDetails');
+                    detailsDiv.innerHTML = '<div class="text-center text-muted py-4">Loading...</div>';
+                    try {
+                        const resp = await fetch('/Home/FetchHistoricalData');
+                        const data = await resp.json();
+                        if (!data || data.length === 0) {
+                            detailsDiv.innerHTML = `
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-clock-history fs-1 text-primary mb-2"></i>
+                                    <div>No historical data to display yet.</div>
+                                </div>`;
+                            return;
+                        }
+                        // Sort newest first by createdAt
+                        data.sort((a, b) => {
+                            const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+                            const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+                            return dateB - dateA;
+                        });
+                        let html = '';
+                        data.forEach((entry, i) => {
+                            const collapseId = `systemMappingContent${i}`;
+
+                            let badgeClass = 'bg-success';
+                            let emoji = '<i class="bi bi-emoji-smile"></i>';
+                            if (entry.accuracyRate < 35) {
+                                badgeClass = 'bg-danger';
+                                emoji = '<i class="bi bi-emoji-frown"></i>';
+                            } else if (entry.accuracyRate < 70) {
+                                badgeClass = 'bg-warning text-dark';
+                                emoji = '<i class="bi bi-emoji-neutral"></i>';
+                            }
+                            html += `
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-1 d-flex justify-content-between align-items-center toggle-heading"
+                                        data-bs-toggle="collapse"
+                                        href="#${collapseId}"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="${collapseId}">
+                                        <span class="d-flex align-items-center">
+                                            <i class="bi bi-chevron-right me-2 toggle-icon"></i>
+                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
+                                            <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
+                                                style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
+                                            </span>
+                                        </span>
+                                        <span class="d-flex align-items-center px-2 py-1 rounded bg-light border" style="font-size:0.95em;">
+                                            <small class="text-secondary">${entry.createdAt ? new Date(entry.createdAt).toLocaleString() : 'N/A'}</small>
+                                            <span class="mx-1 text-secondary">|</span>
+                                            <small class="text-secondary">${entry.LLMType || ''}</small>
+                                        </span>
+                                    </h6>
+
+
+                                    <div class="collapse" id="${collapseId}">
+                                        <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+                                            <div class="card-body p-3">
+                                                <div class="row g-3 align-items-center">
+                                                    <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                                                        <div class="display-5 fw-bold text-primary">
+                                                            <i class="bi bi-graph-up-arrow"></i>
+                                                            <span>${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%</span>
+                                                        </div>
+                                                        <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
+                                                    </div>
+                                                    <div class="col-12 col-md-8">
+                                                        <div class="row g-2">
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Description Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i>
+                                                                <strong>${entry.accuracyResult && entry.accuracyResult.descriptionSimilarity !== undefined && entry.accuracyResult.descriptionSimilarity !== null ? entry.accuracyResult.descriptionSimilarity : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">MIMOSA Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                                                <strong>${entry.accuracyResult && entry.accuracyResult.mimosaSimilarity !== undefined && entry.accuracyResult.mimosaSimilarity !== null ? entry.accuracyResult.mimosaSimilarity : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">Data Type Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                                                <strong>${entry.accuracyResult && entry.accuracyResult.dataType !== undefined && entry.accuracyResult.dataType !== null ? entry.accuracyResult.dataType : 'N/A'}%</strong></div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-6">
+                                                                <div class="metric-label">SAP Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                                                <strong>${entry.accuracyResult && entry.accuracyResult.sapSimilarity !== undefined && entry.accuracyResult.sapSimilarity !== null ? entry.accuracyResult.sapSimilarity : 'N/A'}%</strong></div>
+                                                            </div>                                                            
+                                                            <div class="col-12 col-sm-6 ms-auto">
+                                                                <div class="metric-label">Table Coverage</div>
+                                                                <div class="metric-value"><i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
+                                                                <strong>${entry.accuracyResult && entry.accuracyResult.infoOmitted !== undefined && entry.accuracyResult.infoOmitted !== null ? entry.accuracyResult.infoOmitted : 'N/A'}%</strong></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h5>Mapping Pairs</h5>
+                                            </div>
+                                            ${Array.isArray(entry.mappings) && entry.mappings.length > 0 ?
+                                                `<div class="card-body" style="max-height: 800px; overflow-y: auto;">` +
+                                                entry.mappings.map((m, idx) => {
+                                                    let pairAcc = (entry.accuracySingleMappingPair && entry.accuracySingleMappingPair[idx]) || null;
+                                                    return `
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6 border-end">
+                                                                        <h6 class="fw-bold text-primary mb-2">SAP</h6>
+                                                                        <div><strong>Entity:</strong> ${m.sap.entityName || ''}</div>
+                                                                        <div><strong>Field:</strong> ${m.sap.fieldName || ''}</div>
+                                                                        <div><strong>Description:</strong> ${m.sap.description || ''}</div>
+                                                                        <div><strong>Type:</strong> ${m.sap.dataType || ''}</div>
+                                                                        <div><strong>Length:</strong> ${m.sap.fieldLength || ''}</div>
+                                                                        <div><strong>Notes:</strong> ${m.sap.notes || ''}</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <h6 class="fw-bold text-success mb-2">MIMOSA</h6>
+                                                                        <div><strong>Entity:</strong> ${m.mimosa.entityName || ''}</div>
+                                                                        <div><strong>Field:</strong> ${m.mimosa.fieldName || ''}</div>
+                                                                        <div><strong>Description:</strong> ${m.mimosa.description || ''}</div>
+                                                                        <div><strong>Type:</strong> ${m.mimosa.dataType || ''}</div>
+                                                                        <div><strong>Length:</strong> ${m.mimosa.fieldLength || ''}</div>
+                                                                        <div><strong>Notes:</strong> ${m.mimosa.notes || ''}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mt-3">
+                                                                    <div class="col-12">
+                                                                        <div class="bg-light rounded p-2">
+                                                                            <span class="fw-semibold">Mapping Pair Accuracy Metrics:</span><br>
+                                                                            ${pairAcc ? `
+                                                                                <div class="mt-2 pt-2 accuracy-details-metrics">
+                                                                                    <div class="row g-1">
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"></i> Desc. Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.descriptionSimilarity !== undefined && pairAcc.descriptionSimilarity !== null ? pairAcc.descriptionSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.sapSimilarity !== undefined && pairAcc.sapSimilarity !== null ? pairAcc.sapSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-4 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
+                                                                                                <span class="metric-value">${pairAcc.mimosaSimilarity !== undefined && pairAcc.mimosaSimilarity !== null ? pairAcc.mimosaSimilarity : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-6 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i> Data Type</span>
+                                                                                                <span class="metric-value">${pairAcc.dataType !== undefined && pairAcc.dataType !== null ? pairAcc.dataType : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-6 col-md-6 mb-1">
+                                                                                            <div class="accuracy-metric-box">
+                                                                                                <span class="metric-label"><i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title=" At an single mapping level it performs same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric."></i> Table Coverage</span>
+                                                                                                <span class="metric-value">${pairAcc.infoOmitted !== undefined && pairAcc.infoOmitted !== null ? pairAcc.infoOmitted : 'N/A'}%</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                       
+                                                                                    </div>
+                                                                                </div>
+                                                                            ` : '<span class="text-muted">No pair accuracy results.</span>'}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }).join('') +
+                                                `</div>` :
+                                                `<div class="text-center text-muted">No mappings available.</div>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                        detailsDiv.innerHTML = html;
+                    } catch (e) {
+                        detailsDiv.innerHTML = `<div class="alert alert-danger">Failed to load historical data.</div>`;
+                    }
+                });
+            }
+            // Historical data Modal open handler
+            const historicalDataBtn = document.getElementById('historicalData');
+            if (historicalDataBtn) {
+                historicalDataBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var modal = new bootstrap.Modal(document.getElementById('historicalDataModal'));
+                    modal.show();
+                });
+            }
         });
     </script>
 }

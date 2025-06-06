@@ -1,3 +1,5 @@
+# Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information.
+
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from numpy.linalg import norm

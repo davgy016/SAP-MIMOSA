@@ -3,20 +3,90 @@
 @{
     ViewData["Title"] = "Edit Mapping";
 }
-@if (Model?.accuracyRate != null || Model?.qualityRate != null || Model?.matchingRate != null)
+@if (Model?.accuracyResult?.accuracyRate != null)
 {
-    <div class="alert alert-info mb-3">
-        Accuracy: <strong>@Html.DisplayFor(m => m.accuracyRate)%</strong> <br />
-        Quality: <strong>@Html.DisplayFor(m => m.qualityRate)%</strong> <br />
-        Matching: <strong>@Html.DisplayFor(m => m.matchingRate)%</strong>
+    <div class="alert alert-info mb-3" id="metricsAlert" style="display:@((Model?.accuracyResult?.accuracyRate != null) ? "block" : "none")">
+
+        @if (Model?.prompts != null && Model.prompts.Any())
+        {
+            <div class="section">
+                <h5>Prompt History</h5>
+                <ul>
+                    @foreach (var prompt in Model.prompts)
+                    {
+                        <li>@prompt</li>
+                    }
+                </ul>
+            </div>
+        }
+        <div class="card shadow-sm border-0 mb-3 modern-metrics-card">
+            <div class="card-body p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                        <div class="display-5 fw-bold text-primary">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
+                        </div>
+                        <div class="fw-semibold">
+                            Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                    </div>
+                        <span id="accuracy-badge" class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
+                            @if (Model?.accuracyResult?.accuracyRate < 35)
+                            {
+                                <i class="bi bi-emoji-frown"></i>
+                            }
+                            @if (Model?.accuracyResult?.accuracyRate >= 35 && Model?.accuracyResult?.accuracyRate < 70)
+                            {
+                                <i class="bi bi-emoji-neutral"></i>
+                            }
+                            @if (Model?.accuracyResult?.accuracyRate >= 70)
+                            {
+                                <i class="bi bi-emoji-smile"></i>
+                            }
+                            @Html.DisplayFor(m => m.accuracyResult.accuracyRate)%
+                        </span>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <div class="row g-2">
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Description Similarity</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-file-earmark-text" data-bs-toggle="tooltip" title="Description similarity compares the meaning of descriptions across a mapping to see if the fields are likely to contain similar information"> </i>
+                                    <strong data-metric="descriptionSimilarity">@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">MIMOSA Similarity</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                    <strong data-metric="mimosaSimilarity">@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">Data Type Similarity</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-list-check" data-bs-toggle="tooltip" title="DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data."></i>
+                                    <strong data-metric="dataType">@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="metric-label">SAP Similarity</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                    <strong data-metric="sapSimilarity">@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-6 ms-auto">
+                                <div class="metric-label">Table Coverage</div>
+                                <div class="metric-value">
+                                    <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
+                                    <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }
-@if (!string.IsNullOrWhiteSpace(Model?.prompt))
-{
-    <div class="alert alert-warning">
-        <strong>Prompt:</strong> @Model.prompt
-    </div>
-}
+
 <div class="container mt-4">
     <h2>Edit Mapping</h2>
 
@@ -27,7 +97,7 @@
         </div>
     }
 
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" id="editForm">
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Mapping Details</h5>
@@ -41,8 +111,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="LLMType" class="form-label">LLM Type</label>
-                        @Html.DropDownListFor(model => model.LLMType, SAP_MIMOSAapp.Models.SearchViewModel.AvailableLLMs, "Select LLM Type", new { @class = "form-select" })
-                        <span asp-validation-for="LLMType" class="text-danger"></span>
+                        <input asp-for="LLMType" class="form-control" readonly value="@Model?.LLMType" />
                     </div>
                 </div>
 
@@ -61,174 +130,58 @@
                         No mappings added yet. Click "Add Mapping" to create a mapping pair.
                     </div>
                 }
-                else
+                @if (Model.mappings != null && Model.mappings.Count > 0)
                 {
-                    <div class="alert alert-info" id="noMappingsMessage" style="display: none;">
-                        No mappings added yet. Click "Add Mapping" to create a mapping pair.
-                    </div>
-
-                    @for (int i = 0; i < Model.mappings.Count; i++)
+                    ViewData["AccuracyaccuracySingleMappingPair"] = Model.accuracySingleMappingPair;
+                    for (int i = 0; i < Model.mappings.Count; i++)
                     {
-                        <div class="mapping-pair mb-4 border rounded p-3 position-relative">
-                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
-                                <i class="bi bi-x-lg"></i> Remove
-                            </button>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5 class="text-primary">SAP Field</h5>
-                                    <div class="mb-2">
-                                        <label class="form-label">Platform</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.platform" value="@Model.mappings[i].sap.platform" readonly />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Entity Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.entityName" value="@Model.mappings[i].sap.entityName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.fieldName" value="@Model.mappings[i].sap.fieldName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="mappings[@i].sap.description" rows="2">@Model.mappings[i].sap.description</textarea>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Data Type</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.dataType" value="@Model.mappings[i].sap.dataType" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Length</label>
-                                        <input type="text" class="form-control" name="mappings[@i].sap.fieldLength" value="@Model.mappings[i].sap.fieldLength" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Notes</label>
-                                        <textarea class="form-control" name="mappings[@i].sap.notes" rows="2">@Model.mappings[i].sap.notes</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <h5 class="text-success">MIMOSA Field</h5>
-                                    <div class="mb-2">
-                                        <label class="form-label">Platform</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.platform" value="@Model.mappings[i].mimosa.platform" readonly />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Entity Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.entityName" value="@Model.mappings[i].mimosa.entityName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Name</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.fieldName" value="@Model.mappings[i].mimosa.fieldName" required />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="mappings[@i].mimosa.description" rows="2">@Model.mappings[i].mimosa.description</textarea>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Data Type</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.dataType" value="@Model.mappings[i].mimosa.dataType" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Field Length</label>
-                                        <input type="text" class="form-control" name="mappings[@i].mimosa.fieldLength" value="@Model.mappings[i].mimosa.fieldLength" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label">Notes</label>
-                                        <textarea class="form-control" name="mappings[@i].mimosa.notes" rows="2">@Model.mappings[i].mimosa.notes</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @await Html.PartialAsync("_MappingPair", Tuple.Create(i, Model.mappings[i]), new ViewDataDictionary(ViewData))
                     }
                 }
+                <div class="alert alert-info" id="noMappingsMessage" style="display: none;">
+                    No mappings added yet. Click "Add Mapping" to create a mapping pair.
+                </div>
             </div>
         </div>
-        <input type="hidden" asp-for="prompt" />
-        <input type="hidden" asp-for="accuracyRate" />
-        <input type="hidden" asp-for="qualityRate" />
-        <input type="hidden" asp-for="matchingRate" />
+        @if (Model?.prompts != null && Model.prompts.Any())
+        {
+            <div>
+                <h5>Prompt History</h5>
+                <ul>
+                    @for (int i = 0; i < Model.prompts.Count; i++)
+                    {
+                        <li>@Model.prompts[i]</li>
+                        <input type="hidden" name="prompts[@i]" value="@Model.prompts[i]" />
+                    }
+                </ul>
+            </div>
+        }
+        @if (Model?.promptHistory != null && Model.promptHistory.Any())
+        {
+            @for (int i = 0; i < Model.promptHistory.Count; i++)
+            {
+                <input type="hidden" name="promptHistory[@i].text" value="@Model.promptHistory[i].text" />
+                <input type="hidden" name="promptHistory[@i].createdAt" value="@Model.promptHistory[i].createdAt?.ToString("yyyy-MM-dd'T'HH:mm:ss")" />
+            }
+        }
+        <input type="hidden" asp-for="accuracyResult.accuracyRate" />
+        <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.mimosaSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.sapSimilarity" />
+        <input type="hidden" asp-for="accuracyResult.dataType" />
+        <input type="hidden" asp-for="accuracyResult.fieldLength" />
+        <input type="hidden" asp-for="accuracyResult.infoOmitted" />
+        <input type="hidden" id="accuracySingleMappingPairJson" name="accuracySingleMappingPairJson" value='@Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracySingleMappingPair ?? new List<SAP_MIMOSAapp.Models.AccuracyResultViewModel>())' />
         <div class="d-flex justify-content-between mb-4">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
 </div>
 
-<!-- Template for mapping pair -->
-<template id="mappingPairTemplate">
-    <div class="mapping-pair mb-4 border rounded p-3 position-relative">
-        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-mapping">
-            <i class="bi bi-x-lg"></i> Remove
-        </button>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h5 class="text-primary">SAP Field</h5>
-                <div class="mb-2">
-                    <label class="form-label">Platform</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.platform" value="SAP" readonly />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Entity Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.entityName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.fieldName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" name="mappings[{index}].sap.description" rows="2"></textarea>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Data Type</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.dataType" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Length</label>
-                    <input type="text" class="form-control" name="mappings[{index}].sap.fieldLength" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-control" name="mappings[{index}].sap.notes" rows="2"></textarea>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <h5 class="text-success">MIMOSA Field</h5>
-                <div class="mb-2">
-                    <label class="form-label">Platform</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.platform" value="MIMOSA" readonly />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Entity Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.entityName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Name</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.fieldName" required />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" name="mappings[{index}].mimosa.description" rows="2"></textarea>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Data Type</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.dataType" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Field Length</label>
-                    <input type="text" class="form-control" name="mappings[{index}].mimosa.fieldLength" />
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-control" name="mappings[{index}].mimosa.notes" rows="2"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+<script type="text/template" id="mappingPairTemplate">
+    @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
+</script>
 
 @section Scripts {
     <script>
@@ -236,51 +189,225 @@
             let mappingIndex = @(Model.mappings?.Count ?? 0);
             const mappingsContainer = document.getElementById('mappingsContainer');
             const noMappingsMessage = document.getElementById('noMappingsMessage');
-            const template = document.getElementById('mappingPairTemplate').innerHTML;
+            const template = document.getElementById('mappingPairTemplate').textContent || document.getElementById('mappingPairTemplate').innerHTML;
+            let formModified = false;
+            const editForm = document.getElementById('editForm');
 
-            // Add mapping button click handler
+            // Track form modifications
+            document.querySelectorAll('form input, form textarea, form select').forEach(input => {
+                input.addEventListener('change', () => {
+                    formModified = true;
+                    recalculateAccuracy();
+                });
+            });
+
+
             document.getElementById('addMapping').addEventListener('click', function() {
                 addMappingPair();
+                renumberMappings();
+                formModified = true;
+                recalculateAccuracy();
             });
+
+            // Save changes with confirmation
+            document.getElementById('saveChangesBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to save changes to this mapping document?')) {
+                    editForm.submit();
+                }
+            });
+
+            // Attach remove handler to all mapping pairs
+            document.querySelectorAll('.mapping-pair').forEach(attachRemoveHandler);
 
             // Add event listeners to existing remove buttons
-            document.querySelectorAll('.remove-mapping').forEach(button => {
-                button.addEventListener('click', function() {
-                    this.closest('.mapping-pair').remove();
+            function attachRemoveHandler(el) {
+                el.querySelector('.remove-mapping')?.addEventListener('click', function() {
+                    el.remove();
+                    renumberMappings();
+                    formModified = true;
 
                     // Show the "no mappings" message if there are no mappings
                     if (mappingsContainer.querySelectorAll('.mapping-pair').length === 0) {
                         noMappingsMessage.style.display = 'block';
                     }
+
+                    recalculateAccuracy();
                 });
-            });
+            }
 
             // Function to add a new mapping pair
-            function addMappingPair() {
-                // Hide the "no mappings" message
+            function addMappingPair(mappingData) {
                 noMappingsMessage.style.display = 'none';
-
-                // Create a new mapping pair from template
-                const newMapping = template.replace(/{index}/g, mappingIndex);
-
-                // Create a container for the new mapping
+                const newMapping = template.replace(/\[@Model\.Item1\]|\[-1\]/g, `[${mappingIndex}]`).replace(/{index}/g, mappingIndex);
                 const mappingElement = document.createElement('div');
                 mappingElement.innerHTML = newMapping;
-                mappingElement.querySelector('.remove-mapping').addEventListener('click', function() {
-                    mappingElement.remove();
-
-                    // Show the "no mappings" message if there are no mappings
-                    if (mappingsContainer.querySelectorAll('.mapping-pair').length === 0) {
-                        noMappingsMessage.style.display = 'block';
-                    }
+                attachRemoveHandler(mappingElement);
+                mappingElement.querySelectorAll('input, textarea, select').forEach(input => {
+                    input.addEventListener('change', () => {
+                        formModified = true;
+                        recalculateAccuracy();
+                    });
                 });
 
-                // Add the new mapping to the container
+                if (mappingData) {
+                    ["sap", "mimosa"].forEach(type => {
+                        ["entityName", "fieldName", "dataType", "description", "fieldLength", "notes", "platform"].forEach(field => {
+                            const input = mappingElement.querySelector(`[name$=\".${type}.${field}\"]`);
+                            if (input && mappingData[type] && mappingData[type][field] !== undefined) {
+                                if (input.tagName.toLowerCase() === 'textarea') {
+                                    input.textContent = mappingData[type][field];
+                                } else {
+                                    input.value = mappingData[type][field];
+                                }
+                            }
+                        });
+                    });
+                }
                 mappingsContainer.appendChild(mappingElement);
-
-                // Increment the index for the next mapping
                 mappingIndex++;
+                renumberMappings();
             }
+
+            // Renumber mapping input names for proper model binding
+            function renumberMappings() {
+                document.querySelectorAll('.mapping-pair').forEach((pair, idx) => {
+                    pair.querySelectorAll('input, textarea, select').forEach(field => {
+                        field.name = field.name.replace(/mappings\[\d+\]/g, `mappings[${idx}]`);
+                        if (field.id) {
+                            field.id = field.id.replace(/_\d+$/, `_${idx}`);
+                        }
+                    });
+                });
+                mappingIndex = document.querySelectorAll('.mapping-pair').length;
+            }
+
+            // Gather all mapping data from DOM
+            function gatherMappings() {
+                const mappings = [];
+                document.querySelectorAll('.mapping-pair').forEach(pair => {
+                    function getValue(selector) {
+                        const el = pair.querySelector(selector);
+                        return el ? el.value : '';
+                    }
+                    mappings.push({
+                        sap: {
+                            entityName: getValue('[name$=".sap.entityName"]'),
+                            fieldName: getValue('[name$=".sap.fieldName"]'),
+                            dataType: getValue('[name$=".sap.dataType"]'),
+                            description: getValue('[name$=".sap.description"]'),
+                            fieldLength: getValue('[name$=".sap.fieldLength"]'),
+                            notes: getValue('[name$=".sap.notes"]'),
+                            platform: getValue('[name$=".sap.platform"]') || 'SAP'
+                        },
+                        mimosa: {
+                            entityName: getValue('[name$=".mimosa.entityName"]'),
+                            fieldName: getValue('[name$=".mimosa.fieldName"]'),
+                            dataType: getValue('[name$=".mimosa.dataType"]'),
+                            description: getValue('[name$=".mimosa.description"]'),
+                            fieldLength: getValue('[name$=".mimosa.fieldLength"]'),
+                            notes: getValue('[name$=".mimosa.notes"]'),
+                            platform: getValue('[name$=".mimosa.platform"]') || 'MIMOSA'
+                        }
+                    });
+                });
+                return mappings;
+            }
+
+            // Recalculate accuracy and update hidden fields
+            async function recalculateAccuracy() {
+                const mappings = gatherMappings();
+                if (mappings.length === 0) return;
+                try {
+                    const response = await fetch('/Home/RecalculateAccuracy', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(mappings)
+                    });
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    document.querySelector('[name="accuracyResult.accuracyRate"]').value = data.overall.accuracyRate;
+                    document.querySelector('[name="accuracyResult.descriptionSimilarity"]').value = data.overall.descriptionSimilarity;
+                    document.querySelector('[name="accuracyResult.mimosaSimilarity"]').value = data.overall.mimosaSimilarity;
+                    document.querySelector('[name="accuracyResult.sapSimilarity"]').value = data.overall.sapSimilarity;
+                    document.querySelector('[name="accuracyResult.dataType"]').value = data.overall.dataType;
+                    document.querySelector('[name="accuracyResult.fieldLength"]').value = data.overall.fieldLength;
+                    document.querySelector('[name="accuracyResult.infoOmitted"]').value = data.overall.infoOmitted;
+                    const metricsAlert = document.getElementById('metricsAlert');
+                    if (metricsAlert) {
+                        metricsAlert.style.display = 'block';
+                        metricsAlert.querySelector('.display-5 span').textContent = data.overall.accuracyRate + '%';
+                        // Update overall metric values using data-metric attributes
+                        const overallMetrics = [
+                            "descriptionSimilarity",
+                            "mimosaSimilarity",
+                            "dataType",
+                            "sapSimilarity",
+                            "fieldLength",
+                            "infoOmitted"
+                        ];
+                        overallMetrics.forEach(metric => {
+                            const el = metricsAlert.querySelector(`[data-metric="${metric}"]`);
+                            if (el && data.overall[metric] !== null && data.overall[metric] !== undefined) {
+                                el.textContent = data.overall[metric] + '%';
+                            }
+                        });
+                        const badge = document.getElementById('accuracy-badge');
+                        badge.className = 'badge px-3 py-2 fs-6 mt-2';
+                        let badgeIcon = '';
+                        if (data.overall.accuracyRate < 35) {
+                            badge.classList.add('bg-danger');
+                            badgeIcon = '<i class="bi bi-emoji-frown"></i>';
+                        } else if (data.overall.accuracyRate < 70) {
+                            badge.classList.add('bg-warning', 'text-dark');
+                            badgeIcon = '<i class="bi bi-emoji-neutral"></i>';
+                        } else {
+                            badge.classList.add('bg-success');
+                            badgeIcon = '<i class="bi bi-emoji-smile"></i>';
+                        }
+                        badge.innerHTML = `${badgeIcon} ${data.overall.accuracyRate}%`;
+                    }
+                    // Update per-mapping pair metrics dynamically
+                    if (Array.isArray(data.details)) {
+                        data.details.forEach((detail, idx) => {
+                            // For each metric in the detail object, update the corresponding span
+                            Object.entries(detail).forEach(([key, value]) => {
+                                if ([
+                                    'descriptionSimilarity',
+                                    'sapSimilarity',
+                                    'mimosaSimilarity',
+                                    'dataType',
+                                    'infoOmitted',
+                                    'fieldLength'
+                                ].includes(key)) {
+                                    const selector = `.metric-value[data-metric="${key}"][data-index="${idx}"]`;
+                                    const span = document.querySelector(selector);
+                                    if (span) span.textContent = (value !== null && value !== undefined) ? value.toFixed(2) + '%' : '';
+                                }
+                            });
+                        });
+                    }
+                    let accuracySingleMappingPairJson = document.getElementById('accuracySingleMappingPairJson');
+                    if (!accuracySingleMappingPairJson) {
+                        accuracySingleMappingPairJson = document.createElement('input');
+                        accuracySingleMappingPairJson.type = 'hidden';
+                        accuracySingleMappingPairJson.id = 'accuracySingleMappingPairJson';
+                        accuracySingleMappingPairJson.name = 'accuracySingleMappingPairJson';
+                        document.querySelector('form').appendChild(accuracySingleMappingPairJson);
+                    }
+                    accuracySingleMappingPairJson.value = JSON.stringify(data.details);
+                } catch (e) {
+                    console.error('Error recalculating accuracy:', e);
+                }
+            }
+
+            // Add warning when navigating away with unsaved changes
+            window.addEventListener('beforeunload', function(e) {
+                if (formModified) {
+                    const message = 'You have unsaved changes. Are you sure you want to leave?';
+                    return message;
+                }
+            });
         });
     </script>
 }

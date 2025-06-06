@@ -1,0 +1,28 @@
+fastapi
+uvicorn
+pydantic
+openai
+sentence-transformers
+numpy
+pytest
+beautifulsoup4 
+
+You need FastAPI (for creating the web app) and Uvicorn (for running the server).
+Open your terminal or PowerShell and run: pip install fastapi uvicorn. Assume python is installed
+
+
+Run the following command in your terminal or PowerShell to install the necessary packages:
+pip install fastapi uvicorn pydantic openai
+
+
+To install and use the sentence-transformers library, which is used for generating sentence embeddings using pre-trained models, run command to install the library and all its required dependencies: pip install sentence-transformers
+
+Set OpenAI key:
+# For Windows (Command Prompt)
+set OPENAI_API_KEY=your_api_key_here
+
+# For Windows (PowerShell)
+$env:OPENAI_API_KEY="your_api_key_here"
+
+# For macOS/Linux
+export OPENAI_API_KEY=your_api_key_here
