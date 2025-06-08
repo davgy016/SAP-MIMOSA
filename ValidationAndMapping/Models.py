@@ -88,8 +88,9 @@ class AccuracyResult(BaseModel):
     mimosaSimilarity: Optional[float] = None
     sapSimilarity: Optional[float] = None
     dataType: Optional[float] = None
-    infoOmitted: Optional[dict] = None
+    infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
+    tableCoverage: Optional[dict] = None
 
 class promptEntry(BaseModel):
     text: Optional[str] = ""

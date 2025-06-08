@@ -163,7 +163,7 @@ def test_scoreManager_scoreOutput(sample_mapping):
     sm = ScoreManager()
     score = sm.scoreOutputWithDetails(sample_mapping.mappings)
     print("Score manager output", score)
-    assert score["Overall"] == pytest.approx(0.6, abs=0.2), "Mappings are not similar enough"
+    assert score["overall"] == pytest.approx(0.6, abs=0.2), "Mappings are not similar enough"
 
 
 

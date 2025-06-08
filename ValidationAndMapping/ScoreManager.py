@@ -65,6 +65,7 @@ class ScoreManager:
           sapSimilarity         = overall_sum["SAPSimilarity"]         ,
           mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
           infoOmitted           = info.score_overall(entries)         ,
+          tableCoverage         = info.table_coverage(entries)
         )
 
         return {
