@@ -533,7 +533,10 @@
             // When modal opens, set value to current input
             promptModal.addEventListener('show.bs.modal', function () {
                 console.log("Modal opening: fetching system message...");
-                fetch('http://127.0.0.1:8000/api/system-message')
+                const useExisting = document.getElementById('checkBx').checked;
+                let improve  = false;
+                if (useExisting) { improve = true; }
+                fetch(`http://127.0.0.1:8000/api/system-message?improve_mappings=${improve}`)
                     .then(response => {
                         console.log("API response status:", response.status);
                         return response.json();
