@@ -95,11 +95,13 @@ def extract_json_from_response(response_text):
 
 
 @app.get("/api/system-message")
-def get_system_message():
-    # For initial mapping (no mappings)
-    system_message = OpenAIModel.get_generate_mapping_message()
-    # For improving mappings, pass mappings to get_improve_mappings_message
-    # system_message = OpenAIModel.get_improve_mappings_message(mappings)
+def get_system_message(improve_mappings: bool):
+    # For improving mappings
+    if improve_mappings == True:
+        system_message = OpenAIModel.get_improve_mappings_message()
+    else:
+        # For initial mapping
+        system_message = OpenAIModel.get_generate_mapping_message()
     return JSONResponse(content={"system_message": system_message})
 
 # OpenAI endpoint
@@ -107,17 +109,8 @@ def get_system_message():
 async def ask_AI(request: SearchQuery):
     try:
         llm_model = request.llm_model
-        system_prompt = request.system_prompt
-        #print(f"system prompt 11111111111111: {system_prompt}")
-        # Use the provided system prompt if available, otherwise use the default
-        if system_prompt:
-            system_message = {"role": "system", "content": system_prompt}
-        else:
-            system_message = {"role": "system", "content": OpenAIModel.get_generate_mapping_message()}
-
-        user_message = {"role": "user", "content": request.Query}
-        # Pass system_message, user_message, llm_model, and mappings to OpenAIModel
-        ai_model = OpenAIModel(request.Query, llm_model, request.mappings, system_message=system_message)
+        system_prompt = request.system_prompt                
+        ai_model = OpenAIModel(request.Query, llm_model, request.mappings, system_prompt)
         response = ai_model.chat()
         
         result = response.choices[0].message.content
