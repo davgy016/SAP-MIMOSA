@@ -618,10 +618,10 @@
                                         aria-controls="${collapseId}">
                                         <span class="d-flex align-items-center">
                                             <i class="bi bi-chevron-right me-2 toggle-icon"></i>
-                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
-                                            <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
-                                                style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
+                                            <span class="badge me-4 ${entry.accuracyResult?.accuracyRate >= 60 ? 'bg-success' : entry.accuracyResult?.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
+                                                style="font-size:1em; width:70px;">${entry.accuracyResult?.accuracyRate !== undefined && entry.accuracyResult?.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
                                             </span>
+                                            <span class="fw-semibold text-dark me-2" style="width:700px">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
                                         </span>
                                         <span class="d-flex align-items-center px-2 py-1 rounded bg-light border" style="font-size:0.95em;">
                                             <small class="text-secondary">${entry.createdAt ? new Date(entry.createdAt).toLocaleString() : 'N/A'}</small>
