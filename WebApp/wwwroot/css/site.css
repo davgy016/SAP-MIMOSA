@@ -30,10 +30,8 @@ footer {
 }
 
 
-.section {
-    margin-top: 40px;
+.section {    
     margin-bottom: 20px;
-    padding-bottom: 10px;
     border-bottom: 2px solid #3498db;
 }
 
