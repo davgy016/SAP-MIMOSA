@@ -160,7 +160,7 @@
                             </div>
                             <div class="fw-semibold">
                                 Overall Accuracy  
-                                <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                                <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Schema Similarity, MIMOSA Schema Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
                             </div>
                             <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
                                 @if (Model?.accuracyResult?.accuracyRate < 35)
@@ -189,10 +189,10 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <div class="metric-label">MIMOSA Similarity</div>
+                                    <div class="metric-label">MIMOSA Schema Similarity</div>
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-3" data-bs-toggle="tooltip"
-                                           title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                           title="Mimosa schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong>
                                     </div>
                                 </div>
@@ -205,10 +205,10 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <div class="metric-label">SAP Similarity</div>
+                                    <div class="metric-label">SAP Schema Similarity</div>
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-2" data-bs-toggle="tooltip"
-                                           title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                           title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
                                     </div>
                                 </div>                               
@@ -639,7 +639,7 @@
                                                             <i class="bi bi-graph-up-arrow"></i>
                                                             <span>${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%</span>
                                                         </div>
-                                                        <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
+                                                        <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Schema Similarity, MIMOSA Schema Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
                                                     </div>
                                                     <div class="col-12 col-md-8">
                                                         <div class="row g-2">
@@ -649,8 +649,8 @@
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.descriptionSimilarity !== undefined && entry.accuracyResult.descriptionSimilarity !== null ? entry.accuracyResult.descriptionSimilarity : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
-                                                                <div class="metric-label">MIMOSA Similarity</div>
-                                                                <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                                                <div class="metric-label">MIMOSA Schema Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="MIMOSA schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.mimosaSimilarity !== undefined && entry.accuracyResult.mimosaSimilarity !== null ? entry.accuracyResult.mimosaSimilarity : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
@@ -659,8 +659,8 @@
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.dataType !== undefined && entry.accuracyResult.dataType !== null ? entry.accuracyResult.dataType : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
-                                                                <div class="metric-label">SAP Similarity</div>
-                                                                <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                                                <div class="metric-label">SAP Schema Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.sapSimilarity !== undefined && entry.accuracyResult.sapSimilarity !== null ? entry.accuracyResult.sapSimilarity : 'N/A'}%</strong></div>
                                                             </div>                                                            
                                                             <div class="col-12 col-sm-6 ms-auto">
@@ -719,13 +719,13 @@
                                                                                         </div>
                                                                                         <div class="col-6 col-md-4 mb-1">
                                                                                             <div class="accuracy-metric-box">
-                                                                                                <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
                                                                                                 <span class="metric-value">${pairAcc.sapSimilarity !== undefined && pairAcc.sapSimilarity !== null ? pairAcc.sapSimilarity : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-6 col-md-4 mb-1">
                                                                                             <div class="accuracy-metric-box">
-                                                                                                <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="MIMOSA schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
                                                                                                 <span class="metric-value">${pairAcc.mimosaSimilarity !== undefined && pairAcc.mimosaSimilarity !== null ? pairAcc.mimosaSimilarity : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
