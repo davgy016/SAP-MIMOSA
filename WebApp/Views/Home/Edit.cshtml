@@ -77,10 +77,29 @@
                             </div>
                            
                             <div class="col-12 col-sm-6 ms-auto">
-                                <div class="metric-label">Table Coverage</div>
+                                <div class="metric-label d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#coverageDetails" style="cursor: pointer;">
+                                    Table Coverage
+                                    <i class="fas fa-chevron-right ms-2 toggle-icon" id="chevronIcon" style="color:blue; display: inline-block; transition: transform 0.3s;"></i>
+                                </div>
                                 <div class="metric-value">
                                     <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
                                     <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                            </div>
+                            <div class="collapse mt-2" id="coverageDetails">
+                                <div>
+                                    @{
+                                        var coverageText = "";
+                                        if (Model?.accuracyResult != null && Model.accuracyResult.missingFields != null)
+                                        {
+                                            foreach (var item in Model.accuracyResult.missingFields)
+                                            {
+                                                coverageText += $"<b>Table {item.Key}</b>: {string.Join(", ", item.Value)}\n";
+                                            }
+                                        }
+                                    }
+                                    <div class="form-control" style="min-height: 80px; white-space: pre-wrap;">@Html.Raw(coverageText)</div>
+                                    <input type="hidden" id="missingFieldsJson" name="accuracyResult.missingFieldsJson" value="" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -391,6 +410,16 @@
                     console.error('Error recalculating accuracy:', e);
                 }
             }
+
+            // Table coverage chevron icon handler
+            const collapseEl = document.getElementById('coverageDetails');
+            const icon = document.getElementById('chevronIcon');
+            collapseEl.addEventListener('show.bs.collapse', function () {
+                icon.style.transform = 'rotate(90deg)';
+            });
+            collapseEl.addEventListener('hide.bs.collapse', function () {
+                icon.style.transform = 'rotate(0deg)';
+            });
 
             // Add warning when navigating away with unsaved changes
             window.addEventListener('beforeunload', function(e) {

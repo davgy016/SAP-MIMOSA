@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import json
 import os
+import re
 import uvicorn
 from .ai_models import OpenAIModel
 from typing import List, Optional
@@ -78,7 +79,6 @@ def store_raw_data_of_AI_responses(mapping_doc):
         import traceback
         traceback.print_exc()
 
-import re
 
 # Extract JSON from LLM response
 def extract_json_from_response(response_text):
@@ -239,7 +239,7 @@ async def check_accuracy(entries: List[MappingEntry]):
     results = ScoreManager.scoreOutputWithDetails(entries)    
     return {
         "overall": to_decimals(results["overall"].model_dump()),
-        "singlePairAccuracydetails": [to_decimals(r.model_dump()) for r in results["singlePairAccuracydetails"]]
+        "singlePairAccuracydetails": [to_decimals(r.model_dump()) for r in results["singlePairAccuracydetails"]]        
     }
 
 def start():

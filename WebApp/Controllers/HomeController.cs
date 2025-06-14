@@ -227,6 +227,19 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 newDocument.promptHistory = new List<promptEntry>();
             }
+            // missingFields from hidden input
+            var missingFieldsJson = Request.Form["accuracyResult.missingFieldsJson"];
+            if (!string.IsNullOrEmpty(missingFieldsJson) && newDocument.accuracyResult != null)
+            {
+                try
+                {
+                    newDocument.accuracyResult.missingFields = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(missingFieldsJson);
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Failed to deserialize missingFields: {ex.Message}");
+                }
+            }
 
             if (!ModelState.IsValid)
             {
@@ -255,6 +268,12 @@ namespace SAP_MIMOSAapp.Controllers
                             mapping.mimosa.platform = "MIMOSA";
                         }
                     }
+                }
+
+                // Remove empty missingFields before saving
+                if (newDocument.accuracyResult != null && newDocument.accuracyResult.missingFields != null && !newDocument.accuracyResult.missingFields.Any())
+                {
+                    newDocument.accuracyResult.missingFields = null;
                 }
 
                 // Log promptHistory

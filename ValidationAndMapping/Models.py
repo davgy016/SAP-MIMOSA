@@ -90,6 +90,7 @@ class AccuracyResult(BaseModel):
     dataType: Optional[float] = None
     infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
+    missingFields: Optional[dict] = None
 
 class promptEntry(BaseModel):
     text: Optional[str] = ""
