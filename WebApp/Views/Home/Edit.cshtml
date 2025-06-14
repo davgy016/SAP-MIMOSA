@@ -12,9 +12,12 @@
             <div class="section">
                 <h5>Prompt History</h5>
                 <ul>
-                    @foreach (var prompt in Model.prompts)
+                    @foreach (var entry in Model.promptHistory)
                     {
-                        <li>@prompt</li>
+                        <li>
+                            <strong>@entry.text</strong>
+                            <small class="text-muted">(@entry.createdAt?.ToString("yyyy-MM-dd HH:mm:ss"))</small>
+                        </li>
                     }
                 </ul>
             </div>
