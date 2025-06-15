@@ -1,20 +1,20 @@
 # DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data.
+# DataType.py
 import re
 from ..Models import MappingEntry
 
-ALIASES = {
+# Original alias definitions (mixed case) – keep these human-readable
+_raw_aliases = {
     "INT":       "INTEGER",
     "SMALLINT":  "INTEGER",
     "DEC":       "DECIMAL",
     "NUM":       "NUMERIC",
-    "NumericType":"NUMERIC",
     "cct:NumericType":"NUMERIC",
     "CHAR":      "STRING",
     "VARCHAR":   "STRING",
     "TextType":  "STRING",
     "cct:TextType":  "STRING",
     "TEXT":      "STRING",
-    "STRING":    "STRING",
     "DATE":      "DATE",
     "DATETIME":  "DATETIME",
     "TIMESTAMP": "DATETIME",
@@ -37,23 +37,31 @@ ALIASES = {
     "xs:nonNegativeInteger":"INTEGER",
     "language":"STRING",
     "xs:language":"STRING"
-    
 }
 
+# Build an uppercase-key alias map once
+ALIASES = { key.upper(): val for key, val in _raw_aliases.items() }
+
 def normalize(dt: str) -> str:
-    dt = dt.strip().upper()
-    base = re.split(r"\s*\(", dt)[0]
+    """Turn any dt string into a canonical category like INTEGER, STRING, DATE, etc."""
+    # 1) strip whitespace, uppercase
+    s = dt.strip().upper()
+    # 2) remove any "namespace:" prefix
+    if ":" in s:
+        s = s.split(":", 1)[1]
+    # 3) drop any "(...)" parameters
+    base = re.split(r"\s*\(", s)[0]
+    # 4) lookup in our uppercase alias map
     return ALIASES.get(base, base)
 
 class DataType:
     @staticmethod
     def score(mapping: MappingEntry) -> float:
         """
-        mappings: list of MappingEntry objects or dicts with 'sap'/'mimosa' fields.
-        Returns the fraction of fields whose normalized types match exactly.
+        Returns 1.0 if the normalized SAP type exactly matches
+        the normalized MIMOSA type, else 0.0.
         """
-        entry = mapping       
-        sap_dt = normalize(entry.sap.dataType)
-        mimosa_dt = normalize(entry.mimosa.dataType)        
-        
-        return float(sap_dt == mimosa_dt)            
+        sap_dt    = normalize(mapping.sap.dataType)
+        mimosa_dt = normalize(mapping.mimosa.dataType)
+        return 1.0 if sap_dt == mimosa_dt else 0.0
+    
