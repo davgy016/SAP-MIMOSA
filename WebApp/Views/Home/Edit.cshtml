@@ -12,9 +12,12 @@
             <div class="section">
                 <h5>Prompt History</h5>
                 <ul>
-                    @foreach (var prompt in Model.prompts)
+                    @foreach (var entry in Model.promptHistory)
                     {
-                        <li>@prompt</li>
+                        <li>
+                            <strong>@entry.text</strong>
+                            <small class="text-muted">(@entry.createdAt?.ToString("yyyy-MM-dd HH:mm:ss"))</small>
+                        </li>
                     }
                 </ul>
             </div>
@@ -28,7 +31,7 @@
                             <span>@Html.DisplayFor(m => m.accuracyResult.accuracyRate)%</span>
                         </div>
                         <div class="fw-semibold">
-                            Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                            Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Schema Similarity, MIMOSA Schema  Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
                     </div>
                         <span id="accuracy-badge" class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
                             @if (Model?.accuracyResult?.accuracyRate < 35)
@@ -55,9 +58,9 @@
                                     <strong data-metric="descriptionSimilarity">@Html.DisplayFor(m => m.accuracyResult.descriptionSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <div class="metric-label">MIMOSA Similarity</div>
+                                <div class="metric-label">MIMOSA Schema Similarity</div>
                                 <div class="metric-value">
-                                    <i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                    <i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
                                     <strong data-metric="mimosaSimilarity">@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
@@ -67,17 +70,36 @@
                                     <strong data-metric="dataType">@Html.DisplayFor(m => m.accuracyResult.dataType)%</strong></div>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <div class="metric-label">SAP Similarity</div>
+                                <div class="metric-label">SAP Schema Similarity</div>
                                 <div class="metric-value">
-                                    <i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                    <i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                     <strong data-metric="sapSimilarity">@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong></div>
                             </div>
                            
                             <div class="col-12 col-sm-6 ms-auto">
-                                <div class="metric-label">Table Coverage</div>
+                                <div class="metric-label d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#coverageDetails" style="cursor: pointer;">
+                                    Table Coverage
+                                    <i class="fas fa-chevron-right ms-2 toggle-icon" id="chevronIcon" style="color:blue; display: inline-block; transition: transform 0.3s;"></i>
+                                </div>
                                 <div class="metric-value">
                                     <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip" title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
                                     <strong data-metric="infoOmitted">@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong></div>
+                            </div>
+                            <div class="collapse mt-2" id="coverageDetails">
+                                <div>
+                                    @{
+                                        var coverageText = "";
+                                        if (Model?.accuracyResult != null && Model.accuracyResult.missingFields != null)
+                                        {
+                                            foreach (var item in Model.accuracyResult.missingFields)
+                                            {
+                                                coverageText += $"<b>Table {item.Key}</b>: {string.Join(", ", item.Value)}\n";
+                                            }
+                                        }
+                                    }
+                                    <div class="form-control" style="min-height: 80px; white-space: pre-wrap;">@Html.Raw(coverageText)</div>
+                                    <input type="hidden" id="missingFieldsJson" name="accuracyResult.missingFieldsJson" value="" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,19 +165,7 @@
                 </div>
             </div>
         </div>
-        @if (Model?.prompts != null && Model.prompts.Any())
-        {
-            <div>
-                <h5>Prompt History</h5>
-                <ul>
-                    @for (int i = 0; i < Model.prompts.Count; i++)
-                    {
-                        <li>@Model.prompts[i]</li>
-                        <input type="hidden" name="prompts[@i]" value="@Model.prompts[i]" />
-                    }
-                </ul>
-            </div>
-        }
+        
         @if (Model?.promptHistory != null && Model.promptHistory.Any())
         {
             @for (int i = 0; i < Model.promptHistory.Count; i++)
@@ -400,6 +410,16 @@
                     console.error('Error recalculating accuracy:', e);
                 }
             }
+
+            // Table coverage chevron icon handler
+            const collapseEl = document.getElementById('coverageDetails');
+            const icon = document.getElementById('chevronIcon');
+            collapseEl.addEventListener('show.bs.collapse', function () {
+                icon.style.transform = 'rotate(90deg)';
+            });
+            collapseEl.addEventListener('hide.bs.collapse', function () {
+                icon.style.transform = 'rotate(0deg)';
+            });
 
             // Add warning when navigating away with unsaved changes
             window.addEventListener('beforeunload', function(e) {

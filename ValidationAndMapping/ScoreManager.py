@@ -33,6 +33,7 @@ class ScoreManager:
         # zero out accumulators
         overall_sum = {k: 0.0 for k in keys}
         details     = []
+        missingFieldsList = info.get_missing_fields(entries)
 
         if n == 0:
             return {"overall": AccuracyResult(), "singlePairAccuracydetails": []}
@@ -56,7 +57,7 @@ class ScoreManager:
             # accumulate
             for k in keys:
                 overall_sum[k] += scores[k] / n
-
+        
         # build overall result
         overall = AccuracyResult(
           accuracyRate          = overall_sum["Accuracy"]          ,
@@ -65,6 +66,7 @@ class ScoreManager:
           sapSimilarity         = overall_sum["SAPSimilarity"]         ,
           mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
           infoOmitted           = info.score_overall(entries)         ,
+          missingFields         = missingFieldsList                    ,
         )
 
         return {
