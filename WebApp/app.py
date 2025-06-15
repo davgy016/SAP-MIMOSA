@@ -69,7 +69,7 @@ def save_data(data, file_path):
 
 def store_raw_data_of_AI_responses(mapping_doc):	       
     entry = mapping_doc.model_dump(mode="json")
-    #entry["createdAt"] = mapping_doc.createdAt.strftime("%Y-%m-%d %H:%M:%S")
+    
     try:
         data = load_data(rawDataStoragePath)           
         data.append(entry)            
@@ -82,19 +82,19 @@ def store_raw_data_of_AI_responses(mapping_doc):
 
 # Extract JSON from LLM response
 def extract_json_from_response(response_text):
-    # Try to extract JSON from a markdown code block
+    # Extract Json
     match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
     if match:
         return match.group(1)
-    # Try to find the first JSON-looking structure
+    # Find the first Json-looking structure
     match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
     if match:
         return match.group(1)
     raise ValueError("No JSON found in AI response")
 
 
-
-@app.get("/api/system-message")
+# Endpoint to get system initial message of ai_model
+@app.get("/system-message")
 def get_system_message(improve_mappings: bool):
     # For improving mappings
     if improve_mappings == True:
@@ -154,21 +154,21 @@ async def ask_AI(request: SearchQuery):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-# Work order endpoints
-@app.get("/workorders")
-async def get_workorders():
+# Get mappings
+@app.get("/mappings")
+async def get_mappings():
     return load_data(storagePath)
 
-@app.get("/workorders/{map_id}")
-async def get_workorder(map_id: str):
+@app.get("/mappings/{map_id}")
+async def get_mappings(map_id: str):
     data = load_data(storagePath)
     for doc in data:
         if str(doc.get("mapID")) == str(map_id):
             return doc
     raise HTTPException(status_code=404, detail="Mapping not found")
 
-@app.post("/workorders")
-async def create_workorder(document: MappingDocument):
+@app.post("/mappings")
+async def create_mappings(document: MappingDocument):
     data = load_data(storagePath)    
     if not document.mapID:
         existing_ids = [
@@ -181,14 +181,9 @@ async def create_workorder(document: MappingDocument):
     save_data(data, storagePath)
     return document
 
-'''
-@app.put("/workorders")
-async def update_workorders(documents: List[MappingDocument]):
-    save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
-    return documents
-'''
-@app.put("/workorders/{map_id}")
-async def update_workorder(map_id: str, document: MappingDocument):
+# Update mapping 
+@app.put("/mappings/{map_id}")
+async def update_mappings(map_id: str, document: MappingDocument):
     data = load_data(storagePath)
     updated = False
     for idx, doc in enumerate(data):
@@ -201,8 +196,8 @@ async def update_workorder(map_id: str, document: MappingDocument):
     save_data(data, storagePath)
     return document
 
-@app.delete("/workorders/{map_id}")
-async def delete_workorder(map_id: str):
+@app.delete("/mappings/{map_id}")
+async def delete_mappings(map_id: str):
     data = load_data(storagePath)
     original_len = len(data)
     data = [doc for doc in data if str(doc.get("mapID")) != str(map_id)]
@@ -211,7 +206,7 @@ async def delete_workorder(map_id: str):
     save_data(data, storagePath)
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
 
-
+# Retrieve historical data from Data/rawDataOfAIResponses.json
 @app.get("/fetchHistoricalData")
 async def get_filter_historicalData(createdDate: Optional[datetime.datetime] = Query(None)):
     data = load_data(rawDataStoragePath)

@@ -27,8 +27,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="ai-mapping-search-area mb-4">
-                        @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
+                    <div class="ai-mapping-search-area mb-4">                        
                         <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
                             <i class="bi bi-search fs-4 text-primary"></i>
                             <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" readonly data-bs-toggle="modal" data-bs-target="#promptModal" />
@@ -278,8 +277,7 @@
             
         </div>
 
-        @* <input type="hidden" asp-for="prompt" /> *@
-        @* <input type="hidden" asp-for="LLMType" /> *@
+        
         <input type="hidden" asp-for="createdAt" />
         <input type="hidden" asp-for="accuracyResult.accuracyRate" />
         <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
@@ -318,7 +316,7 @@
 
     <script>
 
-        // Check box changes placeholder text of 'Prompt' input
+        // Check box changes placeholder text of Prompt input
         const mappingCheckBx = document.getElementById('checkBx');
         const aiPrompt = document.getElementById('aiPrompt');
 
@@ -327,7 +325,7 @@
         });
 
 
-        // --- AI Assistant logic ---
+        // --- AI Assistant ---
         document.addEventListener('DOMContentLoaded', () => {
             const aiPrompt = document.getElementById('aiPrompt');
             const aiLLMType = document.getElementById('aiLLMType');
@@ -364,7 +362,7 @@
                     }
                 }
 
-                // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request
+                // If checkbox(Use Existing Mapping) is checked, collect existing mapping pairs and add in request
                 if (useExisting) {
                     const mappings = [];
                     document.querySelectorAll('.mapping-pair').forEach(pair => {
@@ -503,7 +501,7 @@
                 mappingIndex++;
             }
 
-             // --- CSV Import logic ---
+             // --- CSV Import ---
             document.getElementById('importCsvBtn')?.addEventListener('click', event => {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
@@ -555,7 +553,7 @@
                 const useExisting = document.getElementById('checkBx').checked;
                 let improve  = false;
                 if (useExisting) { improve = true; }
-                fetch(`http://127.0.0.1:8000/api/system-message?improve_mappings=${improve}`)
+                fetch(`http://127.0.0.1:8000/system-message?improve_mappings=${improve}`)
                     .then(response => {
                         console.log("API response status:", response.status);
                         return response.json();
@@ -591,7 +589,7 @@
     <!-- Historical data modal -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Historical Data Modal: show and fetch logic
+            // Historical Data Modal: show and fetch
             const historicalDataModal = document.getElementById('historicalDataModal');
             if (historicalDataModal) {
                 historicalDataModal.addEventListener('show.bs.modal', async function () {

@@ -423,13 +423,13 @@
                                     </div>
                                 </div>
                                 <div class="my-3">
-                                    <button class="btn btn-link d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#notesCollapse" aria-expanded="false" aria-controls="notesCollapse" style="text-decoration:none;">
+                                    <button class="btn btn-link d-flex align-items-center" type="button" onclick="toggleNotes('@document.mapID')" style="text-decoration:none;">
                                         <span class="fw-bold">Note</span>
                                         <span class="ms-2">
-                                            <i class="bi bi-chevron-right" id="notesArrow" style="transition: transform 0.3s;"></i>
+                                            <i class="bi bi-chevron-right note-icon" id="notesArrow-@document.mapID"></i>
                                         </span>
                                     </button>
-                                    <div class="collapse" id="notesCollapse">
+                                    <div class="notes-row" id="notesCollapse-@document.mapID" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
                                         @{
                                             var notesList = new System.Text.StringBuilder();
                                             int idx = 1;
@@ -521,7 +521,7 @@
 
 @section Scripts {
     <script>
-        //Search form logic
+        //Search form
         function updateSearchInputName() {
             const searchType = document.querySelector('input[name="SearchType"]:checked').value;
             const searchInput = document.getElementById('searchInput');
@@ -575,7 +575,7 @@
             }
         });
 
-        //Row toggle logic
+        // Display details
         function toggleDetails(mapID) {
             // Hide all other open details rows
             document.querySelectorAll('.details-row').forEach(function(row) {
@@ -584,7 +584,7 @@
                     setTimeout(function() { row.style.display = 'none'; }, 400);
                 }
             });
-            // Toggle the selected row with animation
+            // Toggle the selected row
             const row = document.getElementById('details-' + mapID);
             if (row && row.style.display === 'none') {
                 row.style.display = 'table-row';
@@ -641,18 +641,27 @@
 
     <!-- Showing mapping note with notes of all mapping pairs  -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var collapseEl = document.getElementById('notesCollapse');
-            var arrow = document.getElementById('notesArrow');
-            if (collapseEl && arrow) {
-                collapseEl.addEventListener('show.bs.collapse', function () {
-                    arrow.style.transform = 'rotate(180deg)';
-                });
-                collapseEl.addEventListener('hide.bs.collapse', function () {
-                    arrow.style.transform = 'rotate(0deg)';
-                });
-            }
-        });
+        function toggleNotes(mapID) {
+          const currentNote = document.getElementById("notesCollapse-" + mapID);
+          const currentArrow = document.getElementById("notesArrow-" + mapID);
+          const isOpen = currentNote.classList.contains("open");
+
+          // Close all notes and reset arrows
+          document.querySelectorAll(".notes-row").forEach((row) => {
+            row.style.maxHeight = "0"
+            row.classList.remove("open")
+          });
+          document.querySelectorAll(".note-icon").forEach((arrow) => {
+            arrow.classList.remove("rotated");
+          });
+
+          // Open current note
+          if (!isOpen) {
+            currentNote.classList.add("open")
+            currentNote.style.maxHeight = currentNote.scrollHeight + "px"
+            currentArrow.classList.add("rotated");
+          }
+        }
     </script>
 
     <!-- Displaying historical data -->
