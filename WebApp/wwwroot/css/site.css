@@ -800,3 +800,12 @@ border-color: #1976D2;
     transform: rotate(90deg);
     transition: transform 0.2s ease;
 }
+
+.note-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+    .note-icon.rotated {
+        transform: rotate(90deg);
+    }
