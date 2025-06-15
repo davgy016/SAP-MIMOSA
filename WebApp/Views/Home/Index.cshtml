@@ -521,7 +521,7 @@
 
 @section Scripts {
     <script>
-        //Search form logic
+        //Search form
         function updateSearchInputName() {
             const searchType = document.querySelector('input[name="SearchType"]:checked').value;
             const searchInput = document.getElementById('searchInput');
@@ -575,7 +575,7 @@
             }
         });
 
-        //Row toggle logic
+        // Display details
         function toggleDetails(mapID) {
             // Hide all other open details rows
             document.querySelectorAll('.details-row').forEach(function(row) {
@@ -584,7 +584,7 @@
                     setTimeout(function() { row.style.display = 'none'; }, 400);
                 }
             });
-            // Toggle the selected row with animation
+            // Toggle the selected row
             const row = document.getElementById('details-' + mapID);
             if (row && row.style.display === 'none') {
                 row.style.display = 'table-row';
@@ -655,7 +655,7 @@
             arrow.classList.remove("rotated");
           });
 
-          // Open current note if it was closed
+          // Open current note
           if (!isOpen) {
             currentNote.classList.add("open")
             currentNote.style.maxHeight = currentNote.scrollHeight + "px"

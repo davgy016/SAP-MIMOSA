@@ -403,117 +403,9 @@
         ]
     },
     {
-        "mapID": "015",
-        "LLMType": "gpt-o4-mini",
-        "mappings": [
-            {
-                "sap": {
-                    "platform": "SAP",
-                    "entityName": "Customer",
-                    "fieldName": "ID",
-                    "description": "Customer identifier",
-                    "dataType": "INT",
-                    "notes": "e",
-                    "fieldLength": "e"
-                },
-                "mimosa": {
-                    "platform": "MIMOSA",
-                    "entityName": "Customer",
-                    "fieldName": "CustID",
-                    "description": "Unique customer ID",
-                    "dataType": "integer",
-                    "notes": "e",
-                    "fieldLength": "e"
-                }
-            }
-        ]
-    },
-    {
         "mapID": "016",
         "LLMType": "Other",
         "mappings": []
-    },
-    {
-        "mapID": "017",
-        "LLMType": "gpt-o4-mini",
-        "mappings": [
-            {
-                "sap": {
-                    "platform": "SAP",
-                    "entityName": "Customer88",
-                    "fieldName": "ID",
-                    "description": "Customer identifier",
-                    "dataType": "INT",
-                    "notes": "d",
-                    "fieldLength": "d"
-                },
-                "mimosa": {
-                    "platform": "MIMOSA",
-                    "entityName": "Customer",
-                    "fieldName": "CustID",
-                    "description": "Unique customer ID",
-                    "dataType": "integer",
-                    "notes": "d",
-                    "fieldLength": "d"
-                }
-            }
-        ]
-    },
-    {
-        "mapID": "018",
-        "LLMType": "gpt-4.1",
-        "mappings": [
-            {
-                "sap": {
-                    "platform": "SAP",
-                    "entityName": "Customer0000000000000",
-                    "fieldName": "ID",
-                    "description": "Customer identifier",
-                    "dataType": "INT",
-                    "notes": "d",
-                    "fieldLength": "d"
-                },
-                "mimosa": {
-                    "platform": "MIMOSA",
-                    "entityName": "Customer",
-                    "fieldName": "CustID",
-                    "description": "Unique customer ID",
-                    "dataType": "integer",
-                    "notes": "d",
-                    "fieldLength": "d"
-                }
-            }
-        ]
-    },
-    {
-        "mapID": "019",
-        "LLMType": "gpt-4.1",
-        "prompt": "generate one field",
-        "accuracyRate": 22.77,
-        "qualityRate": 75.45,
-        "matchingRate": 80.56,
-        "mappings": [
-            {
-                "sap": {
-                    "platform": "SAP",
-                    "entityName": "Equipment7867",
-                    "fieldName": "EQUNR",
-                    "description": "Unique identifier for equipment in SAP",
-                    "dataType": "CHAR",
-                    "notes": "Primary key for equipment master record",
-                    "fieldLength": "18"
-                },
-                "mimosa": {
-                    "platform": "MIMOSA",
-                    "entityName": "Asset",
-                    "fieldName": "AssetIdentifier",
-                    "description": "Globally unique, persistent identity for an asset",
-                    "dataType": "String",
-                    "notes": "Serves as the asset's primary identifier within MIMOSA",
-                    "fieldLength": "40"
-                }
-            }
-        ]
     },
     {
         "mapID": "020",
@@ -4219,16 +4111,20 @@
         ]
     },
     {
-        "createdAt": "2025-06-14T22:43:34",
+        "createdAt": "2025-06-15T15:37:27+09:30",
         "mapID": "041",
         "LLMType": "gpt-4.1",
         "prompts": [
-            "generate 3 mapping Pairs of Equipment. use cryptic names for SAP"
+            "Modified Manually"
         ],
         "promptHistory": [
             {
                 "text": "generate 3 mapping Pairs of Equipment. use cryptic names for SAP",
                 "createdAt": "2025-06-14T22:43:34"
+            },
+            {
+                "text": "Modified Manually",
+                "createdAt": "2025-06-15T15:37:27+09:30"
             }
         ],
         "mappings": [
@@ -4248,7 +4144,7 @@
                     "fieldName": "EquipmentID",
                     "description": "Unique Identifier for Equipment",
                     "dataType": "String",
-                    "notes": "Corresponds to SAP Equipment Number",
+                    "notes": "Corresponds to SAP Equipment Number.",
                     "fieldLength": "50"
                 }
             },
@@ -4293,7 +4189,7 @@
                 }
             }
         ],
-        "prompt": "generate 3 mapping Pairs of Equipment. use cryptic names for SAP",
+        "prompt": "",
         "accuracyResult": {
             "accuracyRate": 64.74,
             "descriptionSimilarity": 78.96,
@@ -4301,96 +4197,7 @@
             "sapSimilarity": 80.0,
             "dataType": 100.0,
             "infoOmitted": 3.37,
-            "missingFields": {
-                "EQUI": [
-                    "/GEP/AUTOM",
-                    "/GEP/DACHG",
-                    "/GEP/KLIMA",
-                    "/GEP/PASSENGER",
-                    "/GEP/SCHNEEK",
-                    "/GEP/VHCAT",
-                    "/GEP/WINTERR",
-                    "/MRSS/DATACHANGE",
-                    "/MRSS/ID_PROFILE",
-                    "/MRSS/PROF_KEY",
-                    "ACT_CHANGE_AA",
-                    "AEDAT",
-                    "AENAM",
-                    "ANSDT",
-                    "ANSWT",
-                    "APLKZ",
-                    "AULDT",
-                    "BAUJJ",
-                    "BAUMM",
-                    "BEGRU",
-                    "BEGRUI",
-                    "BRGEW",
-                    "BSTVP",
-                    "CHARGE",
-                    "CUOBJ",
-                    "DATLWB",
-                    "ELIEF",
-                    "EMATN",
-                    "EQART",
-                    "EQASP",
-                    "EQBER",
-                    "EQDAT",
-                    "EQEXT_ACTIVE",
-                    "EQLB_DUTY",
-                    "EQLB_HIDE",
-                    "EQLFN",
-                    "EQNUM",
-                    "EQSNR",
-                    "EQTYP",
-                    "EQUI_SNTYPE",
-                    "EQUI_SRTYPE",
-                    "ERDAT",
-                    "ERNAM",
-                    "GERNR",
-                    "GEWEI",
-                    "GROES",
-                    "GWLDT",
-                    "GWLDV",
-                    "GWLEN",
-                    "HANDLE",
-                    "HERLD",
-                    "HERST",
-                    "HZEIN",
-                    "IMRC_POINT",
-                    "INBDT",
-                    "INVNR",
-                    "IUID_TYPE",
-                    "KMATN",
-                    "KRFKZ",
-                    "KUNDE",
-                    "LAGER",
-                    "LVORM",
-                    "MANDT",
-                    "MATNR",
-                    "MGANR",
-                    "OBJNR",
-                    "REVLV",
-                    "SERNR",
-                    "SPARTE",
-                    "S_CC",
-                    "S_ELSE",
-                    "S_EQBS",
-                    "S_EQUI",
-                    "S_FHM",
-                    "S_FLEET",
-                    "S_ISU",
-                    "S_KONFI",
-                    "S_SALE",
-                    "S_SERIAL",
-                    "TSEGTP",
-                    "UII",
-                    "UII_PLANT",
-                    "WAERS",
-                    "WARPL",
-                    "WDBWT",
-                    "WERK"
-                ]
-            }
+            "missingFields": {}
         },
         "accuracySingleMappingPair": [
             {
@@ -4416,6 +4223,450 @@
                 "sapSimilarity": 80.0,
                 "dataType": 100.0,
                 "infoOmitted": 3.37
+            }
+        ]
+    },
+    {
+        "createdAt": "2025-06-15T15:42:16",
+        "mapID": "042",
+        "LLMType": "gpt-4.1",
+        "prompts": [
+            "generate mapping pairs of workOrder entity",
+            "use cryptic names for SAP",
+            "use cryptic names for SAP to match workOrder entity schema",
+            "use correct cryptic name for SAP workOrder"
+        ],
+        "promptHistory": [
+            {
+                "text": "generate mapping pairs of workOrder entity",
+                "createdAt": "2025-06-15T15:39:18"
+            },
+            {
+                "text": "use cryptic names for SAP",
+                "createdAt": "2025-06-15T15:40:13"
+            },
+            {
+                "text": "use cryptic names for SAP to match workOrder entity schema",
+                "createdAt": "2025-06-15T15:41:03"
+            },
+            {
+                "text": "use correct cryptic name for SAP workOrder",
+                "createdAt": "2025-06-15T15:42:16"
+            }
+        ],
+        "mappings": [
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "AUFNR",
+                    "description": "Order Number (Work Order Unique Identifier)",
+                    "dataType": "CHAR",
+                    "notes": "Primary key for work orders in SAP PM (Plant Maintenance); cryptic SAP entity/table name: AUFK (Order Header Data)",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderID",
+                    "description": "Unique identifier for a work order",
+                    "dataType": "STRING",
+                    "notes": "Primary key for work order in MIMOSA",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "AUART",
+                    "description": "Order Type",
+                    "dataType": "CHAR",
+                    "notes": "Defines the type/category of the work order (e.g. PM01, PM02); cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "WorkOrderType",
+                    "description": "Type/category of the work order",
+                    "dataType": "STRING",
+                    "notes": "Aligns to order classification",
+                    "fieldLength": "20"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "KURZTEXT",
+                    "description": "Short Description",
+                    "dataType": "CHAR",
+                    "notes": "Short text describing the work order; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "40"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "Description",
+                    "description": "Brief description of the work order",
+                    "dataType": "STRING",
+                    "notes": "Field for work order summary/short text",
+                    "fieldLength": "255"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "ERNAM",
+                    "description": "Created By (User ID)",
+                    "dataType": "CHAR",
+                    "notes": "SAP user ID who created the work order; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "12"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "CreatedBy",
+                    "description": "Identifier of the person or system that created the work order",
+                    "dataType": "STRING",
+                    "notes": "Creator of the work order",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "ERDAT",
+                    "description": "Created On (Date)",
+                    "dataType": "DATS",
+                    "notes": "Date the work order was created in SAP; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "CreatedDate",
+                    "description": "Date when the work order was created",
+                    "dataType": "DATE",
+                    "notes": "Work order creation date",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "GSTRP",
+                    "description": "Basic Start Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled basic start date for the work order; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledStartDate",
+                    "description": "Scheduled start of the work order",
+                    "dataType": "DATE",
+                    "notes": "Date field for planned start",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "GLTRP",
+                    "description": "Basic Finish Date",
+                    "dataType": "DATS",
+                    "notes": "Scheduled basic finish date for the work order; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "8"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "ScheduledFinishDate",
+                    "description": "Scheduled finish of the work order",
+                    "dataType": "DATE",
+                    "notes": "Date field for planned finish",
+                    "fieldLength": "10"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "IWERK",
+                    "description": "Maintenance Planning Plant",
+                    "dataType": "CHAR",
+                    "notes": "Plant responsible for work order planning; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "4"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "OrganizationID",
+                    "description": "Identifier of the responsible organization or plant",
+                    "dataType": "STRING",
+                    "notes": "Links to MIMOSA organization entity",
+                    "fieldLength": "30"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "OBJNR",
+                    "description": "Object Number",
+                    "dataType": "CHAR",
+                    "notes": "Reference to technical object (equipment or functional location); cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "22"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "AssetID",
+                    "description": "Unique identifier for the asset to which the work order refers",
+                    "dataType": "STRING",
+                    "notes": "References MIMOSA asset/equipment",
+                    "fieldLength": "50"
+                }
+            },
+            {
+                "sap": {
+                    "platform": "SAP",
+                    "entityName": "AUFK",
+                    "fieldName": "STSMA",
+                    "description": "Status Profile",
+                    "dataType": "CHAR",
+                    "notes": "Code representing the status profile assigned to the work order; cryptic SAP entity/table name: AUFK",
+                    "fieldLength": "6"
+                },
+                "mimosa": {
+                    "platform": "MIMOSA",
+                    "entityName": "WorkOrder",
+                    "fieldName": "Status",
+                    "description": "Current status of the work order",
+                    "dataType": "STRING",
+                    "notes": "Status as mapped to MIMOSA standard values",
+                    "fieldLength": "20"
+                }
+            }
+        ],
+        "prompt": "use correct cryptic name for SAP workOrder",
+        "accuracyResult": {
+            "accuracyRate": 56.43,
+            "descriptionSimilarity": 47.7,
+            "mimosaSimilarity": 24.0,
+            "sapSimilarity": 84.0,
+            "dataType": 70.0,
+            "infoOmitted": 8.13,
+            "missingFields": {
+                "AUFK": [
+                    "ABGSL",
+                    "ABKRS",
+                    "ABUKR",
+                    "ADRNRA",
+                    "AEDAT",
+                    "AENAM",
+                    "AEZEIT",
+                    "AKSTL",
+                    "ANFAUFNR",
+                    "ASTKZ",
+                    "ASTNR",
+                    "AUFEX",
+                    "AUFK_STATUS",
+                    "AUTYP",
+                    "AWSLS",
+                    "BEMOT",
+                    "BUKRS",
+                    "CCKEY",
+                    "CLAIM_CONTROL",
+                    "COSTESTNR",
+                    "CPD_UPDAT",
+                    "CSTG_VRNT",
+                    "CUM_AUEST",
+                    "CUM_CMNUM",
+                    "CUM_DESNUM",
+                    "CUM_IND",
+                    "CYCLE",
+                    "DUMMY_CI_AUFK",
+                    "ERFZEIT",
+                    "ESTNR",
+                    "ETYPE",
+                    "FERC_IND",
+                    "FLG_MLTPS",
+                    "FUNC_AREA",
+                    "GSBER",
+                    "IDAT1",
+                    "IDAT2",
+                    "IDAT3",
+                    "IVPRO",
+                    "IZWEK",
+                    "JV_JIBCL",
+                    "JV_JIBSA",
+                    "JV_OCO",
+                    "KALSM",
+                    "KAPPL",
+                    "KDAUF",
+                    "KDPOS",
+                    "KOKRS",
+                    "KOSTL",
+                    "KOSTV",
+                    "KSTAR",
+                    "KSTEMPF",
+                    "KTEXT",
+                    "KVEWE",
+                    "LOEKZ",
+                    "LOGSYSTEM",
+                    "LTEXT",
+                    "MANDT",
+                    "MRSS_ACT_TYPE",
+                    "MRSS_DATACHANGE",
+                    "MRSS_INIT_DONE",
+                    "MRSS_NW_BOOKED",
+                    "MRSS_ORDER_PROB",
+                    "MRSS_PL_MAN_TYP",
+                    "MRSS_PL_STRU_ID",
+                    "MRSS_SALES_ORG",
+                    "OBJID",
+                    "OIHANTYP",
+                    "OTYPE",
+                    "PDAT1",
+                    "PDAT2",
+                    "PDAT3",
+                    "PHAS0",
+                    "PHAS1",
+                    "PHAS2",
+                    "PHAS3",
+                    "PKOSA",
+                    "PLGKZ",
+                    "PLINT",
+                    "PRCTR",
+                    "PROCNR",
+                    "PROTY",
+                    "PSPEL",
+                    "RECID",
+                    "REFNR",
+                    "RSORD",
+                    "SAKNR",
+                    "SCOPE",
+                    "SDATE",
+                    "SEQNR",
+                    "SETNM",
+                    "SIZECL",
+                    "SOWRK",
+                    "STDAT",
+                    "STORT",
+                    "TXJCD",
+                    "UMWKZ",
+                    "UPDATE_CONTROL",
+                    "UPDATE_NEEDED",
+                    "USER0",
+                    "USER1",
+                    "USER2",
+                    "USER3",
+                    "USER4",
+                    "USER5",
+                    "USER6",
+                    "USER7",
+                    "USER8",
+                    "USER9",
+                    "VAPLZ",
+                    "VERAA_USER",
+                    "VNAME",
+                    "VOGRP",
+                    "WAERS",
+                    "WAWRK",
+                    "WERKS",
+                    "ZSCHL",
+                    "ZSCHM"
+                ]
+            }
+        },
+        "accuracySingleMappingPair": [
+            {
+                "accuracyRate": 72.56,
+                "descriptionSimilarity": 90.24,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 70.04,
+                "descriptionSimilarity": 60.14,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 100.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 54.08,
+                "descriptionSimilarity": 36.33,
+                "mimosaSimilarity": 60.0,
+                "sapSimilarity": 20.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 58.9,
+                "descriptionSimilarity": 35.6,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 39.57,
+                "descriptionSimilarity": 58.29,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 0.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 42.48,
+                "descriptionSimilarity": 49.93,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 100.0,
+                "dataType": 0.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 44.08,
+                "descriptionSimilarity": 56.33,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 100.0,
+                "dataType": 0.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 64.01,
+                "descriptionSimilarity": 36.04,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 100.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 61.3,
+                "descriptionSimilarity": 25.18,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 100.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
+            },
+            {
+                "accuracyRate": 57.23,
+                "descriptionSimilarity": 28.92,
+                "mimosaSimilarity": 20.0,
+                "sapSimilarity": 80.0,
+                "dataType": 100.0,
+                "infoOmitted": 8.13
             }
         ]
     }

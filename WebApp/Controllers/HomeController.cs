@@ -34,7 +34,7 @@ namespace SAP_MIMOSAapp.Controllers
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
-                    var response = await _httpClient.GetStringAsync("workorders");
+                    var response = await _httpClient.GetStringAsync("mappings");
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
@@ -77,7 +77,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             if (string.IsNullOrEmpty(mapID))
                 return BadRequest("mapID is required");
-            var response = await _httpClient.GetAsync($"http://127.0.0.1:8000/workorders/{mapID}");
+            var response = await _httpClient.GetAsync($"http://127.0.0.1:8000/mappings/{mapID}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
             var json = await response.Content.ReadAsStringAsync();
@@ -290,7 +290,7 @@ namespace SAP_MIMOSAapp.Controllers
                 var json = JsonSerializer.Serialize(newDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var createResponse = await _httpClient.PostAsync("workorders", content);
+                var createResponse = await _httpClient.PostAsync("mappings", content);
                 var responseText = await createResponse.Content.ReadAsStringAsync();
 
                 if (!createResponse.IsSuccessStatusCode)
@@ -316,7 +316,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"workorders/{id}");
+                var response = await _httpClient.GetStringAsync($"mappings/{id}");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -378,7 +378,7 @@ namespace SAP_MIMOSAapp.Controllers
                 // Send only the updated document to the correct endpoint
                 var json = JsonSerializer.Serialize(updatedDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var updateResponse = await _httpClient.PutAsync($"workorders/{updatedDocument.mapID}", content);
+                var updateResponse = await _httpClient.PutAsync($"mappings/{updatedDocument.mapID}", content);
 
                 if (!updateResponse.IsSuccessStatusCode)
                 {
@@ -402,7 +402,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var deleteResponse = await _httpClient.DeleteAsync($"workorders/{id}");
+                var deleteResponse = await _httpClient.DeleteAsync($"mappings/{id}");
                 if (!deleteResponse.IsSuccessStatusCode)
                 {
                     var error = await deleteResponse.Content.ReadAsStringAsync();
@@ -626,7 +626,7 @@ namespace SAP_MIMOSAapp.Controllers
             try
             {
                 // get mapping data for the given mapId
-                var response = await _httpClient.GetAsync($"workorders/{mapId}");
+                var response = await _httpClient.GetAsync($"mappings/{mapId}");
                 if (!response.IsSuccessStatusCode)
                 {
                     return BadRequest("Failed to fetch mapping data.");
