@@ -108,14 +108,14 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 
 ### AI Endpoints
 - `POST /ask_AI` — Generate a mapping suggestion from a user query using OpenAI.
-- `GET /api/system-message` — Get the system prompt used for AI mapping.
+- `GET /system-message` — Get the system prompt used for AI mapping.
 
 ### Mapping Documents
-- `GET /workorders` — Retrieve all mapping documents.
-- `GET /workorders/{map_id}` — Retrieve a mapping document by its ID.
-- `POST /workorders` — Create a new mapping document.
-- `PUT /workorders/{map_id}` — Update a mapping document by its ID.
-- `DELETE /workorders/{map_id}` — Delete a mapping document by its ID.
+- `GET /mappings` — Retrieve all mapping documents.
+- `GET /mappings/{map_id}` — Retrieve a mapping document by its ID.
+- `POST /mappings` — Create a new mapping document.
+- `PUT /mappings/{map_id}` — Update a mapping document by its ID.
+- `DELETE /mappings/{map_id}` — Delete a mapping document by its ID.
 
 ### Analytics & History
 - `GET /fetchHistoricalData?createdDate=YYYY-MM-DDTHH:MM:SS` — Retrieve historical AI mapping data (optionally filtered by date).
@@ -165,11 +165,18 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 ## Running the Application
 
 ### 1. Backend (Python FastAPI)
-- Install dependencies: check requirements.txt 
+- Install dependencies:
+  - Run the following command in your terminal or PowerShell to install the necessary packages: pip install fastapi uvicorn pydantic openai
+  - To install and use the sentence-transformers library, which is used for generating sentence embeddings using pre-trained models, run command: pip install sentence-transformers
+
 - Set your OpenAI API key as an environment variable (replace with your actual key):
   - Windows (Powershell):
     ```sh
     $env:OPENAI_API_KEY="your_api_key_here"
+    ```
+  - For Windows (Command Prompt)
+    ```sh
+    set OPENAI_API_KEY=your_api_key_here
     ```
   - Linux/macOS:
     ```sh
