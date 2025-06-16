@@ -242,6 +242,11 @@ Content-Type: application/json
 - **Data type Similarity:** DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data. It does this by converting all know data types across SAP and MIMOSA schema to their base type i.e cct:TextType from MIMOSA is converted to a string. These base types are then compared to each other to see if they are the same i.e to prevent a number from matching to a string. 
 - **Table Coverage:** Table coverage is a measure of how much of the base tables are covered by the the current mappings. At an overall level it gets the total number of fields that have a valid table name and the total number of fields for each valid table found and calculates a score with (total number of fields mapped/number of fields found across all tables found). At an single mapping level it performs this same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric. 
 
+### Validation system architecture
+<img src="images/validationSystem.jpg">
+
+### Web app architecture
+<img src="images/dataFlowOfWebapp.jpg">
 ---
 
 ## Future Improvements
