@@ -56,7 +56,7 @@ namespace SAP_MIMOSAapp.Controllers
                     }
 
                     model.FilteredCount = documents.Count;
-                    model.SearchResults = documents;
+                    model.SearchResults = documents.OrderByDescending(d => d.mapID).ToList();
                 }
                 else
                 {
