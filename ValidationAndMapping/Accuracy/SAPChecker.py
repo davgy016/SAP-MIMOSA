@@ -29,25 +29,25 @@ class SAPChecker:
             }
 
         # flatten index of every field across all tables
-        self.any_field_index = {
+        self.anyFieldIndex = {
             field: meta
-            for tbl_meta in self.schema.values()
-            for field, meta in tbl_meta.items()
+            for tblMeta in self.schema.values()
+            for field, meta in tblMeta.items()
         }
 
         # build alias map from CheckTable → actual table metadata
-        self.alias_map = {}
+        self.aliasMap = {}
         for table in raw:
-            real_tbl = table["TableName"].upper()
-            meta_block = self.schema.get(real_tbl, {})
+            realTbl = table["TableName"].upper()
+            metaBlock = self.schema.get(realTbl, {})
             for fld in table.get("Fields", []):
                 chk = fld.get("CheckTable", "").upper()
                 # ignore wildcards or empty
-                if chk and chk != "*" and chk != real_tbl:
+                if chk and chk != "*" and chk != realTbl:
                     # only keep the first mapping (most JSONs tend to repeat)
-                    self.alias_map.setdefault(chk, meta_block)
+                    self.aliasMap.setdefault(chk, metaBlock)
 
-    def _normalize_table(self, name: str) -> str:
+    def normalizeTable(self, name: str) -> str:
         """
         Strip off anything after the first word, e.g.
         "AUFK (OrderMaster)" → "AUFK"
@@ -67,41 +67,41 @@ class SAPChecker:
         )
 
         # normalize the incoming entityName
-        tbl_raw = field.entityName
-        tbl = self._normalize_table(tbl_raw)
+        tblRaw = field.entityName
+        tbl = self.normalizeTable(tblRaw)
 
         # pick the right metadata block
         if tbl in self.schema:
             fc.entityName = FieldState.CORRECT
-            table_fields = self.schema[tbl]
-        elif tbl in self.alias_map:
+            tableFields = self.schema[tbl]
+        elif tbl in self.aliasMap:
             # use CheckTable if original table was just an alias
             fc.entityName = FieldState.CORRECT
-            table_fields = self.alias_map[tbl]
+            tableFields = self.aliasMap[tbl]
         else:
             # table not found
             fc.entityName = FieldState.INCORRECT
-            table_fields = {}
+            tableFields = {}
 
         # normalize the incoming fieldName
         fld = field.fieldName.upper().strip()
 
         # 1) fieldName check: look in table first, then global index
-        if fld in table_fields:
+        if fld in tableFields:
             fc.fieldName = FieldState.CORRECT
-            meta = table_fields[fld]
-        elif fld in self.any_field_index:
+            meta = tableFields[fld]
+        elif fld in self.anyFieldIndex:
             fc.fieldName = FieldState.CORRECT
-            meta = self.any_field_index[fld]
+            meta = self.anyFieldIndex[fld]
         else:
             # no such field anywhere
             return fc
 
         # 2) dataType
-        got_type = field.dataType.split("(")[0].upper().strip()
+        gotType = field.dataType.split("(")[0].upper().strip()
         fc.dataType = (
             FieldState.CORRECT
-            if meta["DataType"].upper() == got_type
+            if meta["DataType"].upper() == gotType
             else FieldState.INCORRECT
         )
 

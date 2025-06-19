@@ -1,12 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using SAP_MIMOSAapp.Models;
-using System.Net.Http.Json;
-using System;
 
 namespace SAP_MIMOSAapp.Controllers
 {
@@ -44,14 +39,14 @@ namespace SAP_MIMOSAapp.Controllers
                     {
                         documents = documents
                             .Where(d => d.mappings.Any(m =>
-                                m.sap.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase) ||
-                                m.mimosa.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase)))
+                                m.sap.entityName.Contains(model.SearchByEntityName, StringComparison.OrdinalIgnoreCase) ||
+                                m.mimosa.entityName.Contains(model.SearchByEntityName, StringComparison.OrdinalIgnoreCase)))
                             .ToList();
                     }
                     else if (!string.IsNullOrEmpty(model.SearchByLLM))
                     {
                         documents = documents
-                            .Where(d => d.LLMType.Contains(model.SearchByLLM, System.StringComparison.OrdinalIgnoreCase))
+                            .Where(d => d.LLMType.Contains(model.SearchByLLM, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                     }
 
@@ -116,7 +111,7 @@ namespace SAP_MIMOSAapp.Controllers
                 //Console.WriteLine($"GetAIResponse called with query: {query} {systemPrompt}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query, llm_model = llmModel, mappings = mappings ?? new List<MappingPair>(), system_prompt = systemPrompt };
+                var request = new { query, llmModel, mappings = mappings ?? new List<MappingPair>(), systemPrompt };
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
@@ -160,7 +155,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return $"Raw response: {responseString}";
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Exception in GetAIResponse: {ex}");
                 return $"Error: {ex.Message}";
@@ -305,7 +300,7 @@ namespace SAP_MIMOSAapp.Controllers
                 TempData["SuccessMessage"] = $"Mapping with #ID {createdDoc?.mapID} created successfully!";
                 return RedirectToAction("Index");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error creating record: {ex.Message}";
                 return View(newDocument);
@@ -330,7 +325,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 return View(document);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error: {ex.Message}";
                 return RedirectToAction("Index");
@@ -411,7 +406,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 return Json(new { success = true, message = "Mapping deleted successfully!" });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error deleting record: {ex.Message}" });
             }
@@ -524,7 +519,7 @@ namespace SAP_MIMOSAapp.Controllers
                             return Json(new { success = false, message = "AI did not return a valid mapping document." });
                         }
                     }
-                    catch (System.Text.Json.JsonException)
+                    catch (JsonException)
                     {
                         Console.WriteLine($"Raw AI response: {aiResponse}");
 
@@ -536,7 +531,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return Json(new { success = false, message = "AI did not return a valid mapping (no response or invalid format)." });
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error communicating with AI: {ex.Message}" });
             }

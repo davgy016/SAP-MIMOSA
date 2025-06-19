@@ -553,7 +553,7 @@
                 const useExisting = document.getElementById('checkBx').checked;
                 let improve  = false;
                 if (useExisting) { improve = true; }
-                fetch(`http://127.0.0.1:8000/system-message?improve_mappings=${improve}`)
+                fetch(`http://127.0.0.1:8000/system_message?improveMappings=${improve}`)
                     .then(response => {
                         console.log("API response status:", response.status);
                         return response.json();

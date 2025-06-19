@@ -4,7 +4,7 @@ import re
 from ..Models import MappingEntry
 
 # Original alias definitions (mixed case) – keep these human-readable
-_raw_aliases = {
+rawAliases = {
     "INT":       "INTEGER",
     "SMALLINT":  "INTEGER",
     "DEC":       "DECIMAL",
@@ -40,7 +40,7 @@ _raw_aliases = {
 }
 
 # Build an uppercase-key alias map once
-ALIASES = { key.upper(): val for key, val in _raw_aliases.items() }
+ALIASES = { key.upper(): val for key, val in rawAliases.items() }
 
 def normalize(dt: str) -> str:
     """Turn any dt string into a canonical category like INTEGER, STRING, DATE, etc."""
@@ -61,7 +61,7 @@ class DataType:
         Returns 1.0 if the normalized SAP type exactly matches
         the normalized MIMOSA type, else 0.0.
         """
-        sap_dt    = normalize(mapping.sap.dataType)
-        mimosa_dt = normalize(mapping.mimosa.dataType)
-        return 1.0 if sap_dt == mimosa_dt else 0.0
+        sapDt    = normalize(mapping.sap.dataType)
+        mimosaDt = normalize(mapping.mimosa.dataType)
+        return 1.0 if sapDt == mimosaDt else 0.0
     

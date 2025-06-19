@@ -16,10 +16,10 @@ from ..Models import MappingEntry, FieldState
 class Accuracy:
     def __init__(self):
         # instantiate once, reuse across calls
-        self.description_scorer = DescriptionSimilarity()
-        self.type_scorer        = DataType()
-        self.sap_checker        = SAPChecker()
-        self.mimosa_checker     = MimosaChecker()
+        self.descriptionScorer = DescriptionSimilarity()
+        self.typeScorer        = DataType()
+        self.sapChecker        = SAPChecker()
+        self.mimosaChecker     = MimosaChecker()
     
     def calculateAccuracy(self, entry: MappingEntry) -> dict:
         """
@@ -32,25 +32,25 @@ class Accuracy:
         scores = {}
 
         # 1) SAP schema check - flatten to single 0..1
-        sap_fc    = self.sap_checker.checkField(entry.sap)     # returns a FieldCheck
-        sap_score = sap_fc.to_score()                           
-        scores["SAPSimilarity"] = sap_score
+        sapFc    = self.sapChecker.checkField(entry.sap)     # returns a FieldCheck
+        sapScore = sapFc.toScore()                           
+        scores["SAPSimilarity"] = sapScore
 
         # 2) MIMOSA schema check - flatten to single 0..1
-        mimo_fc    = self.mimosa_checker.checkField(entry.mimosa)
-        mimo_score = mimo_fc.to_score()
-        scores["MIMOSASimilarity"] = mimo_score
+        mimoFc    = self.mimosaChecker.checkField(entry.mimosa)
+        mimoScore = mimoFc.toScore()
+        scores["MIMOSASimilarity"] = mimoScore
 
         # 3) Build existence mask
-        exist = Existence.fields_present(entry)
+        exist = Existence.fieldsPresent(entry)
         # exist is e.g. {"description": True, "dataType": False, ...}
 
         # 4) Conditional scorers
         scores["DescriptionSimilarity"] = (
-            self.description_scorer.score(entry) if exist["description"] else 0.0
+            self.descriptionScorer.score(entry) if exist["description"] else 0.0
         )
         scores["DataType"] = (
-            self.type_scorer.score(entry) if exist["dataType"] else 0.0
+            self.typeScorer.score(entry) if exist["dataType"] else 0.0
         )
 
 
