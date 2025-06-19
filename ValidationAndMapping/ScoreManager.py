@@ -33,7 +33,7 @@ class ScoreManager:
         # zero out accumulators
         overall_sum = {k: 0.0 for k in keys}
         details     = []
-        missingFieldsList = info.get_missing_fields(entries)
+        missingFieldsList = info.getMissingFields(entries)
 
         if n == 0:
             return {"overall": AccuracyResult(), "singlePairAccuracydetails": []}
@@ -42,7 +42,7 @@ class ScoreManager:
             scores = acc.calculateAccuracy(e)
 
             # compute coverage for this entry
-            info_single = info.score_single(e, entries)
+            infoSingle = info.scoreSingle(e, entries)
 
             # build per‐entry detail
             details.append(AccuracyResult(
@@ -51,7 +51,7 @@ class ScoreManager:
                 dataType              = scores["DataType"]              ,
                 sapSimilarity         = scores["SAPSimilarity"]         ,
                 mimosaSimilarity      = scores["MIMOSASimilarity"]      ,
-                infoOmitted           = info_single                     ,
+                infoOmitted           = infoSingle                     ,
             ))
 
             # accumulate
@@ -65,7 +65,7 @@ class ScoreManager:
           dataType              = overall_sum["DataType"]              ,
           sapSimilarity         = overall_sum["SAPSimilarity"]         ,
           mimosaSimilarity      = overall_sum["MIMOSASimilarity"]      ,
-          infoOmitted           = info.score_overall(entries)         ,
+          infoOmitted           = info.scoreOverall(entries)         ,
           missingFields         = missingFieldsList                    ,
         )
 

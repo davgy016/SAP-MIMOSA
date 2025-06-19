@@ -11,16 +11,16 @@ class DescriptionSimilarity:
     def score(self, mapping: MappingEntry) -> float:
         # For now, we'll just score the first MappingEntry in the first Mapping object
         entry = mapping
-        sap_desc = entry.sap.description
-        mimosa_desc = entry.mimosa.description
+        sapDesc = entry.sap.description
+        mimosaDesc = entry.mimosa.description
 
         # Encode descriptions
-        sap_vector = self.model.encode(sap_desc)
-        mimosa_vector = self.model.encode(mimosa_desc)
+        sapVector = self.model.encode(sapDesc)
+        mimosaVector = self.model.encode(mimosaDesc)
 
         # Cosine similarity
-        score = np.dot(sap_vector, mimosa_vector) / (
-            norm(sap_vector) * norm(mimosa_vector)
+        score = np.dot(sapVector, mimosaVector) / (
+            norm(sapVector) * norm(mimosaVector)
         )
 
         return score

@@ -32,21 +32,21 @@ class InfoOmitted:
             }
 
         # flatten index of every field across all tables
-        self.any_field_index = {
+        self.anyFieldIndex = {
             field: meta
-            for tbl_meta in self.schema.values()
-            for field, meta in tbl_meta.items()
+            for tblMeta in self.schema.values()
+            for field, meta in tblMeta.items()
         }
 
-    def score_overall(self, mapping: list) -> float:
+    def scoreOverall(self, mapping: list) -> float:
         # Convert to set to remove duplicates based on FieldMapping.__eq__
-        unique_mappings = set(mapping)
+        uniqueMappings = set(mapping)
         countFields = 0
 
         #a list of all the different entities
         entities = []
         realEntities = []
-        for map in unique_mappings:
+        for map in uniqueMappings:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
         
@@ -60,7 +60,7 @@ class InfoOmitted:
                 realEntities.append(entity)
                 totalFields += len(tableFields)
 
-        for map in unique_mappings:
+        for map in uniqueMappings:
             if map.sap.entityName in realEntities:
                 countFields += 1
         print(f"Fields counted in overall score {countFields} for entities {entities} with total fields {totalFields} and real entites {realEntities}")
@@ -70,7 +70,7 @@ class InfoOmitted:
 
         return countFields/totalFields
     
-    def score_single(self, map: MappingEntry, mappings: list) -> float:
+    def scoreSingle(self, map: MappingEntry, mappings: list) -> float:
         countFields = 0 
         entity = map.sap.entityName.upper()
 
@@ -90,7 +90,7 @@ class InfoOmitted:
 
         return countFields/totalFields
 
-    def get_missing_fields(self, mapping: list) -> dict:
+    def getMissingFields(self, mapping: list) -> dict:
         """
         Returns a dict: {TABLE: [missing_field1, missing_field2, ...]}
         Only checks the table name in the first mapping pair.
@@ -98,14 +98,14 @@ class InfoOmitted:
         if not mapping:
             return {}
         # Use the first mapping's SAP entity name
-        first_table = mapping[0].sap.entityName.upper()
-        mapped_fields = set()
+        firstTable = mapping[0].sap.entityName.upper()
+        mappedFields = set()
         for m in mapping:
-            if m.sap.entityName.upper() == first_table:
-                mapped_fields.add(m.sap.fieldName.upper())
-        if first_table in self.schema:
-            schema_fields = set(self.schema[first_table].keys())
-            missing_fields = list(schema_fields - mapped_fields)
-            if missing_fields:
-                return {first_table: sorted(missing_fields)}
+            if m.sap.entityName.upper() == firstTable:
+                mappedFields.add(m.sap.fieldName.upper())
+        if firstTable in self.schema:
+            schemaFields = set(self.schema[firstTable].keys())
+            missingFields = list(schemaFields - mappedFields)
+            if missingFields:
+                return {firstTable: sorted(missingFields)}
         return {}

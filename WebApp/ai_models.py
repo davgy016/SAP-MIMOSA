@@ -7,7 +7,7 @@ from typing import List
 
 class OpenAIModel:
     @staticmethod
-    def get_generate_mapping_message():
+    def getGenerateMappingMessage():
         return (
             """You are an AI assistant for generating mapping between SAP and MIMOSA data models. "
             "Generate a structured JSON response that follows this exact format: "
@@ -40,7 +40,7 @@ class OpenAIModel:
         )
 
     @staticmethod
-    def get_improve_mappings_message():
+    def getImproveMappingsMessage():
         
         return (
             "You are an AI assistant for improving existing mappings between SAP and MIMOSA data models. "
@@ -52,34 +52,35 @@ class OpenAIModel:
             "Below are the current mapping pairs in JSON format:\n"            
         )
 
-    def __init__(self, query: str, llm_model: str, mappings: List[MappingEntry] = None, system_prompt: str = None):
+    def __init__(self, query: str, llmModel: str, mappings: List[MappingEntry] = None, systemPrompt: str = None):
         self.query = query
-        self.llm_model = llm_model
+        self.llmModel = llmModel
         self.mappings = mappings
-        self.system_prompt = system_prompt
-        self.api_key = ""
+        self.systemPrompt = systemPrompt
+        # if set up env for api key(check readme.md) keep following, otherwise directly set api key with your key self.apiKey = "YOUR_API_KEY"
+        self.apiKey = os.getenv("OPENAI_API_KEY")
 
     def chat(self):
-        if not self.api_key:
+        if not self.apiKey:
             raise ValueError("OpenAI API key not found. Set the OPENAI_API_KEY environment variable.")
-        client = OpenAIClient(api_key=self.api_key)
+        client = OpenAIClient(api_key=self.apiKey)
 
         # Decide which system message to use
-        if self.system_prompt and self.system_prompt.strip():
-            system_prompt = self.system_prompt
+        if self.systemPrompt and self.systemPrompt.strip():
+            systemPrompt = self.systemPrompt
         else:
             if self.mappings and len(self.mappings) > 0:
-                system_prompt = self.get_improve_mappings_message()
+                systemPrompt = self.getImproveMappingsMessage()
             else:
-                system_prompt = self.get_generate_mapping_message()
+                systemPrompt = self.getGenerateMappingMessage()
 
         # If mappings exist, append them to the system_message
         if self.mappings:
-            mappings_dict = [m.model_dump() for m in self.mappings]
-            mappings_json = json.dumps(mappings_dict, ensure_ascii=False, indent=2)
-            system_prompt += f"\n{mappings_json}"
+            mappingsDict = [m.model_dump() for m in self.mappings]
+            mappingsJson = json.dumps(mappingsDict, ensure_ascii=False, indent=2)
+            systemPrompt += f"\n{mappingsJson}"
 
-        system_message = {"role": "system", "content": system_prompt}
+        system_message = {"role": "system", "content": systemPrompt}
         user_message = {"role": "user", "content": self.query}
         messages = [system_message, user_message]
 
@@ -90,7 +91,7 @@ class OpenAIModel:
         '''
 
         response = client.chat.completions.create(
-            model=self.llm_model,
+            model=self.llmModel,
             messages=messages
         )
         return response
