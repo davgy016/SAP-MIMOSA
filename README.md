@@ -108,7 +108,7 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 
 ### AI Endpoints
 - `POST /ask_AI` — Generate a mapping suggestion from a user query using OpenAI.
-- `GET /system-message` — Get the system prompt used for AI mapping.
+- `GET /system_message` — Get the system prompt used for AI mapping.
 
 ### Mapping Documents
 - `GET /mappings` — Retrieve all mapping documents.
