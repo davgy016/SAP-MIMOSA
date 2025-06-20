@@ -64,7 +64,7 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 ### Backend (Python FastAPI)
 - Developed with FastAPI for high performance and easy extensibility.
 - Implements REST endpoints for all CRUD operations on mapping documents.
-- Integrates with OpenAI’s GPT-4.1 and o3-mini for generating mapping suggestions based on user queries.
+- Integrates with OpenAI’s GPT-4.1 and o4-mini for generating mapping suggestions based on user queries.
 - Stores all mappings in a JSON file, ensuring persistence and easy backup.
 - Store every single AI generated mapping in separate JSON file as a chronological data for analytics 
 - Generates unique, incremental map IDs server-side for security and consistency.
@@ -96,7 +96,7 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 - **Landing Page:**
   - Displays a detailed mapping table retrieved from the JSON data storage. Each row shows SAP PM and MIMOSA CCOM field details.
 - **Editing and Creating:**
-  - Use the “Edit”, “Create New Field”, and delete buttons to update, add, or remove mappings.
+  - Use the “Edit”, “ + ”, and delete buttons to update, add, or remove mappings.
 - **AI Assistant:**
   - Enter a mapping-related question or requirement into the AI search box. The AI assistant will generate a mapping, which you can review and further edit before saving.
 - **Feedback Mechanism:**
@@ -153,12 +153,6 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 - **AI Performance Assessment:**
   - The system can assess the accuracy of AI-generated mappings, supporting analytics and improvement.
 
----
-
-## Future Improvements
-- **Authentication & Authorization:** Restrict mapping management to authorized users.
-- **User Feedback:** Allow users to rate mappings to improve AI performance.
-- **Audit Logging:** Track all changes for compliance and traceability.
 
 ---
 
@@ -256,11 +250,18 @@ Content-Type: application/json
 <img src="images/dataFlowOfWebapp.jpg">
 ---
 
+## Key findings 
+- Using words such as **schema** and **cryptic** in user prompt improves AI response for SAP side, because due to SAP cryptic names this enables AI-generated mapping to match SAP schema.    
+- Generative AI provides more accurate and relevant response when SAP or MIMOSA side of the mappinng is provided rather than ask AI to generate from scratch. 
+- Providing desired entity names for both SAP and MIMOSA in user prompt enables Generative AI to generate more relevant mappings. e.g. it is better to ask "generate mapping between equipment and Asset" than "generate mapping for asset".  
+
+---
+
 ## Future Improvements
 - **Authentication & Authorization:** Restrict mapping management to authorized users.
 - **User Feedback:** Allow users to rate mappings to improve AI performance.
 - **Audit Logging:** Track all changes for compliance and traceability.
 - **Per-Mapping AI Assistance:** Each mapping pair section can have its own AI assistant to improve individual mapping fields.
 - **Semantic Search Validation:** Use semantic search algorithms for better mapping content validation.
-- **Model Fine-Tuning:** Tune the generative AI model specifically for SAP and MIMOSA CCOM data models for more accurate responses.
+- **Model Fine-Tuning:** Tune the generative AI model for SAP and MIMOSA CCOM data models for more accurate responses.
 - **Model Expansion:** Add more models to choose from.
