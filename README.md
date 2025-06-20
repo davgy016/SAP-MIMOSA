@@ -192,6 +192,16 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
   ```
 - The frontend expects the backend at `http://127.0.0.1:8000/` by default. Adjust as needed in `HomeController.cs`.
 
+### 3. Run application in Microsoft Visual Studio 2022 +
+- Open Powershell and make sure you are in correct directory  ...\group-5\sapMimosaWebApp.
+- Then run **python main.py**, you should see something like this:   
+    INFO:     Started server process [14392]
+    INFO:     Waiting for application startup.
+    INFO:     Application startup complete.
+    INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit).
+
+- Then run web app as usual by clicking play sign
+
 ---
 
 ## API Usage Examples
