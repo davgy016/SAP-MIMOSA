@@ -11,8 +11,8 @@ class FieldState(Enum):
 
 class SearchQuery(BaseModel):
     Query: str = Field(..., alias="query")
-    system_prompt: Optional[str] = Field(None, alias="system_prompt")
-    llm_model: Optional[str] = Field(None, alias="llm_model")
+    systemPrompt: Optional[str] = Field(None, alias="system_prompt")
+    llmModel: Optional[str] = Field(None, alias="llm_model")
     mappings:  Optional[List["MappingEntry"]]
     model_config = ConfigDict(validate_by_name=True)
 
@@ -55,7 +55,7 @@ class FieldCheck(BaseModel):
     dataType: FieldState = FieldState.UNCHECKED
     fieldLength: FieldState = FieldState.UNCHECKED
 
-    def to_score(self) -> float:
+    def toScore(self) -> float:
         """
         Return ( #correct ) / ( #dimensions actually checked ).
         Unchecked dimensions (UNCHECKED) are excluded from both numerator and denominator.
@@ -90,7 +90,7 @@ class AccuracyResult(BaseModel):
     dataType: Optional[float] = None
     infoOmitted: Optional[float] = None
     fieldLength: Optional[float] = None
-    tableCoverage: Optional[dict] = None
+    missingFields: Optional[dict] = None
 
 class promptEntry(BaseModel):
     text: Optional[str] = ""
@@ -111,4 +111,3 @@ class Mapping(BaseModel):
 
 class MappingQuery(RootModel[List[Mapping]]):
     pass
-

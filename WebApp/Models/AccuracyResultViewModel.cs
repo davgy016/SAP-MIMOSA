@@ -33,5 +33,8 @@ namespace SAP_MIMOSAapp.Models
         [JsonPropertyName("fieldLength")]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public float? fieldLength { get; set; }
+
+        [JsonPropertyName("missingFields")]
+        public Dictionary<string, List<string>>? missingFields { get; set; } = new Dictionary<string, List<string>>();
     }
 }

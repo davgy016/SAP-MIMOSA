@@ -27,8 +27,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="ai-mapping-search-area mb-4">
-                        @* <div class="search-bar-container d-flex flex-wrap align-items-center shadow-lg rounded-pill px-4 py-3 bg-white position-relative" style=" border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;"> *@
+                    <div class="ai-mapping-search-area mb-4">                        
                         <div class="search-bar-container d-flex align-items-center shadow-lg rounded-pill px-4 py-3 bg-white" style="border: 2px solid #00e6a6; box-shadow: 0 4px 32px 0 #00e6a6aa;">
                             <i class="bi bi-search fs-4 text-primary"></i>
                             <input asp-for="prompt" type="text" id="aiPrompt" class="form-control border-0 bg-transparent fs-5 px-3" placeholder="Enter prompt to generate initial mapping" style="max-width: 445px; background: none; box-shadow: none; outline: none;" readonly data-bs-toggle="modal" data-bs-target="#promptModal" />
@@ -160,7 +159,7 @@
                             </div>
                             <div class="fw-semibold">
                                 Overall Accuracy  
-                                <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
+                                <i class="bi bi-info-circle ms-1 text-primary" data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Schema Similarity, MIMOSA Schema Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i>
                             </div>
                             <span class="badge @(Model?.accuracyResult?.accuracyRate < 35 ? "bg-danger" : (Model?.accuracyResult?.accuracyRate < 70 ? "bg-warning text-dark" : "bg-success")) px-3 py-2 fs-6 mt-2">
                                 @if (Model?.accuracyResult?.accuracyRate < 35)
@@ -189,10 +188,10 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <div class="metric-label">MIMOSA Similarity</div>
+                                    <div class="metric-label">MIMOSA Schema Similarity</div>
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-3" data-bs-toggle="tooltip"
-                                           title="MIMOSA similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
+                                           title="Mimosa schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.mimosaSimilarity)%</strong>
                                     </div>
                                 </div>
@@ -205,19 +204,39 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <div class="metric-label">SAP Similarity</div>
+                                    <div class="metric-label">SAP Schema Similarity</div>
                                     <div class="metric-value">
                                         <i class="bi bi-diagram-2" data-bs-toggle="tooltip"
-                                           title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                           title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.sapSimilarity)%</strong>
                                     </div>
                                 </div>                               
                                 <div class="col-12 col-sm-6 ms-auto">
-                                    <div class="metric-label">Table Coverage</div>
+                                    <div class="metric-label d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#coverageDetails" style="cursor: pointer;">
+                                        Table Coverage
+                                        <i class="fas fa-chevron-right ms-2 toggle-icon" id="chevronIcon" style="color:blue; display: inline-block; transition: transform 0.3s;"></i>
+                                    </div>
                                     <div class="metric-value">
                                         <i class="bi bi-exclamation-circle" data-bs-toggle="tooltip"
                                            title="Indicates the percentage of base tables that are currently covered by defined mappings."></i>
                                         <strong>@Html.DisplayFor(m => m.accuracyResult.infoOmitted)%</strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="collapse mt-2" id="coverageDetails">
+                                    <div>
+                                        @{
+                                            var coverageText = "";
+                                            if (Model?.accuracyResult != null && Model.accuracyResult.missingFields != null)
+                                            {
+                                                foreach (var item in Model.accuracyResult.missingFields)
+                                                {
+                                                    coverageText += $"<b>Table {item.Key}</b>: {string.Join(", ", item.Value)}\n";
+                                                }
+                                            }
+                                        }
+                                        <div class="form-control" style="min-height: 80px; white-space: pre-wrap;">@Html.Raw(coverageText)</div>
+                                        <input type="hidden" id="missingFieldsJson" name="accuracyResult.missingFieldsJson" value="" />
                                     </div>
                                 </div>
                             </div>
@@ -225,16 +244,16 @@
                     </div>
                 </div>
             </div>
-
+            
         </div>
 
-        <div class="card mb-4">
+        <div class="card mb-4" style="display:@((Model?.mappings != null && Model.mappings.Count > 0) ? "block" : "none")">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>
                     Mapping Pairs
-                    @if(Model?.mappings.Count > 0){
+                    
                         <small class=" text-muted fs-5 p-2"><i>(Total: @Model?.mappings.Count) </i></small>
-                    }
+                    
                 </h5>
                 <div class="d-flex align-items-center gap-2">
 
@@ -242,8 +261,7 @@
                 </div>
             </div>
 
-            @if (Model?.mappings != null && Model.mappings.Count > 0)
-            {
+            
                 <div class="card-body" id="mappingsContainer" style="max-height: 800px; overflow-y: auto;">
                     @{
                         var mappingIndex = 0;
@@ -256,11 +274,10 @@
                         }
                     }
                 </div>
-            }
+            
         </div>
 
-        @* <input type="hidden" asp-for="prompt" /> *@
-        @* <input type="hidden" asp-for="LLMType" /> *@
+        
         <input type="hidden" asp-for="createdAt" />
         <input type="hidden" asp-for="accuracyResult.accuracyRate" />
         <input type="hidden" asp-for="accuracyResult.descriptionSimilarity" />
@@ -295,11 +312,11 @@
     <!-- Template for mapping pair for JS to clone and insert blank mapping rows dynamically -->
     <script type="text/template" id="mappingPairTemplate">
         @await Html.PartialAsync("_MappingPair", Tuple.Create(-1, new SAP_MIMOSAapp.Models.MappingPair { sap = new SAP_MIMOSAapp.Models.MappingField(), mimosa = new SAP_MIMOSAapp.Models.MappingField() }))
-    </script>
+    </script>   
 
     <script>
 
-        // Check box changes placeholder text of 'Prompt' input
+        // Check box changes placeholder text of Prompt input
         const mappingCheckBx = document.getElementById('checkBx');
         const aiPrompt = document.getElementById('aiPrompt');
 
@@ -308,7 +325,7 @@
         });
 
 
-        // --- AI Assistant logic ---
+        // --- AI Assistant ---
         document.addEventListener('DOMContentLoaded', () => {
             const aiPrompt = document.getElementById('aiPrompt');
             const aiLLMType = document.getElementById('aiLLMType');
@@ -333,7 +350,7 @@
 
                 const requestBody = { prompt, llmType };
 
-                // Always collect existing promptHistory from the current model (whether reusing or not)
+                // Always collect existing promptHistory from the current model
                 const promptHistoryInput = document.getElementById('promptHistoryJson');
                 let existingPromptHistory = [];
                 if (promptHistoryInput && promptHistoryInput.value) {
@@ -345,7 +362,7 @@
                     }
                 }
 
-                // If "Use Existing Mapping" checkbox is checked, collect existing mapping pairs and add in request
+                // If checkbox(Use Existing Mapping) is checked, collect existing mapping pairs and add in request
                 if (useExisting) {
                     const mappings = [];
                     document.querySelectorAll('.mapping-pair').forEach(pair => {
@@ -484,7 +501,7 @@
                 mappingIndex++;
             }
 
-             // --- CSV Import logic ---
+             // --- CSV Import ---
             document.getElementById('importCsvBtn')?.addEventListener('click', event => {
                 event.preventDefault();
                 const fileInput = document.getElementById('csvFileInput');
@@ -533,7 +550,10 @@
             // When modal opens, set value to current input
             promptModal.addEventListener('show.bs.modal', function () {
                 console.log("Modal opening: fetching system message...");
-                fetch('http://127.0.0.1:8000/api/system-message')
+                const useExisting = document.getElementById('checkBx').checked;
+                let improve  = false;
+                if (useExisting) { improve = true; }
+                fetch(`http://127.0.0.1:8000/system_message?improveMappings=${improve}`)
                     .then(response => {
                         console.log("API response status:", response.status);
                         return response.json();
@@ -569,7 +589,7 @@
     <!-- Historical data modal -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Historical Data Modal: show and fetch logic
+            // Historical Data Modal: show and fetch
             const historicalDataModal = document.getElementById('historicalDataModal');
             if (historicalDataModal) {
                 historicalDataModal.addEventListener('show.bs.modal', async function () {
@@ -615,10 +635,10 @@
                                         aria-controls="${collapseId}">
                                         <span class="d-flex align-items-center">
                                             <i class="bi bi-chevron-right me-2 toggle-icon"></i>
-                                            <span class="fw-semibold text-dark me-2">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
-                                            <span class="badge ms-1 ${entry.accuracyResult && entry.accuracyResult.accuracyRate >= 70 ? 'bg-success' : entry.accuracyResult && entry.accuracyResult.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
-                                                style="font-size:1em; min-width:48px;">${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
+                                            <span class="badge me-4 ${entry.accuracyResult?.accuracyRate >= 60 ? 'bg-success' : entry.accuracyResult?.accuracyRate >= 35 ? 'bg-warning text-dark' : 'bg-danger'}"
+                                                style="font-size:1em; width:70px;">${entry.accuracyResult?.accuracyRate !== undefined && entry.accuracyResult?.accuracyRate !== null ? entry.accuracyResult.accuracyRate + '%' : 'N/A'}
                                             </span>
+                                            <span class="fw-semibold text-dark me-2" style="width:700px">${entry.prompt ? entry.prompt : '(No prompt)'}</span>
                                         </span>
                                         <span class="d-flex align-items-center px-2 py-1 rounded bg-light border" style="font-size:0.95em;">
                                             <small class="text-secondary">${entry.createdAt ? new Date(entry.createdAt).toLocaleString() : 'N/A'}</small>
@@ -637,7 +657,7 @@
                                                             <i class="bi bi-graph-up-arrow"></i>
                                                             <span>${entry.accuracyResult && entry.accuracyResult.accuracyRate !== undefined && entry.accuracyResult.accuracyRate !== null ? entry.accuracyResult.accuracyRate : 'N/A'}%</span>
                                                         </div>
-                                                        <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Similarity, MIMOSA Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
+                                                        <div class="fw-semibold">Overall Accuracy <i class="bi bi-info-circle ms-1 text-primary"data-bs-toggle="tooltip" title="A total accuracy score is calculated by taking the metrics, SAP Schema Similarity, MIMOSA Schema Similarity, Description Similarity and Data type Similarity but not Table coverage and averaging their scores."></i></div>
                                                     </div>
                                                     <div class="col-12 col-md-8">
                                                         <div class="row g-2">
@@ -647,8 +667,8 @@
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.descriptionSimilarity !== undefined && entry.accuracyResult.descriptionSimilarity !== null ? entry.accuracyResult.descriptionSimilarity : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
-                                                                <div class="metric-label">MIMOSA Similarity</div>
-                                                                <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i>
+                                                                <div class="metric-label">MIMOSA Schema Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="MIMOSA schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i>
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.mimosaSimilarity !== undefined && entry.accuracyResult.mimosaSimilarity !== null ? entry.accuracyResult.mimosaSimilarity : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
@@ -657,8 +677,8 @@
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.dataType !== undefined && entry.accuracyResult.dataType !== null ? entry.accuracyResult.dataType : 'N/A'}%</strong></div>
                                                             </div>
                                                             <div class="col-12 col-sm-6">
-                                                                <div class="metric-label">SAP Similarity</div>
-                                                                <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
+                                                                <div class="metric-label">SAP Schema Similarity</div>
+                                                                <div class="metric-value"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i>
                                                                 <strong>${entry.accuracyResult && entry.accuracyResult.sapSimilarity !== undefined && entry.accuracyResult.sapSimilarity !== null ? entry.accuracyResult.sapSimilarity : 'N/A'}%</strong></div>
                                                             </div>                                                            
                                                             <div class="col-12 col-sm-6 ms-auto">
@@ -717,13 +737,13 @@
                                                                                         </div>
                                                                                         <div class="col-6 col-md-4 mb-1">
                                                                                             <div class="accuracy-metric-box">
-                                                                                                <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-2" data-bs-toggle="tooltip" title="SAP schema similarity compares the SAP side of the mapping to to the schema to see if it is a valid field"></i> SAP Sim.</span>
                                                                                                 <span class="metric-value">${pairAcc.sapSimilarity !== undefined && pairAcc.sapSimilarity !== null ? pairAcc.sapSimilarity : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-6 col-md-4 mb-1">
                                                                                             <div class="accuracy-metric-box">
-                                                                                                <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="Mimosa similarity compares the mimosa side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
+                                                                                                <span class="metric-label"><i class="bi bi-diagram-3" data-bs-toggle="tooltip" title="MIMOSA schema similarity compares the MIMOSA side of the mapping to to the schema to see if it is a valid field."></i> MIMOSA Sim.</span>
                                                                                                 <span class="metric-value">${pairAcc.mimosaSimilarity !== undefined && pairAcc.mimosaSimilarity !== null ? pairAcc.mimosaSimilarity : 'N/A'}%</span>
                                                                                             </div>
                                                                                         </div>
@@ -773,6 +793,23 @@
                     modal.show();
                 });
             }
+
+            // Table coverage chevron icon handler
+            const collapseEl = document.getElementById('coverageDetails');
+            const icon = document.getElementById('chevronIcon');
+            collapseEl.addEventListener('show.bs.collapse', function () {
+                icon.style.transform = 'rotate(90deg)';
+            });
+            collapseEl.addEventListener('hide.bs.collapse', function () {
+                icon.style.transform = 'rotate(0deg)';
+            });
+
+            // Table coverage, set the hidden input if missingFields exists in the model
+            var mf = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model?.accuracyResult?.missingFields ?? null));
+            if (mf && mf !== null && Object.keys(mf).length > 0) {
+                document.getElementById('missingFieldsJson').value = JSON.stringify(mf);
+            }
+            
         });
     </script>
 }

@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import json
 import os
+import re
 import uvicorn
 from .ai_models import OpenAIModel
 from typing import List, Optional
@@ -35,7 +36,7 @@ app.add_middleware(
 )
 
 # JSON file operations
-def load_data(file_path):
+def loadData(file_path):
     if not os.path.exists(file_path):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "w", encoding="utf-8") as file:
@@ -50,110 +51,102 @@ def load_data(file_path):
 
 import datetime
 
-def convert_datetimes(obj):
+def convertDatetimes(obj):
     if isinstance(obj, dict):
-        return {k: convert_datetimes(v) for k, v in obj.items()}
+        return {k: convertDatetimes(v) for k, v in obj.items()}
     elif isinstance(obj, list):
-        return [convert_datetimes(i) for i in obj]
+        return [convertDatetimes(i) for i in obj]
     elif isinstance(obj, datetime.datetime):
         return obj.isoformat(timespec="seconds")
     else:
         return obj
 
-def save_data(data, file_path):
+def saveData(data, file_path):
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "w", encoding="utf-8") as file:
-        data = convert_datetimes(data)
+        data = convertDatetimes(data)
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-def store_raw_data_of_AI_responses(mapping_doc):	       
+def storeRawDataOfAiResponses(mapping_doc):	       
     entry = mapping_doc.model_dump(mode="json")
-    #entry["createdAt"] = mapping_doc.createdAt.strftime("%Y-%m-%d %H:%M:%S")
+    
     try:
-        data = load_data(rawDataStoragePath)           
+        data = loadData(rawDataStoragePath)           
         data.append(entry)            
-        save_data(data, rawDataStoragePath)            
+        saveData(data, rawDataStoragePath)            
     except Exception as file_exc:
         print(f"Failed to write raw OpenAI response: {file_exc}")
         import traceback
         traceback.print_exc()
 
-import re
 
 # Extract JSON from LLM response
-def extract_json_from_response(response_text):
-    # Try to extract JSON from a markdown code block
+def extractJsonFromResponse(response_text):
+    # Extract Json
     match = re.search(r"```json\s*([\s\S]*?)\s*```", response_text)
     if match:
         return match.group(1)
-    # Try to find the first JSON-looking structure
+    # Find the first Json-looking structure
     match = re.search(r"(\[.*\]|\{.*\})", response_text, re.DOTALL)
     if match:
         return match.group(1)
     raise ValueError("No JSON found in AI response")
 
 
-
-@app.get("/api/system-message")
-def get_system_message():
-    # For initial mapping (no mappings)
-    system_message = OpenAIModel.get_generate_mapping_message()
-    # For improving mappings, pass mappings to get_improve_mappings_message
-    # system_message = OpenAIModel.get_improve_mappings_message(mappings)
-    return JSONResponse(content={"system_message": system_message})
+# Endpoint to get system initial message of ai_model
+@app.get("/system_message")
+def getSystemMessage(improveMappings: bool):
+    # For improving mappings
+    if improveMappings == True:
+        systemMessage = OpenAIModel.getImproveMappingsMessage()
+    else:
+        # For initial mapping
+        systemMessage = OpenAIModel.getGenerateMappingMessage()
+    return JSONResponse(content={"system_message": systemMessage})
 
 # OpenAI endpoint
 @app.post("/ask_AI")
-async def ask_AI(request: SearchQuery):
+async def askAI(request: SearchQuery):
     try:
-        llm_model = request.llm_model
-        system_prompt = request.system_prompt
-        #print(f"system prompt 11111111111111: {system_prompt}")
-        # Use the provided system prompt if available, otherwise use the default
-        if system_prompt:
-            system_message = {"role": "system", "content": system_prompt}
-        else:
-            system_message = {"role": "system", "content": OpenAIModel.get_generate_mapping_message()}
-
-        user_message = {"role": "user", "content": request.Query}
-        # Pass system_message, user_message, llm_model, and mappings to OpenAIModel
-        ai_model = OpenAIModel(request.Query, llm_model, request.mappings, system_message=system_message)
-        response = ai_model.chat()
+        llmModel = request.llmModel
+        systemPrompt = request.systemPrompt                
+        aiModel = OpenAIModel(request.Query, llmModel, request.mappings, systemPrompt)
+        response = aiModel.chat()
         
         result = response.choices[0].message.content
         print(f"Sending response: {result}")
 
         # Extract JSON from LLM response
-        json_str = extract_json_from_response(result)
-        mapping_doc_dict = json.loads(json_str)
-        #print("AI returned:", mapping_doc_dict)  
+        json_str = extractJsonFromResponse(result)
+        mappingDocDict = json.loads(json_str)
+        #print("AI returned:", mappingDocDict)  
         
-        if isinstance(mapping_doc_dict, dict) and "mappings" in mapping_doc_dict:
-            mappings = mapping_doc_dict["mappings"]
-        elif isinstance(mapping_doc_dict, list):
-            mappings = mapping_doc_dict
+        if isinstance(mappingDocDict, dict) and "mappings" in mappingDocDict:
+            mappings = mappingDocDict["mappings"]
+        elif isinstance(mappingDocDict, list):
+            mappings = mappingDocDict
         else:
-            raise ValueError(f"AI response is not a dict with a 'mappings' key or a list. Got: {mapping_doc_dict}")
+            raise ValueError(f"AI response is not a dict with a 'mappings' key or a list. Got: {mappingDocDict}")
 
         # Convert list of dicts to list of MappingEntry objects
-        mapping_entries = [MappingEntry(**item) for item in mappings]
-        mapping_doc = MappingDocument(
-            LLMType=llm_model,
-            mappings=mapping_entries,
+        mappingEntries = [MappingEntry(**item) for item in mappings]
+        mappingDoc = MappingDocument(
+            LLMType=llmModel,
+            mappings=mappingEntries,
             prompt=request.Query,
             createdAt=datetime.datetime.now().isoformat(timespec="seconds")
         )
        
         # Call check_accuracy and set the accuracyResult and accuracy of Single MappingPair  properties
-        accuracy_result = await check_accuracy(mapping_entries)
-        mapping_doc.accuracyResult = accuracy_result["overall"]
-        mapping_doc.accuracySingleMappingPair = accuracy_result["singlePairAccuracydetails"]       
+        accuracyResult = await checkAccuracy(mappingEntries)
+        mappingDoc.accuracyResult = accuracyResult["overall"]
+        mappingDoc.accuracySingleMappingPair = accuracyResult["singlePairAccuracydetails"]       
 
         # Store mapping_doc in Data/rawDataOfAIResponses.json for ranking LLMs performance 
-        store_raw_data_of_AI_responses(mapping_doc)
+        storeRawDataOfAiResponses(mappingDoc)
 
         # Return the Mapping object directly
-        return mapping_doc
+        return mappingDoc
 
     except Exception as e:
         print(f"Error in ask_openai: {str(e)}")
@@ -161,22 +154,22 @@ async def ask_AI(request: SearchQuery):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-# Work order endpoints
-@app.get("/workorders")
-async def get_workorders():
-    return load_data(storagePath)
+# Get mappings
+@app.get("/mappings")
+async def getMappings():
+    return loadData(storagePath)
 
-@app.get("/workorders/{map_id}")
-async def get_workorder(map_id: str):
-    data = load_data(storagePath)
+@app.get("/mappings/{map_id}")
+async def getMappings(map_id: str):
+    data = loadData(storagePath)
     for doc in data:
         if str(doc.get("mapID")) == str(map_id):
             return doc
     raise HTTPException(status_code=404, detail="Mapping not found")
 
-@app.post("/workorders")
-async def create_workorder(document: MappingDocument):
-    data = load_data(storagePath)    
+@app.post("/mappings")
+async def createMappings(document: MappingDocument):
+    data = loadData(storagePath)    
     if not document.mapID:
         existing_ids = [
             int(doc["mapID"]) for doc in data
@@ -185,18 +178,13 @@ async def create_workorder(document: MappingDocument):
         next_id = max(existing_ids, default=0) + 1
         document.mapID = f"{next_id:03d}"
     data.append(document.dict(exclude_none=True))
-    save_data(data, storagePath)
+    saveData(data, storagePath)
     return document
 
-'''
-@app.put("/workorders")
-async def update_workorders(documents: List[MappingDocument]):
-    save_data([doc.dict(exclude_none=True) for doc in documents], storagePath)
-    return documents
-'''
-@app.put("/workorders/{map_id}")
-async def update_workorder(map_id: str, document: MappingDocument):
-    data = load_data(storagePath)
+# Update mapping 
+@app.put("/mappings/{map_id}")
+async def updateMappings(map_id: str, document: MappingDocument):
+    data = loadData(storagePath)
     updated = False
     for idx, doc in enumerate(data):
         if str(doc.get("mapID")) == str(map_id):
@@ -205,23 +193,23 @@ async def update_workorder(map_id: str, document: MappingDocument):
             break
     if not updated:
         raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
-    save_data(data, storagePath)
+    saveData(data, storagePath)
     return document
 
-@app.delete("/workorders/{map_id}")
-async def delete_workorder(map_id: str):
-    data = load_data(storagePath)
-    original_len = len(data)
+@app.delete("/mappings/{map_id}")
+async def deleteMappings(map_id: str):
+    data = loadData(storagePath)
+    originalLen = len(data)
     data = [doc for doc in data if str(doc.get("mapID")) != str(map_id)]
-    if len(data) == original_len:
+    if len(data) == originalLen:
         raise HTTPException(status_code=404, detail=f"Mapping with mapID {map_id} not found.")
-    save_data(data, storagePath)
+    saveData(data, storagePath)
     return {"detail": f"Mapping with mapID {map_id} deleted successfully."}
 
-
+# Retrieve historical data from Data/rawDataOfAIResponses.json
 @app.get("/fetchHistoricalData")
-async def get_filter_historicalData(createdDate: Optional[datetime.datetime] = Query(None)):
-    data = load_data(rawDataStoragePath)
+async def getFilterHistoricalData(createdDate: Optional[datetime.datetime] = Query(None)):
+    data = loadData(rawDataStoragePath)
 
     if createdDate:
         createdDateStr = createdDate.isoformat(timespec="seconds")
@@ -242,11 +230,11 @@ def to_decimals(d):
     return {k: (round(v* 100, 2) if isinstance(v, float) and v is not None else v) for k, v in d.items()}
 
 @app.post("/check_accuracy")
-async def check_accuracy(entries: List[MappingEntry]):
+async def checkAccuracy(entries: List[MappingEntry]):
     results = ScoreManager.scoreOutputWithDetails(entries)    
     return {
         "overall": to_decimals(results["overall"].model_dump()),
-        "singlePairAccuracydetails": [to_decimals(r.model_dump()) for r in results["singlePairAccuracydetails"]]
+        "singlePairAccuracydetails": [to_decimals(r.model_dump()) for r in results["singlePairAccuracydetails"]]        
     }
 
 def start():

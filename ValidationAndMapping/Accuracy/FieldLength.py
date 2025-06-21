@@ -7,15 +7,15 @@ class FieldLength:
     def score(self, mapping: MappingEntry) -> float:
         # get the values for sap and mimos
         entry = mapping
-        sap_fieldLength_str = entry.sap.fieldLength
-        mimosa_fieldLength_str = entry.mimosa.fieldLength
+        sapFieldLengthStr = entry.sap.fieldLength
+        mimosaFieldLengthStr = entry.mimosa.fieldLength
        
         # convert to integers
         try:
-            sap_fieldLength_int = int(sap_fieldLength_str)
-            mimosa_fieldLength_int = int(mimosa_fieldLength_str)
-            score = 1 - (abs(sap_fieldLength_int - mimosa_fieldLength_int) / max(sap_fieldLength_int, mimosa_fieldLength_int))
+            sapFieldLengthInt = int(sapFieldLengthStr)
+            mimosaFieldLengthInt = int(mimosaFieldLengthStr)
+            score = 1 - (abs(sapFieldLengthInt - mimosaFieldLengthInt) / max(sapFieldLengthInt, mimosaFieldLengthInt))
             return score
         except (ValueError, TypeError):
-            print(f"Non-integer fieldLength encountered: SAP='{sap_fieldLength_str}', MIMOSA='{mimosa_fieldLength_str}'")
+            print(f"Non-integer fieldLength encountered: SAP='{sapFieldLengthStr}', MIMOSA='{mimosaFieldLengthStr}'")
             return 0.0

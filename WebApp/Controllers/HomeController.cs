@@ -1,12 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using SAP_MIMOSAapp.Models;
-using System.Net.Http.Json;
-using System;
 
 namespace SAP_MIMOSAapp.Controllers
 {
@@ -34,7 +29,7 @@ namespace SAP_MIMOSAapp.Controllers
                 // Search by Entity Name or LLM type
                 if (!string.IsNullOrEmpty(model.SearchByEntityName) || !string.IsNullOrEmpty(model.SearchByLLM))
                 {
-                    var response = await _httpClient.GetStringAsync("workorders");
+                    var response = await _httpClient.GetStringAsync("mappings");
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     documents = JsonSerializer.Deserialize<List<MappingDocument>>(response, options) ?? new List<MappingDocument>();
 
@@ -44,19 +39,19 @@ namespace SAP_MIMOSAapp.Controllers
                     {
                         documents = documents
                             .Where(d => d.mappings.Any(m =>
-                                m.sap.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase) ||
-                                m.mimosa.entityName.Contains(model.SearchByEntityName, System.StringComparison.OrdinalIgnoreCase)))
+                                m.sap.entityName.Contains(model.SearchByEntityName, StringComparison.OrdinalIgnoreCase) ||
+                                m.mimosa.entityName.Contains(model.SearchByEntityName, StringComparison.OrdinalIgnoreCase)))
                             .ToList();
                     }
                     else if (!string.IsNullOrEmpty(model.SearchByLLM))
                     {
                         documents = documents
-                            .Where(d => d.LLMType.Contains(model.SearchByLLM, System.StringComparison.OrdinalIgnoreCase))
+                            .Where(d => d.LLMType.Contains(model.SearchByLLM, StringComparison.OrdinalIgnoreCase))
                             .ToList();
                     }
 
                     model.FilteredCount = documents.Count;
-                    model.SearchResults = documents;
+                    model.SearchResults = documents.OrderByDescending(d => d.mapID).ToList();
                 }
                 else
                 {
@@ -77,7 +72,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             if (string.IsNullOrEmpty(mapID))
                 return BadRequest("mapID is required");
-            var response = await _httpClient.GetAsync($"http://127.0.0.1:8000/workorders/{mapID}");
+            var response = await _httpClient.GetAsync($"http://127.0.0.1:8000/mappings/{mapID}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
             var json = await response.Content.ReadAsStringAsync();
@@ -116,7 +111,7 @@ namespace SAP_MIMOSAapp.Controllers
                 //Console.WriteLine($"GetAIResponse called with query: {query} {systemPrompt}");
 
                 // Create the request object exactly matching the Python model
-                var request = new { query = query, llm_model = llmModel, mappings = mappings ?? new List<MappingPair>(), system_prompt = systemPrompt };
+                var request = new { query, llmModel, mappings = mappings ?? new List<MappingPair>(), systemPrompt };
 
                 // Serialize with proper casing
                 var jsonOptions = new JsonSerializerOptions
@@ -160,7 +155,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return $"Raw response: {responseString}";
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Exception in GetAIResponse: {ex}");
                 return $"Error: {ex.Message}";
@@ -227,6 +222,19 @@ namespace SAP_MIMOSAapp.Controllers
             {
                 newDocument.promptHistory = new List<promptEntry>();
             }
+            // missingFields from hidden input
+            var missingFieldsJson = Request.Form["accuracyResult.missingFieldsJson"];
+            if (!string.IsNullOrEmpty(missingFieldsJson) && newDocument.accuracyResult != null)
+            {
+                try
+                {
+                    newDocument.accuracyResult.missingFields = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(missingFieldsJson);
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Failed to deserialize missingFields: {ex.Message}");
+                }
+            }
 
             if (!ModelState.IsValid)
             {
@@ -257,6 +265,12 @@ namespace SAP_MIMOSAapp.Controllers
                     }
                 }
 
+                // Remove empty missingFields before saving
+                if (newDocument.accuracyResult != null && newDocument.accuracyResult.missingFields != null && !newDocument.accuracyResult.missingFields.Any())
+                {
+                    newDocument.accuracyResult.missingFields = null;
+                }
+
                 // Log promptHistory
                 Console.WriteLine($"Creating mapping with {newDocument.promptHistory?.Count ?? 0} promptHistory entries");
                 if (newDocument.promptHistory?.Any() == true)
@@ -271,7 +285,7 @@ namespace SAP_MIMOSAapp.Controllers
                 var json = JsonSerializer.Serialize(newDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var createResponse = await _httpClient.PostAsync("workorders", content);
+                var createResponse = await _httpClient.PostAsync("mappings", content);
                 var responseText = await createResponse.Content.ReadAsStringAsync();
 
                 if (!createResponse.IsSuccessStatusCode)
@@ -286,7 +300,7 @@ namespace SAP_MIMOSAapp.Controllers
                 TempData["SuccessMessage"] = $"Mapping with #ID {createdDoc?.mapID} created successfully!";
                 return RedirectToAction("Index");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error creating record: {ex.Message}";
                 return View(newDocument);
@@ -297,7 +311,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"workorders/{id}");
+                var response = await _httpClient.GetStringAsync($"mappings/{id}");
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -311,7 +325,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 return View(document);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = $"Error: {ex.Message}";
                 return RedirectToAction("Index");
@@ -359,7 +373,7 @@ namespace SAP_MIMOSAapp.Controllers
                 // Send only the updated document to the correct endpoint
                 var json = JsonSerializer.Serialize(updatedDocument);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var updateResponse = await _httpClient.PutAsync($"workorders/{updatedDocument.mapID}", content);
+                var updateResponse = await _httpClient.PutAsync($"mappings/{updatedDocument.mapID}", content);
 
                 if (!updateResponse.IsSuccessStatusCode)
                 {
@@ -383,7 +397,7 @@ namespace SAP_MIMOSAapp.Controllers
         {
             try
             {
-                var deleteResponse = await _httpClient.DeleteAsync($"workorders/{id}");
+                var deleteResponse = await _httpClient.DeleteAsync($"mappings/{id}");
                 if (!deleteResponse.IsSuccessStatusCode)
                 {
                     var error = await deleteResponse.Content.ReadAsStringAsync();
@@ -392,7 +406,7 @@ namespace SAP_MIMOSAapp.Controllers
 
                 return Json(new { success = true, message = "Mapping deleted successfully!" });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error deleting record: {ex.Message}" });
             }
@@ -505,7 +519,7 @@ namespace SAP_MIMOSAapp.Controllers
                             return Json(new { success = false, message = "AI did not return a valid mapping document." });
                         }
                     }
-                    catch (System.Text.Json.JsonException)
+                    catch (JsonException)
                     {
                         Console.WriteLine($"Raw AI response: {aiResponse}");
 
@@ -517,7 +531,7 @@ namespace SAP_MIMOSAapp.Controllers
                     return Json(new { success = false, message = "AI did not return a valid mapping (no response or invalid format)." });
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Error communicating with AI: {ex.Message}" });
             }
@@ -607,7 +621,7 @@ namespace SAP_MIMOSAapp.Controllers
             try
             {
                 // get mapping data for the given mapId
-                var response = await _httpClient.GetAsync($"workorders/{mapId}");
+                var response = await _httpClient.GetAsync($"mappings/{mapId}");
                 if (!response.IsSuccessStatusCode)
                 {
                     return BadRequest("Failed to fetch mapping data.");

@@ -7,7 +7,7 @@ from typing import List
 
 class OpenAIModel:
     @staticmethod
-    def get_generate_mapping_message():
+    def getGenerateMappingMessage():
         return (
             """You are an AI assistant for generating mapping between SAP and MIMOSA data models. "
             "Generate a structured JSON response that follows this exact format: "
@@ -40,47 +40,58 @@ class OpenAIModel:
         )
 
     @staticmethod
-    def get_improve_mappings_message(mappings):
-        mappings_dict = [m.model_dump() for m in mappings]
-        mappings_json = json.dumps(mappings_dict, ensure_ascii=False, indent=2)
+    def getImproveMappingsMessage():
+        
         return (
             "You are an AI assistant for improving existing mappings between SAP and MIMOSA data models. "
-            "Below are the current mapping pairs in JSON format:\n"
-            f"{mappings_json}\n"
             "Review these mappings. Improve their accuracy, completeness, and clarity. "
             "If any mapping is incorrect, incomplete, or ambiguous, fix it. "
             "Return the improved mappings in the same JSON format. "
             "Do NOT remove any fields. Only update or clarify as needed. "
-            "The platform for SAP should always be 'SAP' and for MIMOSA should always be 'MIMOSA'."
+            "The platform for SAP should always be 'SAP' and for MIMOSA should always be 'MIMOSA'. "
+            "Below are the current mapping pairs in JSON format:\n"            
         )
 
-    def __init__(self, query: str, llm_model: str, mappings: List[MappingEntry] = None, system_message: dict = None):
+    def __init__(self, query: str, llmModel: str, mappings: List[MappingEntry] = None, systemPrompt: str = None):
         self.query = query
-        self.llm_model = llm_model
+        self.llmModel = llmModel
         self.mappings = mappings
-        self.system_message = system_message
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.systemPrompt = systemPrompt
+        # if set up env for api key(check readme.md) keep following, otherwise directly set api key with your key self.apiKey = "YOUR_API_KEY"
+        self.apiKey = os.getenv("OPENAI_API_KEY")
 
     def chat(self):
-        if not self.api_key:
+        if not self.apiKey:
             raise ValueError("OpenAI API key not found. Set the OPENAI_API_KEY environment variable.")
-        client = OpenAIClient(api_key=self.api_key)
+        client = OpenAIClient(api_key=self.apiKey)
 
-        # Use the provided system_message if available
-        if self.system_message:
-            system_message = self.system_message
+        # Decide which system message to use
+        if self.systemPrompt and self.systemPrompt.strip():
+            systemPrompt = self.systemPrompt
         else:
             if self.mappings and len(self.mappings) > 0:
-                system_message_content = self.get_improve_mappings_message(self.mappings)
+                systemPrompt = self.getImproveMappingsMessage()
             else:
-                system_message_content = self.get_generate_mapping_message()
-            system_message = {
-                "role": "system",
-                "content": system_message_content
-            }
+                systemPrompt = self.getGenerateMappingMessage()
+
+        # If mappings exist, append them to the system_message
+        if self.mappings:
+            mappingsDict = [m.model_dump() for m in self.mappings]
+            mappingsJson = json.dumps(mappingsDict, ensure_ascii=False, indent=2)
+            systemPrompt += f"\n{mappingsJson}"
+
+        system_message = {"role": "system", "content": systemPrompt}
         user_message = {"role": "user", "content": self.query}
+        messages = [system_message, user_message]
+
+        '''        
+        print("Messages sent to OpenAI:")
+        for m in messages:
+            print(m) 
+        '''
+
         response = client.chat.completions.create(
-            model=self.llm_model,
-            messages=[system_message, user_message]
+            model=self.llmModel,
+            messages=messages
         )
         return response

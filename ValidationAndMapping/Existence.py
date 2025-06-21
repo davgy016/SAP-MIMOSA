@@ -2,7 +2,7 @@ from .Models import MappingEntry
 
 class Existence:
     @staticmethod
-    def fields_present(entry: MappingEntry) -> dict[str, bool]:
+    def fieldsPresent(entry: MappingEntry) -> dict[str, bool]:
         """
         Returns a dict telling us which metadata fields were
         actually provided by the AI in *both* sap & mimosa.

@@ -37,7 +37,7 @@ class MimosaChecker:
 
         self.counter = 0
         fieldCheck = FieldCheck()
-        if self._getRoot() == False:
+        if self.getRoot() == False:
             return fieldCheck
 
         # look for entity name 
@@ -47,7 +47,7 @@ class MimosaChecker:
                 fieldCheck.entityName = FieldState.CORRECT
                 # if found look for field names
                 try:
-                    foundField = self._findWithName(self.root,field.fieldName)[0]
+                    foundField = self.findWithName(self.root,field.fieldName)[0]
                 except IndexError as e:
                     print("Couldn't find a field",e)
                     foundField = None
@@ -62,7 +62,7 @@ class MimosaChecker:
                     fieldCheck.fieldName = FieldState.CORRECT
 
                     #check the data type
-                    if self._checkDataType(foundField,field.dataType):
+                    if self.checkDataType(foundField,field.dataType):
                         fieldCheck.dataType = FieldState.CORRECT
                     else:
                         fieldCheck.dataType = FieldState.INCORRECT
@@ -71,7 +71,7 @@ class MimosaChecker:
                     fieldCheck.fieldLength = FieldState.CORRECT
 
                     #check field description
-                    if self._checkDescription(foundField, field.description):
+                    if self.checkDescription(foundField, field.description):
                         fieldCheck.description = FieldState.CORRECT
                     else:
                         fieldCheck.description = FieldState.INCORRECT
@@ -79,14 +79,14 @@ class MimosaChecker:
 
         return fieldCheck
 
-    def _getRoot(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        schema_path = os.path.join(current_dir, '..', 'Data', 'mimosaSchema.xsd')
+    def getRoot(self):
+        currentDir = os.path.dirname(os.path.abspath(__file__))
+        schemaPath = os.path.join(currentDir, '..', 'Data', 'mimosaSchema.xsd')
 
         try:
-            tree = ET.parse(schema_path)
+            tree = ET.parse(schemaPath)
             self.root = tree.getroot()
-            self.xsd_namespace = "{http://www.w3.org/2001/XMLSchema}"
+            self.xsdNamespace = "{http://www.w3.org/2001/XMLSchema}"
 
             return True
         except FileNotFoundError:
@@ -96,43 +96,43 @@ class MimosaChecker:
             print(f"Not able to parse mimosa schema: {e}")
             return False
     
-    def _findWithName(self, root, name):
+    def findWithName(self, root, name):
         self.counter += 1
         foundField = []
         for child in root:
             if child.get("name") == name:
                 foundField.append(child)
-            foundField.extend(self._findWithName(child, name))
+            foundField.extend(self.findWithName(child, name))
         return foundField
     
-    def _findAnnotation(self, element, name):
+    def findAnnotation(self, element, name):
         for child in element:
-            if child.tag == self.xsd_namespace + "annotation":
+            if child.tag == self.xsdNamespace + "annotation":
                 try:
                     if element.get("name") == name:
                         return child[0].text
                 except TypeError:
                     pass
             else:
-                text = self._findAnnotation(child, name)
+                text = self.findAnnotation(child, name)
                 if text is not None:
                     return text
         return None
 
     
-    def _checkDataType(self, element, expected):
-        field_type = element.get("type")
-        if field_type is not None and expected in field_type:
+    def checkDataType(self, element, expected):
+        fieldType = element.get("type")
+        if fieldType is not None and expected in fieldType:
             return True
         else:
             return False
         
-    def _checkDescription(self, element, expected):
+    def checkDescription(self, element, expected):
         """
         Return True if the schema’s annotation for this element
         contains the expected description (case-insensitive).
         """
-        annotation = self._findAnnotation(self.root, element.get("name"))
+        annotation = self.findAnnotation(self.root, element.get("name"))
         if not annotation:
             return False
 

@@ -64,7 +64,7 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 ### Backend (Python FastAPI)
 - Developed with FastAPI for high performance and easy extensibility.
 - Implements REST endpoints for all CRUD operations on mapping documents.
-- Integrates with OpenAI’s GPT-4.1 and o3-mini for generating mapping suggestions based on user queries.
+- Integrates with OpenAI’s GPT-4.1 and o4-mini for generating mapping suggestions based on user queries.
 - Stores all mappings in a JSON file, ensuring persistence and easy backup.
 - Store every single AI generated mapping in separate JSON file as a chronological data for analytics 
 - Generates unique, incremental map IDs server-side for security and consistency.
@@ -96,7 +96,7 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 - **Landing Page:**
   - Displays a detailed mapping table retrieved from the JSON data storage. Each row shows SAP PM and MIMOSA CCOM field details.
 - **Editing and Creating:**
-  - Use the “Edit”, “Create New Field”, and delete buttons to update, add, or remove mappings.
+  - Use the “Edit”, “ + ”, and delete buttons to update, add, or remove mappings.
 - **AI Assistant:**
   - Enter a mapping-related question or requirement into the AI search box. The AI assistant will generate a mapping, which you can review and further edit before saving.
 - **Feedback Mechanism:**
@@ -108,14 +108,14 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 
 ### AI Endpoints
 - `POST /ask_AI` — Generate a mapping suggestion from a user query using OpenAI.
-- `GET /api/system-message` — Get the system prompt used for AI mapping.
+- `GET /system_message` — Get the system prompt used for AI mapping.
 
 ### Mapping Documents
-- `GET /workorders` — Retrieve all mapping documents.
-- `GET /workorders/{map_id}` — Retrieve a mapping document by its ID.
-- `POST /workorders` — Create a new mapping document.
-- `PUT /workorders/{map_id}` — Update a mapping document by its ID.
-- `DELETE /workorders/{map_id}` — Delete a mapping document by its ID.
+- `GET /mappings` — Retrieve all mapping documents.
+- `GET /mappings/{map_id}` — Retrieve a mapping document by its ID.
+- `POST /mappings` — Create a new mapping document.
+- `PUT /mappings/{map_id}` — Update a mapping document by its ID.
+- `DELETE /mappings/{map_id}` — Delete a mapping document by its ID.
 
 ### Analytics & History
 - `GET /fetchHistoricalData?createdDate=YYYY-MM-DDTHH:MM:SS` — Retrieve historical AI mapping data (optionally filtered by date).
@@ -153,23 +153,24 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
 - **AI Performance Assessment:**
   - The system can assess the accuracy of AI-generated mappings, supporting analytics and improvement.
 
----
-
-## Future Improvements
-- **Authentication & Authorization:** Restrict mapping management to authorized users.
-- **User Feedback:** Allow users to rate mappings to improve AI performance.
-- **Audit Logging:** Track all changes for compliance and traceability.
 
 ---
 
 ## Running the Application
 
 ### 1. Backend (Python FastAPI)
-- Install dependencies: check requirements.txt 
+- Install dependencies:
+  - Run the following command in your terminal or PowerShell to install the necessary packages: pip install fastapi uvicorn pydantic openai
+  - To install and use the sentence-transformers library, which is used for generating sentence embeddings using pre-trained models, run command: pip install sentence-transformers
+
 - Set your OpenAI API key as an environment variable (replace with your actual key):
   - Windows (Powershell):
     ```sh
     $env:OPENAI_API_KEY="your_api_key_here"
+    ```
+  - For Windows (Command Prompt)
+    ```sh
+    set OPENAI_API_KEY=your_api_key_here
     ```
   - Linux/macOS:
     ```sh
@@ -190,6 +191,16 @@ The SAP-MIMOSA Mapping Application is designed to help industry specialists and 
   dotnet run
   ```
 - The frontend expects the backend at `http://127.0.0.1:8000/` by default. Adjust as needed in `HomeController.cs`.
+
+### 3. Run application in Microsoft Visual Studio 2022 +
+- Open Powershell and make sure you are in correct directory  ...\group-5\sapMimosaWebApp.
+- Then run **python main.py**, you should see something like this:   
+    INFO:     Started server process [14392]
+    INFO:     Waiting for application startup.
+    INFO:     Application startup complete.
+    INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit).
+
+- Then run web app as usual by clicking play sign
 
 ---
 
@@ -242,6 +253,18 @@ Content-Type: application/json
 - **Data type Similarity:** DataType compares the data type between mapped fields to see if they are likely to be able to contain similar data. It does this by converting all know data types across SAP and MIMOSA schema to their base type i.e cct:TextType from MIMOSA is converted to a string. These base types are then compared to each other to see if they are the same i.e to prevent a number from matching to a string. 
 - **Table Coverage:** Table coverage is a measure of how much of the base tables are covered by the the current mappings. At an overall level it gets the total number of fields that have a valid table name and the total number of fields for each valid table found and calculates a score with (total number of fields mapped/number of fields found across all tables found). At an single mapping level it performs this same check but only uses the table for that mapping i.e MANDT from table AUFK will only look for fields with table AUFK in the mappings generated, giving an individual table coverage metric. 
 
+### Validation system architecture
+<img src="images/validationSystem.jpg">
+
+### Web app architecture
+<img src="images/dataFlowOfWebapp.jpg">
+---
+
+## Key findings 
+- Using words such as **schema** and **cryptic** in user prompt improves AI response for SAP side, because due to SAP cryptic names this enables AI-generated mapping to match SAP schema.    
+- Generative AI provides more accurate and relevant response when SAP or MIMOSA side of the mappinng is provided rather than ask AI to generate from scratch. 
+- Providing desired entity names for both SAP and MIMOSA in user prompt enables Generative AI to generate more relevant mappings. e.g. it is better to ask "generate mapping between equipment and Asset" than "generate mapping for asset".  
+
 ---
 
 ## Future Improvements
@@ -250,5 +273,5 @@ Content-Type: application/json
 - **Audit Logging:** Track all changes for compliance and traceability.
 - **Per-Mapping AI Assistance:** Each mapping pair section can have its own AI assistant to improve individual mapping fields.
 - **Semantic Search Validation:** Use semantic search algorithms for better mapping content validation.
-- **Model Fine-Tuning:** Tune the generative AI model specifically for SAP and MIMOSA CCOM data models for more accurate responses.
+- **Model Fine-Tuning:** Tune the generative AI model for SAP and MIMOSA CCOM data models for more accurate responses.
 - **Model Expansion:** Add more models to choose from.

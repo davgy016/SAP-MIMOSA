@@ -32,102 +32,45 @@ class InfoOmitted:
             }
 
         # flatten index of every field across all tables
-        self.any_field_index = {
+        self.anyFieldIndex = {
             field: meta
-            for tbl_meta in self.schema.values()
-            for field, meta in tbl_meta.items()
+            for tblMeta in self.schema.values()
+            for field, meta in tblMeta.items()
         }
 
-    def table_coverage(self, mapping: list) -> dict:
+    def scoreOverall(self, mapping: list) -> float:
         # Convert to set to remove duplicates based on FieldMapping.__eq__
-        unique_mappings = set(mapping)
+        uniqueMappings = set(mapping)
         countFields = 0
 
         #a list of all the different entities
         entities = []
         realEntities = []
-        fields = []
-        for map in unique_mappings:
+        for map in uniqueMappings:
             if map.sap.entityName not in entities:
                 entities.append(map.sap.entityName)
-                fields.append(map.sap.fieldName)
         
         #a count of the number of fields across all entities
         totalFields = 0
 
-        entityOutput = {}
         for entity in entities:
             entity = entity.upper()
             if entity in self.schema:
                 tableFields = self.schema[entity]
                 realEntities.append(entity)
                 totalFields += len(tableFields)
-                entityOutput[entity] = []
-                # get all of the tables that aren't covered and add them to entityOutput
-                for field in tableFields:
-                    if field not in fields:
-                        fieldInfo = {"FieldName":field}
-                        for col in tableFields[field]:
-                            fieldInfo[col] = tableFields[field][col]
-                        entityOutput[entity].append(fieldInfo)
 
-
-        for map in unique_mappings:
-            if map.sap.entityName in realEntities:
-                countFields += 1
-        if entityOutput != {}:
-            output = {"Tables":entityOutput}
-        else:
-            return {}
-        return output
-
-    def score_overall(self, mapping: list) -> float:
-        # Convert to set to remove duplicates based on FieldMapping.__eq__
-        unique_mappings = set(mapping)
-        countFields = 0
-
-        #a list of all the different entities
-        entities = []
-        realEntities = []
-        fields = []
-        for map in unique_mappings:
-            if map.sap.entityName not in entities:
-                entities.append(map.sap.entityName)
-                fields.append(map.sap.fieldName)
-        
-        #a count of the number of fields across all entities
-        totalFields = 0
-
-        entityOutput = {}
-        for entity in entities:
-            entity = entity.upper()
-            if entity in self.schema:
-                tableFields = self.schema[entity]
-                realEntities.append(entity)
-                totalFields += len(tableFields)
-                entityOutput[entity] = []
-                # get all of the tables that aren't covered and add them to entityOutput
-                for field in tableFields:
-                    if field not in fields:
-                        fieldInfo = {"FieldName":field}
-                        for col in tableFields[field]:
-                            fieldInfo[col] = tableFields[field][col]
-                        entityOutput[entity].append(fieldInfo)
-
-
-        for map in unique_mappings:
+        for map in uniqueMappings:
             if map.sap.entityName in realEntities:
                 countFields += 1
         print(f"Fields counted in overall score {countFields} for entities {entities} with total fields {totalFields} and real entites {realEntities}")
 
         if totalFields == 0:
             return 0
-        
-            
-        output = {"Score":countFields/totalFields,"Tables":entityOutput}
+
         return countFields/totalFields
     
-    def score_single(self, map: MappingEntry, mappings: list) -> dict:
+    def scoreSingle(self, map: MappingEntry, mappings: list) -> float:
         countFields = 0 
         entity = map.sap.entityName.upper()
 
@@ -146,3 +89,23 @@ class InfoOmitted:
         print(f"Fields counted in single score {countFields} for entity {entity} with total fields {totalFields}")
 
         return countFields/totalFields
+
+    def getMissingFields(self, mapping: list) -> dict:
+        """
+        Returns a dict: {TABLE: [missing_field1, missing_field2, ...]}
+        Only checks the table name in the first mapping pair.
+        """
+        if not mapping:
+            return {}
+        # Use the first mapping's SAP entity name
+        firstTable = mapping[0].sap.entityName.upper()
+        mappedFields = set()
+        for m in mapping:
+            if m.sap.entityName.upper() == firstTable:
+                mappedFields.add(m.sap.fieldName.upper())
+        if firstTable in self.schema:
+            schemaFields = set(self.schema[firstTable].keys())
+            missingFields = list(schemaFields - mappedFields)
+            if missingFields:
+                return {firstTable: sorted(missingFields)}
+        return {}
