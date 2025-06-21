@@ -8,9 +8,9 @@ from ValidationAndMapping.ScoreManager import ScoreManager
 
 
 @pytest.fixture
-def sample_mapping():
+def sampleMapping():
     # First mapping entry - Work Order
-    sap_field1 = FieldMapping(
+    sapField1 = FieldMapping(
         platform="SAP PM",
         entityName="AUFK",
         fieldName="AUFNR",
@@ -20,7 +20,7 @@ def sample_mapping():
         fieldLength="12"
     )
 
-    mimosa_field1 = FieldMapping(
+    mimosaField1 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
         fieldName="WorkOrder.WorkOrderID",
@@ -31,7 +31,7 @@ def sample_mapping():
     )
 
     # Second mapping entry - Equipment
-    sap_field2 = FieldMapping(
+    sapField2 = FieldMapping(
         platform="SAP PM",
         entityName="AUFK",
         fieldName="EQUNR",
@@ -41,7 +41,7 @@ def sample_mapping():
         fieldLength="18"
     )
 
-    mimosa_field2 = FieldMapping(
+    mimosaField2 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
         fieldName="Asset.AssetID",
@@ -52,7 +52,7 @@ def sample_mapping():
     )
 
     # Third mapping entry - Maintenance Plan
-    sap_field3 = FieldMapping(
+    sapField3 = FieldMapping(
         platform="SAP PM",
         entityName="AUFK",
         fieldName="PLNNR",
@@ -62,7 +62,7 @@ def sample_mapping():
         fieldLength="12"
     )
 
-    mimosa_field3 = FieldMapping(
+    mimosaField3 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="AUFK",
         fieldName="MaintenancePlan.PlanID",
@@ -72,7 +72,7 @@ def sample_mapping():
         fieldLength="12"
     )
     # Third mapping entry - Maintenance Plan
-    sap_field4 = FieldMapping(
+    sapField4 = FieldMapping(
         platform="SAP PM",
         entityName="NOT REAL",
         fieldName="PLNNR",
@@ -82,7 +82,7 @@ def sample_mapping():
         fieldLength="12"
     )
 
-    mimosa_field4 = FieldMapping(
+    mimosaField4 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="AUFK",
         fieldName="MaintenancePlan.PlanID",
@@ -91,7 +91,7 @@ def sample_mapping():
         notes="Identifier for maintenance plan in MIMOSA",
         fieldLength="12"
     )
-    sap_field5 = FieldMapping(
+    sapField5 = FieldMapping(
         platform="SAP PM",
         entityName="NOT REAL",
         fieldName="EQUNR",
@@ -101,7 +101,7 @@ def sample_mapping():
         fieldLength="18"
     )
 
-    mimosa_field5 = FieldMapping(
+    mimosaField5 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
         fieldName="Asset.AssetID",
@@ -110,7 +110,7 @@ def sample_mapping():
         notes="Unique identifier for asset in MIMOSA",
         fieldLength="18"
     )
-    sap_field6 = FieldMapping(
+    sapField6 = FieldMapping(
         platform="SAP PM",
         entityName="NOT REAL",
         fieldName="EQU",
@@ -120,7 +120,7 @@ def sample_mapping():
         fieldLength="18"
     )
 
-    mimosa_field6 = FieldMapping(
+    mimosaField6 = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
         fieldName="Asset.AssetID",
@@ -130,40 +130,40 @@ def sample_mapping():
         fieldLength="18"
     )
 
-    mapping_entries = [
-        MappingEntry(sap=sap_field1, mimosa=mimosa_field1),
-        MappingEntry(sap=sap_field2, mimosa=mimosa_field2),
-        MappingEntry(sap=sap_field3, mimosa=mimosa_field3),
-        MappingEntry(sap=sap_field4, mimosa=mimosa_field4),
-        MappingEntry(sap=sap_field5, mimosa=mimosa_field5),
-        MappingEntry(sap=sap_field6, mimosa=mimosa_field6)
+    mappingEntries = [
+        MappingEntry(sap=sapField1, mimosa=mimosaField1),
+        MappingEntry(sap=sapField2, mimosa=mimosaField2),
+        MappingEntry(sap=sapField3, mimosa=mimosaField3),
+        MappingEntry(sap=sapField4, mimosa=mimosaField4),
+        MappingEntry(sap=sapField5, mimosa=mimosaField5),
+        MappingEntry(sap=sapField6, mimosa=mimosaField6)
     ]
 
     mapping = Mapping(
         mapID="001",
         LLMType="Go",
-        mappings=mapping_entries
+        mappings=mappingEntries
     )
 
     return mapping
 
-def test_descriptionSimilarity(sample_mapping):
+def test_descriptionSimilarity(sampleMapping):
     sim = DescriptionSimilarity()
-    score = sim.score(mapping=sample_mapping.mappings[0])
+    score = sim.score(mapping=sampleMapping.mappings[0])
     print("Description Similarity score:", score)
     assert score == pytest.approx(0.9, abs=0.2), "Descriptions are not similar enough"
 
-def test_accuracy(sample_mapping):
+def test_accuracy(sampleMapping):
     acc = Accuracy()
-    score = acc.calculateAccuracy(sample_mapping.mappings[0])
+    score = acc.calculateAccuracy(sampleMapping.mappings[0])
     print("Accuracy Score:",score)
     assert score["Accuracy"] == pytest.approx(0.6, abs=0.2), "Mappings are not similar enough"
 
-def test_scoreManager_scoreOutput(sample_mapping):
+def test_scoreManagerScoreOutput(sampleMapping):
     sm = ScoreManager()
-    score = sm.scoreOutputWithDetails(sample_mapping.mappings)
+    score = sm.scoreOutputWithDetails(sampleMapping.mappings)
     print("Score manager output", score)
-    assert score["overall"] == pytest.approx(0.6, abs=0.2), "Mappings are not similar enough"
+    assert score["overall"].accuracyRate == pytest.approx(0.6, abs=0.2), "Mappings are not similar enough"
 
 
 

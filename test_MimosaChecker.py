@@ -7,8 +7,8 @@ from ValidationAndMapping.ScoreManager import ScoreManager
 
 
 @pytest.fixture
-def sample_mapping():
-    sap_field = FieldMapping(
+def sampleMapping():
+    sapField = FieldMapping(
         platform="SAP PM",
         entityName="Equipment",
         fieldName="AUFNR",
@@ -18,7 +18,7 @@ def sample_mapping():
         fieldLength="12"
     )
 
-    mimosa_field = FieldMapping(
+    mimosaField = FieldMapping(
         platform="MIMOSA CCOM",
         entityName="Asset",
         fieldName="PartNumber",
@@ -28,19 +28,19 @@ def sample_mapping():
         fieldLength="15"
     )
 
-    mapping_entry = MappingEntry(sap=sap_field, mimosa=mimosa_field)
+    mappingEntry = MappingEntry(sap=sapField, mimosa=mimosaField)
 
     mapping = Mapping(
         mapID="001",
         LLMType="Go",
-        mappings=[mapping_entry]
+        mappings=[mappingEntry]
     )
 
     return [mapping]
 
-def test_mimosaChecker(sample_mapping):
+def test_mimosaChecker(sampleMapping):
     mc = MimosaChecker()
-    fieldCheck = mc.checkField(sample_mapping[0].mappings[0].mimosa)
+    fieldCheck = mc.checkField(sampleMapping[0].mappings[0].mimosa)
     print("EnityName",fieldCheck.entityName,"FieldName",fieldCheck.fieldName,"Description",fieldCheck.description,"DataType",fieldCheck.dataType,"FieldLength",fieldCheck.fieldLength)
 
 

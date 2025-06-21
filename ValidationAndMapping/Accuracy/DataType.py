@@ -42,7 +42,7 @@ rawAliases = {
 # Build an uppercase-key alias map once
 ALIASES = { key.upper(): val for key, val in rawAliases.items() }
 
-def normalize(dt: str) -> str:
+def normalise(dt: str) -> str:
     """Turn any dt string into a canonical category like INTEGER, STRING, DATE, etc."""
     # 1) strip whitespace, uppercase
     s = dt.strip().upper()
@@ -58,10 +58,10 @@ class DataType:
     @staticmethod
     def score(mapping: MappingEntry) -> float:
         """
-        Returns 1.0 if the normalized SAP type exactly matches
-        the normalized MIMOSA type, else 0.0.
+        Returns 1.0 if the normalised SAP type exactly matches
+        the normalised MIMOSA type, else 0.0.
         """
-        sapDt    = normalize(mapping.sap.dataType)
-        mimosaDt = normalize(mapping.mimosa.dataType)
+        sapDt    = normalise(mapping.sap.dataType)
+        mimosaDt = normalise(mapping.mimosa.dataType)
         return 1.0 if sapDt == mimosaDt else 0.0
     

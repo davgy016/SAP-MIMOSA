@@ -47,7 +47,7 @@ class SAPChecker:
                     # only keep the first mapping (most JSONs tend to repeat)
                     self.aliasMap.setdefault(chk, metaBlock)
 
-    def normalizeTable(self, name: str) -> str:
+    def normaliseTable(self, name: str) -> str:
         """
         Strip off anything after the first word, e.g.
         "AUFK (OrderMaster)" → "AUFK"
@@ -66,9 +66,9 @@ class SAPChecker:
             description=FieldState.NARF,
         )
 
-        # normalize the incoming entityName
+        # normalise the incoming entityName
         tblRaw = field.entityName
-        tbl = self.normalizeTable(tblRaw)
+        tbl = self.normaliseTable(tblRaw)
 
         # pick the right metadata block
         if tbl in self.schema:
@@ -83,7 +83,7 @@ class SAPChecker:
             fc.entityName = FieldState.INCORRECT
             tableFields = {}
 
-        # normalize the incoming fieldName
+        # normalise the incoming fieldName
         fld = field.fieldName.upper().strip()
 
         # 1) fieldName check: look in table first, then global index
